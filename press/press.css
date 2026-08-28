@@ -151,10 +151,10 @@ h1 {
 /* ── Google Play 9:16（360×640 視窗）──
    畫布矮很多：字縮一階、手機縮小並讓底部出血。 */
 @media (max-height: 700px) {
-  .copy { padding-top: 34px; }
+  .copy { padding-top: 34px; padding-left: 22px; padding-right: 22px; }
   .kicker { font-size: 11px; margin-bottom: 9px; }
   h1 { font-size: 27.5px; }
-  .sub { font-size: 12.5px; margin-top: 8px; }
+  .sub { font-size: 12px; margin-top: 8px; }
   .stage { margin-top: 16px; }
   .stage .phone-fit { --ps: .56; }
   .brandline { display: none; }
@@ -194,4 +194,21 @@ h1 {
   .checks { gap: 9px; margin-top: 18px; width: min(300px, 84vw); }
   .check-row { padding: 11px 14px; font-size: 13px; border-radius: 14px; }
   .check-row small { font-size: 10.5px; }
+}
+
+/* ── UI 特寫板（不帶機框的放大細節，商店慣用板式）── */
+.uipanel {
+  position: relative; z-index: 2;
+  width: min(384px, 92vw);
+  border-radius: 26px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(42,55,68,.08), 0 34px 70px -26px rgba(42,55,68,.45);
+  background: #fff;
+}
+.uipanel img { display: block; width: 100%; }
+.stage--panel { flex-direction: column; align-items: center; gap: 0; }
+@media (max-height: 700px) {
+  .uipanel { width: min(302px, 86vw); border-radius: 18px; }
+  .stage--panel .mascot { display: none; }
+  .float-chip { font-size: 12.5px; padding: 9px 15px; }
 }

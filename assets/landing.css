@@ -103,16 +103,12 @@
 }
 
 .pain-ph {
-  height: 130px;
+  display: block;
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
   border-radius: 14px;
-  filter: saturate(.82);
-  position: relative;
-}
-.pain-ph::after {           /* 一層薄薄的悵然 */
-  content: "";
-  position: absolute; inset: 0;
-  border-radius: 14px;
-  background: linear-gradient(180deg, transparent 40%, rgba(42,55,68,.18));
+  filter: saturate(.92);
 }
 
 .pain p { margin: 0; font-size: 15px; color: var(--ink-soft); line-height: 1.8; }
@@ -172,30 +168,28 @@
   filter: drop-shadow(0 12px 22px rgba(42,55,68,.22));
 }
 
-/* 整理段的滑卡動畫：停留 → 傾斜滑出（蓋保留章）→ 回位 */
-@keyframes pb-swipe {
-  0%, 34%  { transform: rotate(0deg) translateX(0); }
-  48%, 62% { transform: rotate(4.5deg) translateX(30px); }
-  78%      { transform: rotate(14deg) translateX(150%); opacity: 0; }
-  79%      { transform: rotate(0deg) translateX(0); opacity: 0; }
-  92%, 100%{ transform: rotate(0deg) translateX(0); opacity: 1; }
+/* 相似照片段：UI 特寫卡（真截圖方形裁切）＋浮出膠囊 */
+.feat-stage--panel {
+  display: flex; flex-direction: column; align-items: center;
+  width: min(400px, 92vw);
 }
-@keyframes pb-stamp {
-  0%, 40%  { opacity: 0; transform: rotate(-12deg) scale(1.35); }
-  48%, 74% { opacity: 1; transform: rotate(-12deg) scale(1); }
-  78%, 100%{ opacity: 0; }
+.feat-panel {
+  width: 100%;
+  border-radius: 24px;
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow: 0 2px 5px rgba(42,55,68,.08), 0 30px 60px -26px rgba(42,55,68,.4);
 }
-.rv-card--anim {
-  transform-origin: 50% 130%;
-  animation: pb-swipe 7s ease-in-out infinite;
-}
-.rv-card--anim .stamp-keep {
-  opacity: 0;
-  animation: pb-stamp 7s ease-in-out infinite;
-}
-@media (prefers-reduced-motion: reduce) {
-  .rv-card--anim { animation: none; transform: rotate(4deg) translateX(26px); }
-  .rv-card--anim .stamp-keep { animation: none; opacity: 1; }
+.feat-panel img { display: block; width: 100%; }
+.feat-chip {
+  position: relative; z-index: 5;
+  margin-top: -22px;
+  background: var(--surface);
+  border-radius: 999px;
+  padding: 11px 20px;
+  font-size: 15px; font-weight: 700;
+  display: inline-flex; align-items: center; gap: 8px;
+  box-shadow: 0 2px 4px rgba(42,55,68,.08), 0 18px 38px -14px rgba(42,55,68,.35);
 }
 
 /* ── 隱私承諾 ── */
@@ -317,3 +311,19 @@
 
 /* 深色主題：手機模擬本身維持 App 淺色外觀（那就是產品的樣子），
    周邊的紙面與光暈由 style.css 的變數自動翻轉。 */
+
+/* ── 兩個角落（省空間＋時間軸）── */
+.duo { padding: 88px 0 0; }
+.duo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 40px 32px;
+  justify-items: center;
+}
+.duo figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.duo .phone-fit { --ps: .56; }
+.duo figcaption {
+  font-size: 14.5px; color: var(--ink-soft); text-align: center;
+  max-width: 34ch; line-height: 1.7;
+}
+@media (max-width: 480px) { .duo .phone-fit { --ps: .48; } }
