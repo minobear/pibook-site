@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
+<defs>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F4C09B"/><stop offset=".45" stop-color="#E39A85"/><stop offset="1" stop-color="#B88A9E"/></linearGradient>
+<linearGradient id="wat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8E7F9C"/><stop offset="1" stop-color="#3F5A72"/></linearGradient>
+<radialGradient id="glow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FBE7C2" stop-opacity=".9"/><stop offset="1" stop-color="#FBE7C2" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="400" height="260" fill="url(#sky)"/>
+<circle cx="268" cy="118" r="86" fill="url(#glow)"/>
+<circle cx="268" cy="118" r="30" fill="#FBE3B0"/>
+<path d="M0 208 L86 128 L150 196 L212 148 L278 214 L338 168 L400 218 V260 H0 Z" fill="#7A6A88" opacity=".85"/>
+<path d="M0 236 L70 186 L138 234 L214 178 L296 240 L354 202 L400 238 V262 H0 Z" fill="#5C5474"/>
+<rect y="258" width="400" height="142" fill="url(#wat)"/>
+<g fill="#F3D9AE" opacity=".5"><rect x="216" y="272" width="104" height="4" rx="2"/><rect x="238" y="288" width="62" height="3.4" rx="1.7"/><rect x="252" y="304" width="36" height="3" rx="1.5"/></g>
+</svg>

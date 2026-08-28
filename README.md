@@ -27,3 +27,18 @@ git add -A && git commit -m "更新條款" && git push
   並依條款所述於生效前 30 天在 App 內公告。
 - 語言切換是純前端的顯示切換，兩種語言都在同一份 HTML 裡 ——
   審查員把網址轉給同事時，對方看到的會是自己讀得懂的語言。
+
+## 首頁的手機畫面模擬與商店截圖
+
+首頁的 App 畫面不是圖片，是照著 App 設計系統重建的 HTML/CSS 元件
+（`assets/phone.css`＋手工 SVG 情景圖 `assets/scenes/`）。
+**App 的皮改了，記得回來同步**：色票對 `pibook_colors.dart`、文案對 `app_zh.arb`。
+
+`press/` 是商店行銷截圖的畫板（同一套元件）。改完跑：
+
+```bash
+bash press/render.sh
+```
+
+會用無頭 Chrome 輸出到主 repo 的 `store_assets/`：
+`ios_6.9/`（1290×2796，App Store 6.9 吋）與 `play_phone/`（1080×1920，Google Play）。

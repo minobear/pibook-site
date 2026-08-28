@@ -1,0 +1,31 @@
+<!--
+  「做到了」橡皮章 —— 使用者真的完成一個手把手動作時蓋下去。
+  取代 Icons.check_circle 那種「系統回報成功」的味道：這是一個蓋在你自己照片上的
+  印記，帶著手工橡皮章的不平整。
+
+  刻意的不完美：
+  - 外圈不是正圓，是四段曲率不同的弧（手刻章的邊緣）
+  - 圈上有兩處刻意的缺口（吃墨不勻）
+  - 勾的兩筆粗細不同、收尾不齊
+  - 幾塊低透明度的補丁模擬墨色濃淡
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <g opacity="0.92">
+    <!-- 外圈：四段弧，半徑 46~49 之間游移，右上與左下各留一個缺口 -->
+    <path d="M64 16 Q98 17 111 49 Q116 66 106 86"
+          stroke="#C75F4E" stroke-width="7" stroke-linecap="round"/>
+    <path d="M99 100 Q76 116 49 110 Q25 104 17 78"
+          stroke="#C75F4E" stroke-width="7.6" stroke-linecap="round"/>
+    <path d="M16 66 Q14 38 38 22"
+          stroke="#C75F4E" stroke-width="6.4" stroke-linecap="round"/>
+
+    <!-- 勾：兩筆，短筆較粗、長筆較細，收尾不對齊 -->
+    <path d="M40 66 L57 83" stroke="#C75F4E" stroke-width="10" stroke-linecap="round"/>
+    <path d="M56 83 L90 45" stroke="#C75F4E" stroke-width="8.4" stroke-linecap="round"/>
+
+    <!-- 墨色濃淡補丁 -->
+    <ellipse cx="52" cy="76" rx="12" ry="9" fill="#C75F4E" opacity="0.22" transform="rotate(-38 52 76)"/>
+    <ellipse cx="84" cy="52" rx="9" ry="6" fill="#FFFFFF" opacity="0.20" transform="rotate(-42 84 52)"/>
+    <ellipse cx="30" cy="44" rx="7" ry="11" fill="#FFFFFF" opacity="0.16"/>
+  </g>
+</svg>

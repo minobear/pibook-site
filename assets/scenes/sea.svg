@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
+<defs>
+<linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CFE2EA"/><stop offset="1" stop-color="#A9C8D6"/></linearGradient>
+<linearGradient id="se" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6D97AD"/><stop offset="1" stop-color="#54809A"/></linearGradient>
+</defs>
+<rect width="400" height="190" fill="url(#sk)"/>
+<circle cx="92" cy="66" r="26" fill="#FDF4DE"/>
+<g fill="#FFFFFF" opacity=".82">
+<ellipse cx="270" cy="70" rx="52" ry="14"/><ellipse cx="308" cy="60" rx="34" ry="11"/>
+<ellipse cx="150" cy="118" rx="40" ry="10" opacity=".6"/>
+</g>
+<rect y="188" width="400" height="96" fill="url(#se)"/>
+<g fill="#EAF3F5"><rect x="0" y="226" width="400" height="5" rx="2.5" opacity=".55"/><rect x="0" y="252" width="400" height="6" rx="3" opacity=".7"/></g>
+<path d="M0 276 Q120 258 226 274 T400 268 V400 H0 Z" fill="#EAD9BC"/>
+<path d="M0 288 Q140 272 250 286 T400 282" fill="none" stroke="#FFFFFF" stroke-width="7" opacity=".75"/>
+<ellipse cx="118" cy="342" rx="7" ry="4.6" fill="#D9C09A"/>
+<ellipse cx="296" cy="362" rx="5.6" ry="3.8" fill="#D9C09A"/>
+</svg>

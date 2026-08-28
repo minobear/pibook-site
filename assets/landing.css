@@ -1,0 +1,319 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   拍簿官網 — 首頁版面（英雄區 / 痛點 / 功能段 / 隱私 / 印製預告）
+   依賴 style.css（全站基調）與 phone.css（手機畫面模擬元件）。
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── 英雄區 ── */
+
+.hero2 {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+}
+.hero2::before {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 46% at 8% 0%, rgba(232,128,110,.12), transparent 70%),
+    radial-gradient(ellipse 62% 52% at 100% 12%, rgba(91,122,146,.12), transparent 70%);
+  pointer-events: none;
+}
+
+.hero2-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 48px;
+  padding-top: 72px;
+  padding-bottom: 0;
+}
+
+.hero2-copy { display: flex; flex-direction: column; gap: 22px; padding-bottom: 72px; }
+
+.hero2-copy .kicker {
+  font-size: 12px;
+  letter-spacing: .2em;
+  color: var(--ink-fade);
+  font-weight: 500;
+}
+
+.hero2-copy h1 {
+  font-family: var(--serif);
+  font-size: clamp(34px, 4.6vw, 52px);
+  line-height: 1.3;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: .01em;
+  text-wrap: balance;
+}
+
+.hero2-copy .lede {
+  font-size: clamp(16px, 1.8vw, 18px);
+  color: var(--ink-soft);
+  margin: 0;
+  max-width: 44ch;
+  line-height: 1.9;
+}
+
+/* 英雄區的手機：底部出血，像從頁面下緣長出來 */
+.hero2-stage {
+  position: relative;
+  align-self: end;
+  --hero-ps: .82;
+}
+.hero2-stage .phone-fit { --ps: var(--hero-ps); height: calc(868px * var(--ps) * .82); }
+.hero2-stage .spark { position: absolute; z-index: 3; }
+.hero2-mascot {
+  position: absolute;
+  z-index: 4;
+  left: -64px;
+  bottom: -6px;
+  width: min(168px, 20vw);
+  filter: drop-shadow(0 14px 26px rgba(42,55,68,.24));
+}
+
+/* ── 痛點 ── */
+
+.pains { padding: 72px 0 8px; }
+
+.sec-h {
+  font-family: var(--serif);
+  font-size: clamp(24px, 3.2vw, 32px);
+  font-weight: 700;
+  margin: 0 0 28px;
+  text-wrap: balance;
+}
+
+.pain-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+}
+
+.pain {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 18px 18px 20px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pain-ph {
+  height: 130px;
+  border-radius: 14px;
+  filter: saturate(.82);
+  position: relative;
+}
+.pain-ph::after {           /* 一層薄薄的悵然 */
+  content: "";
+  position: absolute; inset: 0;
+  border-radius: 14px;
+  background: linear-gradient(180deg, transparent 40%, rgba(42,55,68,.18));
+}
+
+.pain p { margin: 0; font-size: 15px; color: var(--ink-soft); line-height: 1.8; }
+.pain strong { color: var(--ink); font-weight: 700; }
+
+/* ── 功能段 ── */
+
+.feat { padding: 72px 0 0; }
+
+.feat-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 56px;
+}
+
+.feat--flip .feat-grid { grid-template-columns: auto minmax(0, 1fr); }
+.feat--flip .feat-copy { order: 2; }
+.feat--flip .feat-stage { order: 1; }
+
+.feat-copy { display: flex; flex-direction: column; gap: 16px; }
+
+.feat-copy .kicker {
+  font-size: 12px;
+  letter-spacing: .22em;
+  font-weight: 700;
+  color: var(--coral);
+}
+
+.feat-copy h2 {
+  font-family: var(--serif);
+  font-size: clamp(25px, 3.4vw, 34px);
+  line-height: 1.42;
+  font-weight: 700;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.feat-copy p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 16px;
+  line-height: 1.9;
+  max-width: 42ch;
+}
+
+.feat-stage { position: relative; --feat-ps: .62; }
+.feat-stage .phone-fit { --ps: var(--feat-ps); }
+
+.feat-mascot {
+  position: absolute;
+  z-index: 4;
+  right: -34px;
+  top: 30%;
+  width: min(116px, 14vw);
+  transform: rotate(-6deg);
+  filter: drop-shadow(0 12px 22px rgba(42,55,68,.22));
+}
+
+/* 整理段的滑卡動畫：停留 → 傾斜滑出（蓋保留章）→ 回位 */
+@keyframes pb-swipe {
+  0%, 34%  { transform: rotate(0deg) translateX(0); }
+  48%, 62% { transform: rotate(4.5deg) translateX(30px); }
+  78%      { transform: rotate(14deg) translateX(150%); opacity: 0; }
+  79%      { transform: rotate(0deg) translateX(0); opacity: 0; }
+  92%, 100%{ transform: rotate(0deg) translateX(0); opacity: 1; }
+}
+@keyframes pb-stamp {
+  0%, 40%  { opacity: 0; transform: rotate(-12deg) scale(1.35); }
+  48%, 74% { opacity: 1; transform: rotate(-12deg) scale(1); }
+  78%, 100%{ opacity: 0; }
+}
+.rv-card--anim {
+  transform-origin: 50% 130%;
+  animation: pb-swipe 7s ease-in-out infinite;
+}
+.rv-card--anim .stamp-keep {
+  opacity: 0;
+  animation: pb-stamp 7s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .rv-card--anim { animation: none; transform: rotate(4deg) translateX(26px); }
+  .rv-card--anim .stamp-keep { animation: none; opacity: 1; }
+}
+
+/* ── 隱私承諾 ── */
+
+.promise2 {
+  margin-top: 88px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 64px 0;
+}
+
+.promise2-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 48px;
+}
+
+.promise2 .kicker {
+  font-size: 12px;
+  letter-spacing: .22em;
+  font-weight: 700;
+  color: var(--coral);
+  margin-bottom: 14px;
+}
+
+.promise2 blockquote {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(21px, 3vw, 28px);
+  line-height: 1.65;
+  max-width: 24ch;
+  text-wrap: balance;
+}
+
+.promise2 p {
+  margin: 18px 0 0;
+  color: var(--ink-soft);
+  max-width: 54ch;
+  line-height: 1.9;
+}
+
+.promise2-mascot {
+  width: min(210px, 26vw);
+  filter: drop-shadow(0 16px 30px rgba(42,55,68,.22));
+  justify-self: center;
+}
+
+/* ── 印製預告 ── */
+
+.printtease { padding: 64px 0 88px; }
+
+.printtease-inner {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 28px 34px;
+  box-shadow: var(--shadow);
+}
+
+.printtease-inner img { width: 104px; flex: 0 0 auto; }
+
+.printtease h2 {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+
+.printtease p { margin: 0; color: var(--ink-soft); font-size: 15.5px; }
+
+.soon-tag {
+  display: inline-block;
+  margin-left: 10px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  color: var(--coral);
+  background: var(--coral-wash);
+  padding: 3px 10px;
+  border-radius: 999px;
+  vertical-align: 1px;
+}
+
+/* ── 響應式 ──
+   手機畫面模擬是固定 px 的元件，僅靠 --ps 縮放。 */
+
+@media (max-width: 1040px) {
+  .hero2-stage { --hero-ps: .7; }
+  .feat-stage { --feat-ps: .56; }
+}
+
+@media (max-width: 860px) {
+  .hero2-grid { grid-template-columns: 1fr; gap: 8px; }
+  .hero2-copy { padding-bottom: 8px; text-align: left; }
+  .hero2-stage { justify-self: center; --hero-ps: .62; margin-top: 18px; }
+  .hero2-mascot { left: -30px; width: 128px; }
+
+  .feat { padding-top: 56px; }
+  .feat-grid, .feat--flip .feat-grid { grid-template-columns: 1fr; gap: 24px; }
+  .feat--flip .feat-copy { order: 1; }
+  .feat--flip .feat-stage { order: 2; }
+  .feat-stage { justify-self: center; --feat-ps: .58; }
+  .feat-mascot { right: -18px; width: 96px; }
+
+  .promise2-grid { grid-template-columns: 1fr; }
+  .promise2-mascot { width: 170px; }
+
+  .printtease-inner { flex-direction: column; text-align: center; padding: 26px 22px; }
+}
+
+@media (max-width: 420px) {
+  .hero2-stage { --hero-ps: .52; }
+  .feat-stage { --feat-ps: .5; }
+}
+
+/* 深色主題：手機模擬本身維持 App 淺色外觀（那就是產品的樣子），
+   周邊的紙面與光暈由 style.css 的變數自動翻轉。 */
