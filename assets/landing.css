@@ -1,6 +1,7 @@
 /* ═══════════════════════════════════════════════════════════════════════
-   拍簿官網 — 首頁版面（英雄區 / 痛點 / 功能段 / 隱私 / 印製預告）
-   依賴 style.css（全站基調）與 phone.css（手機畫面模擬元件）。
+   拍簿官網 — 首頁版面 v3
+   結構：Promise（英雄）→ Picture（痛點）→ Proof（實機截圖/影片）→ Push（商店）
+   依賴 style.css（全站基調）與 phone.css（機框 + .scr--img 真截圖螢幕）。
    ═══════════════════════════════════════════════════════════════════════ */
 
 /* ── 英雄區 ── */
@@ -14,8 +15,8 @@
   content: "";
   position: absolute; inset: 0;
   background:
-    radial-gradient(ellipse 60% 46% at 8% 0%, rgba(232,128,110,.12), transparent 70%),
-    radial-gradient(ellipse 62% 52% at 100% 12%, rgba(91,122,146,.12), transparent 70%);
+    radial-gradient(ellipse 56% 44% at 6% 0%, rgba(232,128,110,.14), transparent 70%),
+    radial-gradient(ellipse 60% 52% at 100% 10%, rgba(91,122,146,.13), transparent 70%);
   pointer-events: none;
 }
 
@@ -25,23 +26,41 @@
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 48px;
-  padding-top: 72px;
-  padding-bottom: 0;
+  padding-top: 58px;
 }
 
-.hero2-copy { display: flex; flex-direction: column; gap: 22px; padding-bottom: 72px; }
+.hero2-copy { display: flex; flex-direction: column; gap: 20px; padding-bottom: 64px; }
 
-.hero2-copy .kicker {
-  font-size: 12px;
-  letter-spacing: .2em;
+/* LOGO 鎖定組：App 圖示 + 中文字標 + 拉丁小字 */
+.hero2-lockup {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.hero2-lockup img {
+  width: 64px; height: 64px;
+  border-radius: 16px;
+  box-shadow: 0 2px 4px rgba(42,55,68,.1), 0 12px 26px -10px rgba(42,55,68,.3);
+}
+.hero2-lockup .name {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 1.2;
+}
+.hero2-lockup .latin {
+  display: block;
+  font-size: 11.5px;
+  letter-spacing: .3em;
   color: var(--ink-fade);
-  font-weight: 500;
+  font-family: var(--serif);
+  margin-top: 3px;
 }
 
 .hero2-copy h1 {
   font-family: var(--serif);
-  font-size: clamp(34px, 4.6vw, 52px);
-  line-height: 1.3;
+  font-size: clamp(32px, 4.4vw, 48px);
+  line-height: 1.36;
   font-weight: 700;
   margin: 0;
   letter-spacing: .01em;
@@ -49,45 +68,49 @@
 }
 
 .hero2-copy .lede {
-  font-size: clamp(16px, 1.8vw, 18px);
+  font-size: clamp(16px, 1.8vw, 17.5px);
   color: var(--ink-soft);
   margin: 0;
-  max-width: 44ch;
-  line-height: 1.9;
+  max-width: 42ch;
+  line-height: 1.95;
 }
 
-/* 英雄區的手機：底部出血，像從頁面下緣長出來 */
 .hero2-stage {
   position: relative;
   align-self: end;
-  --hero-ps: .82;
+  --hero-ps: .84;
 }
-.hero2-stage .phone-fit { --ps: var(--hero-ps); height: calc(868px * var(--ps) * .82); }
+.hero2-stage .phone-fit { --ps: var(--hero-ps); height: calc(891px * var(--ps) * .8); }
 .hero2-stage .spark { position: absolute; z-index: 3; }
 .hero2-mascot {
   position: absolute;
   z-index: 4;
-  left: -64px;
+  left: -60px;
   bottom: -6px;
-  width: min(168px, 20vw);
+  width: min(164px, 19vw);
   filter: drop-shadow(0 14px 26px rgba(42,55,68,.24));
 }
 
-/* ── 痛點 ── */
+/* ── 痛點：三段小劇場 ── */
 
-.pains { padding: 72px 0 8px; }
+.pains { padding: 76px 0 10px; }
 
 .sec-h {
   font-family: var(--serif);
   font-size: clamp(24px, 3.2vw, 32px);
   font-weight: 700;
-  margin: 0 0 28px;
+  margin: 0 0 8px;
   text-wrap: balance;
+}
+.sec-sub {
+  margin: 0 0 30px;
+  color: var(--ink-soft);
+  font-size: 15.5px;
 }
 
 .pain-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 18px;
 }
 
@@ -95,30 +118,142 @@
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 20px;
-  padding: 18px 18px 20px;
+  padding: 20px 20px 22px;
   box-shadow: var(--shadow);
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
-.pain-ph {
-  display: block;
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 14px;
-  filter: saturate(.92);
-}
-
-.pain p { margin: 0; font-size: 15px; color: var(--ink-soft); line-height: 1.8; }
+.pain p { margin: 0; font-size: 15px; color: var(--ink-soft); line-height: 1.85; }
 .pain strong { color: var(--ink); font-weight: 700; }
+
+/* 小劇場共用舞台 */
+.pv {
+  position: relative;
+  height: 148px;
+  border-radius: 14px;
+  background: var(--sunken);
+  overflow: hidden;
+}
+
+/* ① 連拍四張，哪張才是最好的？ */
+.pv--burst { display: flex; align-items: center; justify-content: center; gap: 8px; }
+.pv--burst img {
+  width: 62px; height: 62px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 2px solid #fff;
+  box-shadow: 0 4px 10px -4px rgba(42,55,68,.35);
+}
+.pv--burst img:nth-child(2) { transform: rotate(-3deg) translateY(4px); }
+.pv--burst img:nth-child(3) { transform: rotate(2.5deg) translateY(-3px); }
+.pv--burst img:nth-child(4) { transform: rotate(-2deg) translateY(5px); opacity: .78; }
+.pv-q {
+  position: absolute;
+  top: 10px; right: 12px;
+  background: #fff;
+  color: var(--coral);
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 13px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  box-shadow: 0 6px 14px -6px rgba(42,55,68,.35);
+}
+
+/* ② 好照片被淹在截圖和連拍裡 */
+.pv--buried { padding: 12px; }
+.pv--buried .tiles {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 6px;
+  height: 100%;
+}
+.pv--buried .t {
+  border-radius: 7px;
+  background: #E4E7EC;
+  position: relative;
+  overflow: hidden;
+}
+/* 「截圖」磚：淺灰底＋幾條字行 */
+.pv--buried .t--shot::before,
+.pv--buried .t--shot::after {
+  content: "";
+  position: absolute;
+  left: 15%; right: 15%;
+  height: 3px;
+  border-radius: 2px;
+  background: #C6CCD4;
+}
+.pv--buried .t--shot::before { top: 28%; }
+.pv--buried .t--shot::after { top: 50%; right: 38%; }
+.pv--buried .t img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.7) brightness(.96); }
+.pv--buried .t--good {
+  outline: 2.5px solid var(--coral);
+  outline-offset: -2.5px;
+  z-index: 2;
+}
+.pv--buried .t--good img { filter: none; }
+.pv--buried .t--good::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, transparent 46%, rgba(228,231,236,.94) 47%);
+}
+
+/* ③ 空間滿了 */
+.pv--full {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  padding: 0 22px;
+}
+.pv--full .row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+.pv--full .row span:last-child {
+  color: #A83B36;
+  font-variant-numeric: tabular-nums;
+}
+.pv--full .bar {
+  height: 10px;
+  border-radius: 6px;
+  background: #E4E0D6;
+  overflow: hidden;
+}
+.pv--full .bar i {
+  display: block; height: 100%; width: 98%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #E8A971, #D8615C 70%);
+}
+.pv--full .hint {
+  font-size: 12px;
+  color: var(--ink-fade);
+}
+.pv--full .hint b { color: #A83B36; font-weight: 700; }
 
 /* ── 功能段 ── */
 
-.feat { padding: 72px 0 0; }
+.feat { padding: 84px 0 0; position: relative; }
+
+/* 每段一種柔和色相，頁面不再一片素 */
+.feat--blush::before, .feat--blue::before, .feat--emerald::before {
+  content: "";
+  position: absolute; inset: 40px 0 -44px;
+  pointer-events: none;
+}
+.feat--blush::before  { background: radial-gradient(ellipse 62% 66% at 84% 40%, rgba(232,128,110,.09), transparent 70%); }
+.feat--blue::before   { background: radial-gradient(ellipse 62% 66% at 14% 40%, rgba(91,122,146,.10), transparent 70%); }
+.feat--emerald::before{ background: radial-gradient(ellipse 62% 66% at 84% 40%, rgba(109,168,144,.11), transparent 70%); }
 
 .feat-grid {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
@@ -133,14 +268,14 @@
 
 .feat-copy .kicker {
   font-size: 12px;
-  letter-spacing: .22em;
+  letter-spacing: .24em;
   font-weight: 700;
   color: var(--coral);
 }
 
 .feat-copy h2 {
   font-family: var(--serif);
-  font-size: clamp(25px, 3.4vw, 34px);
+  font-size: clamp(26px, 3.5vw, 35px);
   line-height: 1.42;
   font-weight: 700;
   margin: 0;
@@ -151,33 +286,36 @@
   margin: 0;
   color: var(--ink-soft);
   font-size: 16px;
-  line-height: 1.9;
-  max-width: 42ch;
+  line-height: 1.95;
+  max-width: 40ch;
 }
+.feat-copy p b { color: var(--ink); font-weight: 700; }
 
-.feat-stage { position: relative; --feat-ps: .62; }
+.feat-stage { position: relative; --feat-ps: .7; }
 .feat-stage .phone-fit { --ps: var(--feat-ps); }
+.feat-stage .spark { position: absolute; z-index: 4; }
 
 .feat-mascot {
   position: absolute;
-  z-index: 4;
-  right: -34px;
-  top: 30%;
-  width: min(116px, 14vw);
+  z-index: 5;
+  right: -30px;
+  top: -44px;
+  width: min(120px, 15vw);
   transform: rotate(-6deg);
   filter: drop-shadow(0 12px 22px rgba(42,55,68,.22));
 }
 
-/* 相似照片段：UI 特寫卡（真截圖方形裁切）＋浮出膠囊 */
+/* 相似照片段：UI 特寫卡＋浮出膠囊 */
 .feat-stage--panel {
   display: flex; flex-direction: column; align-items: center;
-  width: min(400px, 92vw);
+  width: min(420px, 92vw);
 }
 .feat-panel {
   width: 100%;
   border-radius: 24px;
   overflow: hidden;
   background: var(--surface);
+  border: 1px solid var(--line);
   box-shadow: 0 2px 5px rgba(42,55,68,.08), 0 30px 60px -26px rgba(42,55,68,.4);
 }
 .feat-panel img { display: block; width: 100%; }
@@ -185,6 +323,7 @@
   position: relative; z-index: 5;
   margin-top: -22px;
   background: var(--surface);
+  border: 1px solid var(--line);
   border-radius: 999px;
   padding: 11px 20px;
   font-size: 15px; font-weight: 700;
@@ -192,16 +331,89 @@
   box-shadow: 0 2px 4px rgba(42,55,68,.08), 0 18px 38px -14px rgba(42,55,68,.35);
 }
 
+/* 回憶段：整段收進深色圓角面板（App 沉浸底），實錄影片在其中播放 */
+.feat--dark { padding-top: 96px; }
+.feat--dark .feat-shell {
+  background: linear-gradient(165deg, #24374C 0%, #17273A 60%, #131F2E 100%);
+  border-radius: 32px;
+  padding: 56px 48px;
+  overflow: hidden;
+  position: relative;
+}
+.feat--dark .feat-shell::before {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 86% 0%, rgba(246,196,83,.12), transparent 70%),
+    radial-gradient(ellipse 70% 46% at 6% 100%, rgba(142,174,198,.16), transparent 72%);
+  pointer-events: none;
+}
+.feat--dark .kicker { color: #F6C453; }
+.feat--dark h2 { color: #F4F1EA; }
+.feat--dark p { color: rgba(244,241,234,.78); }
+.feat--dark p b { color: #F4F1EA; }
+.feat--dark .livehint {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 4px;
+  font-size: 13px; font-weight: 700;
+  color: #F6C453;
+}
+.feat--dark .livehint .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #F6C453;
+  animation: pb-pulse 2.2s ease-out infinite;
+}
+@keyframes pb-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(246,196,83,.45); }
+  70% { box-shadow: 0 0 0 9px rgba(246,196,83,0); }
+  100% { box-shadow: 0 0 0 0 rgba(246,196,83,0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .feat--dark .livehint .dot { animation: none; }
+}
+
+.scr--img video.shot {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: top;
+  display: block;
+  background: #0E1218;
+}
+
+/* ── 兩個角落 ── */
+
+.duo { padding: 92px 0 0; }
+.duo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 44px 32px;
+  justify-items: center;
+}
+.duo figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.duo .phone-fit { --ps: .58; }
+.duo figcaption {
+  font-size: 14.5px; color: var(--ink-soft); text-align: center;
+  max-width: 34ch; line-height: 1.75;
+}
+.duo figcaption b { color: var(--ink); }
+
 /* ── 隱私承諾 ── */
 
 .promise2 {
-  margin-top: 88px;
+  margin-top: 96px;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
-  padding: 64px 0;
+  padding: 68px 0;
+  position: relative;
+}
+.promise2::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 88% 50%, rgba(251,221,211,.35), transparent 70%);
+  pointer-events: none;
 }
 
 .promise2-grid {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
@@ -210,7 +422,7 @@
 
 .promise2 .kicker {
   font-size: 12px;
-  letter-spacing: .22em;
+  letter-spacing: .24em;
   font-weight: 700;
   color: var(--coral);
   margin-bottom: 14px;
@@ -240,7 +452,7 @@
 
 /* ── 印製預告 ── */
 
-.printtease { padding: 64px 0 88px; }
+.printtease { padding: 68px 0 92px; }
 
 .printtease-inner {
   display: flex;
@@ -277,26 +489,26 @@
   vertical-align: 1px;
 }
 
-/* ── 響應式 ──
-   手機畫面模擬是固定 px 的元件，僅靠 --ps 縮放。 */
+/* ── 響應式 ── */
 
-@media (max-width: 1040px) {
-  .hero2-stage { --hero-ps: .7; }
-  .feat-stage { --feat-ps: .56; }
+@media (max-width: 1060px) {
+  .hero2-stage { --hero-ps: .72; }
+  .feat-stage { --feat-ps: .62; }
 }
 
-@media (max-width: 860px) {
+@media (max-width: 880px) {
   .hero2-grid { grid-template-columns: 1fr; gap: 8px; }
-  .hero2-copy { padding-bottom: 8px; text-align: left; }
-  .hero2-stage { justify-self: center; --hero-ps: .62; margin-top: 18px; }
-  .hero2-mascot { left: -30px; width: 128px; }
+  .hero2-copy { padding-bottom: 8px; }
+  .hero2-stage { justify-self: center; --hero-ps: .64; margin-top: 16px; }
+  .hero2-mascot { left: -26px; width: 124px; }
 
-  .feat { padding-top: 56px; }
-  .feat-grid, .feat--flip .feat-grid { grid-template-columns: 1fr; gap: 24px; }
+  .feat { padding-top: 64px; }
+  .feat-grid, .feat--flip .feat-grid { grid-template-columns: 1fr; gap: 26px; }
   .feat--flip .feat-copy { order: 1; }
   .feat--flip .feat-stage { order: 2; }
-  .feat-stage { justify-self: center; --feat-ps: .58; }
-  .feat-mascot { right: -18px; width: 96px; }
+  .feat-stage { justify-self: center; --feat-ps: .6; }
+  .feat-mascot { right: -14px; top: -38px; width: 98px; }
+  .feat--dark .feat-shell { padding: 40px 26px; border-radius: 26px; }
 
   .promise2-grid { grid-template-columns: 1fr; }
   .promise2-mascot { width: 170px; }
@@ -304,26 +516,10 @@
   .printtease-inner { flex-direction: column; text-align: center; padding: 26px 22px; }
 }
 
-@media (max-width: 420px) {
-  .hero2-stage { --hero-ps: .52; }
-  .feat-stage { --feat-ps: .5; }
+@media (max-width: 430px) {
+  .hero2-stage { --hero-ps: .54; }
+  .feat-stage { --feat-ps: .52; }
+  .duo .phone-fit { --ps: .5; }
+  .hero2-lockup img { width: 52px; height: 52px; border-radius: 13px; }
+  .hero2-lockup .name { font-size: 22px; }
 }
-
-/* 深色主題：手機模擬本身維持 App 淺色外觀（那就是產品的樣子），
-   周邊的紙面與光暈由 style.css 的變數自動翻轉。 */
-
-/* ── 兩個角落（省空間＋時間軸）── */
-.duo { padding: 88px 0 0; }
-.duo-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 40px 32px;
-  justify-items: center;
-}
-.duo figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 16px; }
-.duo .phone-fit { --ps: .56; }
-.duo figcaption {
-  font-size: 14.5px; color: var(--ink-soft); text-align: center;
-  max-width: 34ch; line-height: 1.7;
-}
-@media (max-width: 480px) { .duo .phone-fit { --ps: .48; } }

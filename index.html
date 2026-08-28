@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>拍簿 Pibook — 釋放快門自由，告別選片焦慮</title>
-<meta name="description" content="拍簿是一款照片整理 App。滑一下就整理好一張：左滑保留、下滑丟進待刪除。相似照自動分組、照片影片壓縮、回憶自動翻給你看 —— 全部在你的手機上完成。">
+<title>拍簿 Pibook — 盡情拍、放心錄，整理與回憶靠拍簿</title>
+<meta name="description" content="拍簿是一款照片整理 App。滑一下就整理好一張、連拍自動挑出最美、空間悄悄回來——全部在你的手機上完成，照片不離開裝置。">
 <meta name="theme-color" content="#FBF7F0" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#171E25" media="(prefers-color-scheme: dark)">
-<meta property="og:title" content="拍簿 Pibook">
-<meta property="og:description" content="釋放快門自由，告別選片焦慮。所有整理都在你的手機上完成，照片不會離開裝置。">
+<meta property="og:title" content="拍簿 Pibook — 盡情拍、放心錄">
+<meta property="og:description" content="整理與回憶靠拍簿。所有整理都在你的手機上完成，照片不離開裝置。">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://pibook.app/">
 <link rel="canonical" href="https://pibook.app/">
@@ -26,6 +26,7 @@
 <header class="site-header">
   <div class="inner">
     <a class="brand" href="/">
+      <img src="/assets/app_icon.png" alt="" style="width:26px;height:26px;border-radius:7px">
       <span class="mark zh">拍簿</span>
       <span class="mark en">Pibook</span>
       <span class="latin zh">Pibook</span>
@@ -39,26 +40,32 @@
 
 <main>
 
-  <!-- ═══ 英雄區 ═══ -->
+  <!-- ═══ 英雄區：Promise ═══ -->
   <section class="hero2">
     <div class="wrap hero2-grid">
       <div class="hero2-copy">
-        <div class="kicker zh">照片整理 · iOS 與 ANDROID</div>
-        <div class="kicker en">PHOTO LIBRARY · iOS &amp; ANDROID</div>
 
-        <h1 class="zh">釋放快門自由，<br>告別選片焦慮</h1>
-        <h1 class="en">Shoot freely.<br>Decide calmly.</h1>
+        <div class="hero2-lockup">
+          <img src="/assets/app_icon.png" alt="拍簿 App 圖示">
+          <div>
+            <div class="name zh">拍簿</div>
+            <div class="name en">Pibook</div>
+            <span class="latin">PIBOOK</span>
+          </div>
+        </div>
+
+        <h1 class="zh">盡情拍、放心錄，<br>整理與回憶靠拍簿</h1>
+        <h1 class="en">Shoot freely, record freely —<br>Pibook keeps it sorted</h1>
 
         <p class="lede zh">
-          滑一下，就整理好一張：左滑保留、下滑丟進待刪除。
-          相似照自動排在一起、照片影片壓縮、回憶自動翻給你看 ——
+          拍的當下不用猶豫，回頭也不必硬著頭皮面對幾千張。
+          滑一下就整理好一張、連拍自動挑出最美、空間悄悄回來 ——
           全部在你的手機上完成。
         </p>
         <p class="lede en">
-          One swipe organises one photo: left to keep, down to the deletion
-          queue. Lookalikes grouped automatically, photos and videos
-          compressed, memories resurfacing on their own — all of it on your
-          phone.
+          Never hesitate at the shutter, never dread the backlog.
+          One swipe sorts one photo, bursts pick their own best shot,
+          storage quietly comes back — all on your phone.
         </p>
 
         <div class="badge-row">
@@ -87,24 +94,62 @@
     </div>
   </section>
 
-  <!-- ═══ 痛點（App 序幕的原句）═══ -->
+  <!-- ═══ 痛點：Picture ═══ -->
   <section class="pains">
     <div class="wrap">
       <h2 class="sec-h zh">但，你可能也有過這種時候</h2>
       <h2 class="sec-h en">Sound familiar?</h2>
+      <p class="sec-sub zh">這些都不是你的錯 —— 是工具一直沒跟上。</p>
+      <p class="sec-sub en">None of this is your fault — the tools just never caught up.</p>
+
       <div class="pain-grid">
         <div class="pain">
-          <img class="pain-ph" src="/assets/pains/pain1.jpg" alt="" loading="lazy">
+          <div class="pv pv--burst">
+            <img src="/assets/pains/burst0.jpg" alt="">
+            <img src="/assets/pains/burst1.jpg" alt="">
+            <img src="/assets/pains/burst2.jpg" alt="">
+            <img src="/assets/pains/burst3.jpg" alt="">
+            <span class="pv-q zh">哪張最好？</span>
+            <span class="pv-q en">Which one?</span>
+          </div>
           <p class="zh">想多拍幾張，又怕回去整理很麻煩 —— 一猶豫，<strong>最好看的那張就沒了</strong>。</p>
           <p class="en">You hold back from shooting more, dreading the cleanup — and in that hesitation, <strong>the best shot is gone</strong>.</p>
         </div>
+
         <div class="pain">
-          <img class="pain-ph" src="/assets/pains/pain2.jpg" alt="" loading="lazy">
+          <div class="pv pv--buried">
+            <div class="tiles">
+              <span class="t t--shot"></span>
+              <span class="t"><img src="/assets/pains/burst1.jpg" alt=""></span>
+              <span class="t t--shot"></span>
+              <span class="t"><img src="/assets/pains/burst2.jpg" alt=""></span>
+              <span class="t t--shot"></span>
+              <span class="t"><img src="/assets/pains/burst0.jpg" alt=""></span>
+              <span class="t"><img src="/assets/pains/burst3.jpg" alt=""></span>
+              <span class="t t--shot"></span>
+              <span class="t t--good"><img src="/assets/pains/good.jpg" alt=""></span>
+              <span class="t t--shot"></span>
+              <span class="t"><img src="/assets/pains/burst2.jpg" alt=""></span>
+              <span class="t t--shot"></span>
+              <span class="t"><img src="/assets/pains/burst0.jpg" alt=""></span>
+              <span class="t t--shot"></span>
+              <span class="t"><img src="/assets/pains/burst1.jpg" alt=""></span>
+              <span class="t t--shot"></span>
+              <span class="t"><img src="/assets/pains/burst3.jpg" alt=""></span>
+              <span class="t t--shot"></span>
+            </div>
+          </div>
           <p class="zh">想刪又捨不得，總想著下次再整理 —— 好照片就這樣<strong>被淹在截圖和連拍裡</strong>。</p>
           <p class="en">Too attached to delete, always "next time" — until the good ones are <strong>buried under screenshots and bursts</strong>.</p>
         </div>
+
         <div class="pain">
-          <img class="pain-ph" src="/assets/pains/pain3.jpg" alt="" loading="lazy">
+          <div class="pv pv--full">
+            <div class="row"><span class="zh">儲存空間</span><span class="en">Storage</span><span>125.7 GB / 128 GB</span></div>
+            <div class="bar"><i></i></div>
+            <p class="hint zh"><b>空間即將用盡</b> —— 無法拍攝新照片</p>
+            <p class="hint en"><b>Almost full</b> — can't take new photos</p>
+          </div>
           <p class="zh">拍完就放著，<strong>再也沒打開過</strong> —— 直到空間滿了，才被逼著刪掉幾張。</p>
           <p class="en">Shot and shelved, <strong>never opened again</strong> — until storage runs out and forces a purge.</p>
         </div>
@@ -113,7 +158,7 @@
   </section>
 
   <!-- ═══ 功能一：整理 ═══ -->
-  <section class="feat">
+  <section class="feat feat--blush">
     <div class="wrap feat-grid">
       <div class="feat-copy">
         <div class="kicker zh">整理</div>
@@ -121,39 +166,41 @@
         <h2 class="zh">滑一下，<br>就整理好一張</h2>
         <h2 class="en">One swipe,<br>one photo sorted</h2>
         <p class="zh">
-          左滑保留、下滑丟進待刪除。照片會先放在待刪除，
-          你確認之前都不會真的刪掉；滑錯了，往右滑就能撤回。
+          左滑留下、下滑先放進<b>待刪除</b> —— 你確認之前，
+          一張都不會真的刪。滑錯了？往右一滑就回來。
         </p>
         <p class="en">
-          Swipe left to keep, down for the deletion queue. Nothing is really
-          deleted until you confirm — and a swipe right undoes the last call.
+          Swipe left to keep, down to the <b>deletion queue</b> —
+          nothing is really deleted until you say so.
+          Slipped? A swipe right brings it back.
         </p>
       </div>
       <div class="feat-stage">
+        <svg class="spark" style="left:-8%;top:6%" width="22" height="22" viewBox="0 0 24 24"><path d="M12 0C13 7 17 11 24 12 17 13 13 17 12 24 11 17 7 13 0 12 7 11 11 7 12 0Z" fill="#F6C453"/></svg>
         <div class="phone-fit"><div class="phone"><div class="scr scr--img">
-          <img class="shot" src="/assets/shots/review.jpg" alt="整理畫面：卡片往左滑到一半，浮出保留印章" loading="lazy">
+          <img class="shot" src="/assets/shots/review.jpg" alt="整理畫面：照片往左滑到一半，浮出保留印章，下方是相簿列與操作列" loading="lazy">
         </div></div></div>
       </div>
     </div>
   </section>
 
-  <!-- ═══ 功能二：相似照片（UI 特寫）═══ -->
-  <section class="feat feat--flip">
+  <!-- ═══ 功能二：相似照片 ═══ -->
+  <section class="feat feat--blue feat--flip">
     <div class="wrap feat-grid">
       <div class="feat-copy">
         <div class="kicker zh">相似照片</div>
         <div class="kicker en">SIMILAR PHOTOS</div>
-        <h2 class="zh">相似照片，<br>自動幫你找出來</h2>
-        <h2 class="en">Lookalikes,<br>found for you</h2>
+        <h2 class="zh">連拍裡最美的那張，<br>幫你挑好了</h2>
+        <h2 class="en">The best of every burst,<br>already picked</h2>
         <p class="zh">
-          連拍、重拍、同一個畫面拍好幾張，拍簿會自動分成一組。
-          你只要點想留的，其餘自動淘汰 ——
-          不必一張張想「這張到底該不該刪」。
+          相像的自動排成一組，日期、大小標得清清楚楚。
+          點想留的就好，<b>其餘自動淘汰</b> ——
+          「這張到底刪不刪」的糾結，到今天為止。
         </p>
         <p class="en">
-          Bursts, retakes, five versions of the same scene — Pibook groups
-          them automatically. Tap the ones worth keeping; the rest are
-          cleared for you. No more photo-by-photo agonising.
+          Lookalikes line up in groups, dates and sizes laid bare.
+          Tap what stays; <b>the rest clears itself</b>.
+          The photo-by-photo agonising ends today.
         </p>
       </div>
       <div class="feat-stage feat-stage--panel">
@@ -170,7 +217,7 @@
   </section>
 
   <!-- ═══ 功能三：壓縮 ═══ -->
-  <section class="feat">
+  <section class="feat feat--emerald">
     <div class="wrap feat-grid">
       <div class="feat-copy">
         <div class="kicker zh">照片與影片壓縮</div>
@@ -178,16 +225,18 @@
         <h2 class="zh">照片都還在，<br>只是不那麼佔位子</h2>
         <h2 class="en">Same photos,<br>a fraction of the space</h2>
         <p class="zh">
-          目標大小自己挑，開始之前就告訴你能省多少，肉眼幾乎無感。
-          影片最吃空間，也最容易瘦下來。
+          先告訴你會省多少，再由你決定壓不壓；
+          畫質差別，肉眼幾乎找不到。
+          <b>影片最吃空間，也最容易瘦下來。</b>
         </p>
         <p class="en">
-          Pick a target size and see the savings before you commit —
-          differences the eye can barely find. Videos take the most room
-          and slim down the easiest.
+          See the savings before you decide; the difference is nearly
+          impossible to spot. <b>Videos take the most room — and slim
+          down the easiest.</b>
         </p>
       </div>
       <div class="feat-stage">
+        <svg class="spark" style="right:-6%;top:8%" width="20" height="20" viewBox="0 0 24 24"><path d="M12 0C13 7 17 11 24 12 17 13 13 17 12 24 11 17 7 13 0 12 7 11 11 7 12 0Z" fill="#F6C453"/></svg>
         <div class="phone-fit"><div class="phone"><div class="scr scr--img">
           <img class="shot" src="/assets/shots/compress.jpg" alt="照片壓縮：目標大小滑桿，預估省下 24%" loading="lazy">
         </div></div></div>
@@ -195,33 +244,44 @@
     </div>
   </section>
 
-  <!-- ═══ 功能四：回憶 ═══ -->
-  <section class="feat feat--flip">
-    <div class="wrap feat-grid">
-      <div class="feat-copy">
-        <div class="kicker zh">回憶</div>
-        <div class="kicker en">MEMORIES</div>
-        <h2 class="zh">像滑短影音一樣<br>回味那些日子</h2>
-        <h2 class="en">Relive your days,<br>one flick at a time</h2>
-        <p class="zh">
-          三年前的今天拍了什麼，自動翻給你看。滑過即整理 ——
-          回味的同時，相簿也慢慢變乾淨。
-        </p>
-        <p class="en">
-          What this day looked like three years ago, resurfaced on its own.
-          Every flick counts as organising — your library tidies itself
-          while you reminisce.
-        </p>
-      </div>
-      <div class="feat-stage">
-        <div class="phone-fit"><div class="phone"><div class="scr scr--img">
-          <img class="shot" src="/assets/shots/memory.jpg" alt="回憶：三年前的今天，全螢幕翻看" loading="lazy">
-        </div></div></div>
+  <!-- ═══ 功能四：回憶（實錄影片）═══ -->
+  <section class="feat feat--dark">
+    <div class="wrap">
+      <div class="feat-shell">
+        <div class="feat-grid feat--flip-inner">
+          <div class="feat-stage">
+            <div class="phone-fit"><div class="phone"><div class="scr scr--img">
+              <video class="shot" id="memoryDemo"
+                     src="/assets/shots/memory_demo.mp4"
+                     poster="/assets/shots/memory.jpg"
+                     muted loop playsinline preload="metadata"
+                     aria-label="實機錄製：像滑短影音一樣往下滑，一則一則翻看回憶"></video>
+            </div></div></div>
+          </div>
+          <div class="feat-copy">
+            <div class="kicker zh">回憶</div>
+            <div class="kicker en">MEMORIES</div>
+            <h2 class="zh">留下的照片，<br>會自己回來找你</h2>
+            <h2 class="en">The photos you keep<br>come back to find you</h2>
+            <p class="zh">
+              三年前的今天拍了什麼，自動翻給你看。
+              像滑短影音一樣一則接一則 —— <b>滑過即整理</b>，
+              回味的同時，相簿也慢慢變乾淨。
+            </p>
+            <p class="en">
+              What this day looked like years ago, resurfaced on its own.
+              Flick through like shorts — <b>every flick counts as
+              organising</b>, so your library tidies itself while you
+              reminisce.
+            </p>
+            <span class="livehint"><span class="dot"></span><span class="zh">實機錄製 · 真實操作</span><span class="en">RECORDED ON DEVICE</span></span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ═══ 兩個角落：省空間與時間軸 ═══ -->
+  <!-- ═══ 兩個角落 ═══ -->
   <section class="duo">
     <div class="wrap">
       <h2 class="sec-h zh">相簿的全貌，一眼看懂</h2>
@@ -231,15 +291,15 @@
           <div class="phone-fit"><div class="phone"><div class="scr scr--img">
             <img class="shot" src="/assets/shots/space.jpg" alt="省空間分頁：相似、壓縮、截圖、空相簿等工具" loading="lazy">
           </div></div></div>
-          <figcaption class="zh">省空間 —— 相似、壓縮、截圖、空相簿，哪裡能省一排看完</figcaption>
-          <figcaption class="en">Save Space — similar, compression, screenshots and empty albums in one list</figcaption>
+          <figcaption class="zh"><b>省空間</b> —— 相似、壓縮、截圖、空相簿，哪裡能省一排看完</figcaption>
+          <figcaption class="en"><b>Save Space</b> — similar, compression, screenshots and empty albums in one list</figcaption>
         </figure>
         <figure>
           <div class="phone-fit"><div class="phone"><div class="scr scr--img">
             <img class="shot" src="/assets/shots/timeline.jpg" alt="時間軸分頁：一年一年翻回去" loading="lazy">
           </div></div></div>
-          <figcaption class="zh">時間軸 —— 一年一年翻回去，整理進度一目瞭然</figcaption>
-          <figcaption class="en">Timeline — scroll back year by year, progress in plain sight</figcaption>
+          <figcaption class="zh"><b>時間軸</b> —— 一年一年翻回去，整理進度一目瞭然</figcaption>
+          <figcaption class="en"><b>Timeline</b> — scroll back year by year, progress in plain sight</figcaption>
         </figure>
       </div>
     </div>
@@ -312,5 +372,30 @@
 </footer>
 
 <script src="/assets/lang.js"></script>
+<script>
+/* 回憶實錄影片：進入視窗才播、離開就停；使用者偏好減少動態時改成靜態海報。 */
+(function () {
+  var v = document.getElementById('memoryDemo');
+  if (!v) return;
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var img = document.createElement('img');
+    img.className = 'shot';
+    img.src = v.getAttribute('poster');
+    img.alt = v.getAttribute('aria-label') || '';
+    v.replaceWith(img);
+    return;
+  }
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (e.isIntersecting) { v.play().catch(function () {}); }
+        else { v.pause(); }
+      });
+    }, { threshold: 0.25 }).observe(v);
+  } else {
+    v.autoplay = true; v.play().catch(function () {});
+  }
+})();
+</script>
 </body>
 </html>
