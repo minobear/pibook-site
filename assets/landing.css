@@ -370,6 +370,7 @@
   box-shadow: 0 2px 5px rgba(42,55,68,.08), 0 30px 60px -26px rgba(42,55,68,.4);
 }
 .feat-panel img { display: block; width: 100%; }
+.feat-chip--green { color: var(--green, #3F7A63); }
 .feat-chip {
   position: relative; z-index: 5;
   margin-top: -22px;
