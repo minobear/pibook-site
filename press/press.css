@@ -8,7 +8,7 @@
 
 * { box-sizing: border-box; margin: 0; }
 
-html, body { width: 100%; height: 100%; }
+html, body { width: 100%; height: 100%; overflow: hidden; }
 
 body {
   font-family: var(--pb-sans);
@@ -87,6 +87,9 @@ h1 {
 
 .sub {
   margin-top: 12px;
+  max-width: 340px;
+  margin-left: auto;
+  margin-right: auto;
   font-size: 15.5px;
   line-height: 1.7;
   color: var(--pb-ink-soft);
@@ -101,6 +104,8 @@ h1 {
   z-index: 2;
   flex: 1;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   display: flex;
   justify-content: center;
   margin-top: 20px;
@@ -148,17 +153,6 @@ h1 {
 .brandline img { width: 22px; height: 22px; border-radius: 6px; }
 .board--night .brandline { color: rgba(244,241,234,.72); }
 
-/* ── Google Play 9:16（360×640 視窗）──
-   畫布矮很多：字縮一階、手機縮小並讓底部出血。 */
-@media (max-height: 700px) {
-  .copy { padding-top: 34px; padding-left: 22px; padding-right: 22px; }
-  .kicker { font-size: 11px; margin-bottom: 9px; }
-  h1 { font-size: 27.5px; }
-  .sub { font-size: 12px; margin-top: 8px; }
-  .stage { margin-top: 16px; }
-  .stage .phone-fit { --ps: .56; }
-  .brandline { display: none; }
-}
 
 /* ── 封面品牌列 ── */
 .brand-top {
@@ -187,28 +181,15 @@ h1 {
 .check-row svg { flex: 0 0 auto; }
 .check-row small { display: block; font-size: 12px; font-weight: 500; color: var(--pb-ink-soft); margin-top: 2px; }
 
-@media (max-height: 700px) {
-  .brand-top { padding-top: 26px; }
-  .brand-top img { width: 34px; height: 34px; }
-  .brand-top .wm { font-size: 19px; }
-  .checks { gap: 9px; margin-top: 18px; width: min(300px, 84vw); }
-  .check-row { padding: 11px 14px; font-size: 13px; border-radius: 14px; }
-  .check-row small { font-size: 10.5px; }
-}
 
 /* ── UI 特寫板（不帶機框的放大細節，商店慣用板式）── */
 .uipanel {
   position: relative; z-index: 2;
-  width: min(384px, 92vw);
+  width: min(384px, calc(100vw - 44px));
   border-radius: 26px;
   overflow: hidden;
   box-shadow: 0 2px 5px rgba(42,55,68,.08), 0 34px 70px -26px rgba(42,55,68,.45);
   background: #fff;
 }
 .uipanel img { display: block; width: 100%; }
-.stage--panel { flex-direction: column; align-items: center; gap: 0; }
-@media (max-height: 700px) {
-  .uipanel { width: min(302px, 86vw); border-radius: 18px; }
-  .stage--panel .mascot { display: none; }
-  .float-chip { font-size: 12.5px; padding: 9px 15px; }
-}
+.stage--panel { flex-direction: column; align-items: center; justify-content: flex-start; gap: 0; }
