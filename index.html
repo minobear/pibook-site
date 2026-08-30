@@ -47,14 +47,6 @@
     <div class="wrap hero2-grid">
       <div class="hero2-copy">
 
-        <div class="hero2-lockup rise rise-1">
-          <img src="/assets/app_icon.png" alt="拍簿 App 圖示">
-          <div>
-            <div class="name zh">拍簿</div>
-            <div class="name en">Pibook</div>
-            <span class="latin">PIBOOK</span>
-          </div>
-        </div>
 
         <h1 class="zh"><span class="l1 rise rise-1">盡情拍、放心錄</span><span class="l2 rise rise-2"><span class="hl hl--blush">整理</span>與<span class="hl hl--blue">回憶</span>，靠<span class="brandword">拍簿</span></span></h1>
         <h1 class="en"><span class="l1 rise rise-1">Shoot freely, record freely</span><span class="l2 rise rise-2"><span class="hl hl--blush">Sorting</span> and <span class="hl hl--blue">reliving</span> — that's <span class="brandword">Pibook</span></span></h1>
@@ -84,6 +76,7 @@
           <span class="zh">iOS 與 Android 兩個版本正在上架準備中。</span>
           <span class="en">iOS and Android versions are in store review preparation.</span>
         </p>
+      </div>
 
       <div class="hero2-stage rise rise-5">
         <svg class="spark" style="left:-4%;top:4%" width="26" height="26" viewBox="0 0 24 24"><path d="M12 0C13 7 17 11 24 12 17 13 13 17 12 24 11 17 7 13 0 12 7 11 11 7 12 0Z" fill="#F6C453"/></svg>
@@ -199,8 +192,75 @@
     </div>
   </section>
 
-  <!-- ═══ 功能二：相似照片 ═══ -->
+  <!-- ═══ 功能二：歸檔（實錄操作）═══ -->
   <section class="feat feat--blue feat--flip">
+    <div class="wrap feat-grid">
+      <div class="feat-stage">
+        <div class="phone-fit"><div class="phone"><div class="scr scr--img">
+          <video class="shot demo-video" src="/assets/shots/album_demo.mp4"
+                 poster="/assets/shots/album_poster.jpg"
+                 muted loop playsinline preload="metadata"
+                 aria-label="實機操作：點一下相簿軌就把照片收進相簿，也可以打開完整清單挑"></video>
+        </div></div></div>
+      </div>
+      <div class="feat-copy">
+        <div class="kicker zh">歸檔</div>
+        <div class="kicker en">FILING</div>
+        <h2 class="zh">順手一點，<br>照片就進相簿了</h2>
+        <h2 class="en">A tap away<br>from an album</h2>
+        <p class="zh">
+          常用的相簿就排在拇指旁邊。<b>點一下就收進去</b>，卡片自動換下一張 ——
+          不用退出整理、不用多選、不用長按。想找別的相簿，點「更多相簿」
+          翻完整清單，也可以當場開一本新的。
+        </p>
+        <p class="en">
+          Your go-to albums sit right by your thumb. <b>One tap files the photo</b>
+          and the next card slides in — no backing out, no multi-select, no long
+          press. Need a different one? Open “More albums” for the full list, or
+          create one on the spot.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 功能三：回憶（實錄影片）═══ -->
+  <section class="feat feat--dark">
+    <div class="wrap">
+      <div class="feat-shell">
+        <div class="feat-grid feat--flip-inner">
+          <div class="feat-stage">
+            <div class="phone-fit"><div class="phone"><div class="scr scr--img">
+              <video class="shot demo-video" id="memoryDemo"
+                     src="/assets/shots/memory_demo.mp4"
+                     poster="/assets/shots/memory.jpg"
+                     muted loop playsinline preload="metadata"
+                     aria-label="像滑短影音一樣往下滑，一則一則翻看自己拍過的影片"></video>
+            </div></div></div>
+          </div>
+          <div class="feat-copy">
+            <div class="kicker zh">回憶</div>
+            <div class="kicker en">MEMORIES</div>
+            <h2 class="zh">留下的照片，<br>會自己回來找你</h2>
+            <h2 class="en">The photos you keep<br>come back to find you</h2>
+            <p class="zh">
+              三年前的今天拍了什麼，自動翻給你看 —— 影片會直接播起來。
+              像滑短影音一樣一則接一則，<b>滑過即整理</b>，
+              回味的同時，相簿也慢慢變乾淨。
+            </p>
+            <p class="en">
+              What this day looked like years ago, resurfaced on its own —
+              videos start playing right away. Flick through like shorts;
+              <b>every flick counts as organising</b>, so your library
+              tidies itself while you reminisce.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 功能四：相似照片 ═══ -->
+  <section class="feat feat--blush">
     <div class="wrap feat-grid">
       <div class="feat-copy">
         <div class="kicker zh">相似照片</div>
@@ -231,7 +291,7 @@
     </div>
   </section>
 
-  <!-- ═══ 功能三：壓縮 ═══ -->
+  <!-- ═══ 功能五：壓縮 ═══ -->
   <section class="feat feat--emerald">
     <div class="wrap feat-grid">
       <div class="feat-copy">
@@ -259,7 +319,7 @@
     </div>
   </section>
 
-  <!-- ═══ 功能四：圖庫 ═══ -->
+  <!-- ═══ 功能六：圖庫 ═══ -->
   <section class="feat feat--blue feat--flip">
     <div class="wrap feat-grid">
       <div class="feat-copy">
@@ -301,41 +361,6 @@
     </div>
   </section>
 
-  <!-- ═══ 功能五：回憶（實錄影片）═══ -->
-  <section class="feat feat--dark">
-    <div class="wrap">
-      <div class="feat-shell">
-        <div class="feat-grid feat--flip-inner">
-          <div class="feat-stage">
-            <div class="phone-fit"><div class="phone"><div class="scr scr--img">
-              <video class="shot demo-video" id="memoryDemo"
-                     src="/assets/shots/memory_demo.mp4"
-                     poster="/assets/shots/memory.jpg"
-                     muted loop playsinline preload="metadata"
-                     aria-label="實機錄製：像滑短影音一樣往下滑，一則一則翻看回憶"></video>
-            </div></div></div>
-          </div>
-          <div class="feat-copy">
-            <div class="kicker zh">回憶</div>
-            <div class="kicker en">MEMORIES</div>
-            <h2 class="zh">留下的照片，<br>會自己回來找你</h2>
-            <h2 class="en">The photos you keep<br>come back to find you</h2>
-            <p class="zh">
-              三年前的今天拍了什麼，自動翻給你看 —— 影片會直接播起來。
-              像滑短影音一樣一則接一則，<b>滑過即整理</b>，
-              回味的同時，相簿也慢慢變乾淨。
-            </p>
-            <p class="en">
-              What this day looked like years ago, resurfaced on its own —
-              videos start playing right away. Flick through like shorts;
-              <b>every flick counts as organising</b>, so your library
-              tidies itself while you reminisce.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- ═══ 隱私承諾 ═══ -->
   <section class="promise2">

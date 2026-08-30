@@ -117,14 +117,16 @@
 }
 .hero2-stage .phone-fit { --ps: var(--hero-ps); height: calc(891px * var(--ps) * .8); }
 .hero2-stage .spark { position: absolute; z-index: 3; }
-/* 吉祥物站在英雄區的地面上。舊版 bottom:-6px 加上 .hero2 的
-   overflow:hidden，腳底會被區塊下緣切掉（使用者回報）。
+/* 吉祥物坐在英雄區的地面線上（.hero2-stage 的底就是區塊底）。
+   舊版 bottom:-6px 加上 .hero2 的 overflow:hidden，腳底會被切掉。
    手機圖故意出題外、吉祥物不行——它是完整的形體。 */
 .hero2-mascot {
   position: absolute;
   z-index: 4;
-  left: -60px;
-  bottom: calc(-1 * var(--hero-floor));
+  /* 往左退到只剩肩膀搭在手機邊上 —— 再往右就會蓋掉「今天 33」那張卡，
+     而那個數字正是這張圖要講的事。 */
+  left: -108px;
+  bottom: 0;
   width: min(164px, 19vw);
   filter: drop-shadow(0 14px 26px rgba(42,55,68,.24));
 }
@@ -205,14 +207,17 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  height: 54px;
-  padding: 0 17px 0 14px;
-  border-radius: 9px;
+  height: 56px;
+  padding: 0 18px 0 15px;
+  border-radius: 10px;
+  /* 官方徽章在深色背景上帶一道白色細框 —— 少了它會糊進背景，看起來像
+     隨手畫的黑色方塊而不是商店徽章。 */
+  border: 1px solid rgba(255,255,255,.26);
   background: #000;
   color: #fff;
   -webkit-user-select: none;
   user-select: none;
-  box-shadow: 0 1px 2px rgba(20,26,32,.24), 0 12px 24px -14px rgba(20,26,32,.75);
+  box-shadow: 0 1px 2px rgba(20,26,32,.28), 0 14px 28px -16px rgba(0,0,0,.9);
 }
 .store-badge .sb-glyph { width: 26px; height: 26px; flex: none; }
 .store-badge--play .sb-glyph { width: 23px; height: 23px; }
