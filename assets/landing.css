@@ -152,16 +152,24 @@
 }
 .lg-dot--keep { background: #5B7A92; }
 .lg-dot--drop { background: #E8806E; }
+/* 圖例的相簿戳記要跟圖庫格子上看到的**完全一樣**（含相簿圖示）——
+   少了圖示，使用者對不起來這條在指畫面上的哪個東西。 */
 .lg-badge {
   display: inline-flex; align-items: center; justify-content: center;
-  min-width: 22px; height: 18px;
-  padding: 0 6px;
-  border-radius: 9px;
+  gap: 3px;
+  min-width: 22px; height: 19px;
+  padding: 0 6px 0 5px;
+  border-radius: 9.5px;
   background: rgba(20,26,32,.78);
   color: #fff;
   font-size: 11.5px;
   font-weight: 600;
   flex: none;
+}
+.lg-badge svg {
+  width: 11px; height: 11px;
+  fill: currentColor;
+  display: block;
 }
 
 .mark-closeup {
@@ -660,4 +668,74 @@
   .feat-stage { --feat-ps: .52; }
   .hero2-lockup img { width: 52px; height: 52px; border-radius: 13px; }
   .hero2-lockup .name { font-size: 22px; }
+}
+
+/* ── 一進來就懂：三句話取代原本的痛點小劇場 ──
+   舊版是三張插畫卡＋三段情境文，讀完要花力氣，而真正能說服人的是「實際畫面」。
+   這一段只留下「它替你做哪三件事」，把第一支實機錄影往上拉一整屏。 */
+
+.quickstrip {
+  padding: 58px 0 8px;
+}
+.qs-lead {
+  margin: 0 auto 26px;
+  max-width: 620px;
+  text-align: center;
+  font-size: 17px;
+  line-height: 1.85;
+  color: var(--ink-soft);
+}
+.qs-lead b { color: var(--ink); font-weight: 700; }
+
+.qs-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.qs-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 22px 20px 24px;
+  border-radius: 20px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  box-shadow: 0 1px 2px rgba(42,55,68,.04), 0 16px 34px -26px rgba(42,55,68,.4);
+}
+.qs-n {
+  font-family: var(--serif);
+  font-size: 12px;
+  letter-spacing: .16em;
+  color: var(--accent);
+  font-weight: 700;
+}
+.qs-t {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--ink);
+}
+.qs-d {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--ink-fade);
+}
+.qs-foot {
+  margin: 24px auto 0;
+  max-width: 640px;
+  text-align: center;
+  font-size: 13.5px;
+  color: var(--ink-fade);
+}
+
+@media (max-width: 720px) {
+  .quickstrip { padding-top: 44px; }
+  .qs-lead { font-size: 15.5px; margin-bottom: 20px; }
+  .qs-list { grid-template-columns: 1fr; gap: 11px; }
+  .qs-list li { padding: 18px 17px 19px; border-radius: 17px; }
+  .qs-t { font-size: 17.5px; }
 }
