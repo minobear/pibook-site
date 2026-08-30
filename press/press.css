@@ -111,7 +111,11 @@ h1 {
   margin-top: 20px;
 }
 
-.stage .phone-fit { --ps: .74; }
+/* 手機縮到整支放得進畫布 —— 舊值 .74 會讓底部操作列（撤回／最愛／丟棄／下一張）
+   與首頁的「整理方式」被畫布下緣切一半，Google Play 那張特別明顯。
+   出血只留給「這張圖本來就講不完」的情況，重點元件不可以被切。 */
+.stage .phone-fit { --ps: .615; }
+.stage { padding-bottom: 34px; align-items: flex-start; }
 
 /* 浮出畫面的重點膠囊 */
 .float-chip {
