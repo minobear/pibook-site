@@ -27,9 +27,11 @@
   align-items: center;
   gap: 48px;
   padding-top: 58px;
+  /* 文案欄的下留白同時是「地面線」：英雄區下緣與吉祥物腳底都對到它。 */
+  --hero-floor: 64px;
 }
 
-.hero2-copy { display: flex; flex-direction: column; gap: 20px; padding-bottom: 64px; }
+.hero2-copy { display: flex; flex-direction: column; gap: 20px; padding-bottom: var(--hero-floor); }
 
 /* LOGO 鎖定組：App 圖示 + 中文字標 + 拉丁小字 */
 .hero2-lockup {
@@ -115,13 +117,129 @@
 }
 .hero2-stage .phone-fit { --ps: var(--hero-ps); height: calc(891px * var(--ps) * .8); }
 .hero2-stage .spark { position: absolute; z-index: 3; }
+/* 吉祥物站在英雄區的地面上。舊版 bottom:-6px 加上 .hero2 的
+   overflow:hidden，腳底會被區塊下緣切掉（使用者回報）。
+   手機圖故意出題外、吉祥物不行——它是完整的形體。 */
 .hero2-mascot {
   position: absolute;
   z-index: 4;
   left: -60px;
-  bottom: -6px;
+  bottom: calc(-1 * var(--hero-floor));
   width: min(164px, 19vw);
   filter: drop-shadow(0 14px 26px rgba(42,55,68,.24));
+}
+
+/* ── 圖庫：整理標記的圖例與放大特寫 ── */
+
+.mark-legend {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  font-size: 14.5px;
+  color: var(--ink-soft);
+}
+.mark-legend li { display: inline-flex; align-items: center; gap: 8px; }
+.lg-dot {
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2.5px rgba(255,255,255,.9), 0 1px 3px rgba(42,55,68,.35);
+  flex: none;
+}
+.lg-dot--keep { background: #5B7A92; }
+.lg-dot--drop { background: #E8806E; }
+.lg-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 22px; height: 18px;
+  padding: 0 6px;
+  border-radius: 9px;
+  background: rgba(20,26,32,.78);
+  color: #fff;
+  font-size: 11.5px;
+  font-weight: 600;
+  flex: none;
+}
+
+.mark-closeup {
+  margin: 34px 0 0;
+  text-align: center;
+}
+.mark-closeup img {
+  display: block;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  box-shadow: 0 2px 6px rgba(42,55,68,.08), 0 24px 48px -28px rgba(42,55,68,.45);
+}
+.mark-closeup figcaption {
+  margin-top: 12px;
+  font-size: 13.5px;
+  color: var(--ink-fade);
+}
+
+/* 內文連結：跟著區塊的文字色，不要用瀏覽器預設的蓝。 */
+.promise2 p a,
+.feat-copy p a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgba(232,128,110,.65);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1.5px;
+}
+.promise2 p a:hover,
+.feat-copy p a:hover { text-decoration-color: var(--coral); }
+
+/* ── 商店徽章（依 Apple / Google 官方徽章的黑底規格）── */
+
+.badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 4px;
+}
+.store-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 54px;
+  padding: 0 17px 0 14px;
+  border-radius: 9px;
+  background: #000;
+  color: #fff;
+  -webkit-user-select: none;
+  user-select: none;
+  box-shadow: 0 1px 2px rgba(20,26,32,.24), 0 12px 24px -14px rgba(20,26,32,.75);
+}
+.store-badge .sb-glyph { width: 26px; height: 26px; flex: none; }
+.store-badge--play .sb-glyph { width: 23px; height: 23px; }
+.sb-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+.sb-text small {
+  font-size: 9.5px;
+  font-weight: 400;
+  letter-spacing: .01em;
+  opacity: .95;
+}
+.store-badge--play .sb-text small { font-size: 9px; letter-spacing: .13em; }
+.sb-text strong {
+  font-size: 19.5px;
+  font-weight: 500;
+  letter-spacing: .005em;
+  margin-top: 4px;
+}
+.badge-note {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink-fade);
 }
 
 /* ── 痛點：三段小劇場 ── */
