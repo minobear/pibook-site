@@ -1,0 +1,21 @@
+{
+  "name": "pibook-app-preview",
+  "version": "1.0.0",
+  "private": true,
+  "description": "拍簿 App Store / Google Play 預覽影片（Remotion）",
+  "scripts": {
+    "studio": "remotion studio",
+    "render:ios": "remotion render AppPreviewIOS out/app_preview_ios.mp4",
+    "render:play": "remotion render AppPreviewPlay out/app_preview_1080.mp4"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.410",
+    "@remotion/google-fonts": "^4.0.410",
+    "@remotion/media-utils": "4.0.410",
+    "@remotion/shapes": "4.0.410",
+    "@remotion/transitions": "4.0.410",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "remotion": "4.0.410"
+  }
+}
