@@ -13,12 +13,16 @@
 </head>
 <body data-lang="zh">
 
+<!-- @partial:header -->
 <header class="site-header">
   <div class="inner">
     <a class="brand" href="/">
-      <span class="mark zh">拍簿</span>
-      <span class="mark en">Pibook</span>
-      <span class="latin zh">Pibook</span>
+      <img class="brand-logo" src="/assets/app_icon.png" alt="" aria-hidden="true">
+      <span class="brand-words">
+        <span class="mark zh">拍簿</span>
+        <span class="mark en">Pibook</span>
+        <span class="latin zh">PIBOOK</span>
+      </span>
     </a>
     <div class="lang-toggle">
       <button type="button" data-lang="zh" aria-pressed="true">繁體中文</button>
@@ -26,6 +30,7 @@
     </div>
   </div>
 </header>
+<!-- @/partial:header -->
 
 <main class="doc">
   <div class="doc-head">
@@ -38,22 +43,40 @@
 
   <ul>
     <li><a href="/"><span class="zh">首頁</span><span class="en">Home</span></a></li>
-    <li><a href="/privacy.html"><span class="zh">隱私權政策</span><span class="en">Privacy Policy</span></a></li>
-    <li><a href="/terms.html"><span class="zh">服務條款</span><span class="en">Terms of Use</span></a></li>
-    <li><a href="/support.html"><span class="zh">支援與常見問題</span><span class="en">Support and FAQ</span></a></li>
-    <li><a href="/delete-account.html"><span class="zh">刪除帳號</span><span class="en">Delete Account</span></a></li>
+    <li><a href="/privacy/"><span class="zh">隱私權政策</span><span class="en">Privacy Policy</span></a></li>
+    <li><a href="/terms/"><span class="zh">服務條款</span><span class="en">Terms of Use</span></a></li>
+    <li><a href="/support/"><span class="zh">支援與常見問題</span><span class="en">Support and FAQ</span></a></li>
+    <li><a href="/delete-account/"><span class="zh">刪除帳號</span><span class="en">Delete Account</span></a></li>
   </ul>
 </main>
 
+<!-- @partial:footer -->
 <footer class="site-footer">
   <div class="inner">
     <nav>
       <a href="/"><span class="zh">首頁</span><span class="en">Home</span></a>
-      <a href="/support.html"><span class="zh">支援</span><span class="en">Support</span></a>
+      <a href="/privacy/"><span class="zh">隱私權政策</span><span class="en">Privacy Policy</span></a>
+      <a href="/terms/"><span class="zh">服務條款</span><span class="en">Terms of Use</span></a>
+      <a href="/support/"><span class="zh">支援</span><span class="en">Support</span></a>
+      <a href="/delete-account/"><span class="zh">刪除帳號</span><span class="en">Delete Account</span></a>
     </nav>
-    <div class="legal">© 2026 Pibook.</div>
+    <div class="legal">
+      <span class="zh">
+        八西歐科技有限公司<br>
+        統一編號 60773047<br>
+        support@pibook.app<br>
+        © 2026 Pibook. 保留一切權利。
+      </span>
+      <span class="en">
+        8CO Technology Co., Ltd.<br>
+        Tax ID 60773047<br>
+        support@pibook.app<br>
+        © 2026 Pibook. All rights reserved.
+      </span>
+    </div>
   </div>
 </footer>
+<!-- @/partial:footer -->
 
 <script src="/assets/lang.js"></script>
 </body>

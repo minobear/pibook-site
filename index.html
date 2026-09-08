@@ -23,6 +23,7 @@
 </head>
 <body data-lang="zh">
 
+<!-- @partial:header -->
 <header class="site-header">
   <div class="inner">
     <a class="brand" href="/">
@@ -39,6 +40,7 @@
     </div>
   </div>
 </header>
+<!-- @/partial:header -->
 
 <main>
 
@@ -337,14 +339,14 @@
           相似比對、臉部偵測與品質評分全部在裝置上完成。臉部偵測只判斷
           清不清楚，不辨識是誰、不建立任何身分資料。若你選擇登入並開啟
           雲端備份，我們保存的只是「整理進度」—— 一份無法還原成影像的
-          單向指紋。完整說明請見<a href="/privacy.html">隱私權政策</a>。
+          單向指紋。完整說明請見<a href="/privacy/">隱私權政策</a>。
         </p>
         <p class="en">
           Grouping, face detection and scoring all run on your device.
           Face detection only judges sharpness — never identity. If you sign
           in and enable cloud backup, we store only your <em>progress</em>:
           one-way fingerprints no image can be rebuilt from. Full details in
-          the <a href="/privacy.html">Privacy Policy</a>.
+          the <a href="/privacy/">Privacy Policy</a>.
         </p>
       </div>
       <img class="promise2-mascot" src="/assets/mascot/pipi_locked.webp" alt="拍拍拎著掛鎖">
@@ -366,13 +368,15 @@
 
 </main>
 
+<!-- @partial:footer -->
 <footer class="site-footer">
   <div class="inner">
     <nav>
-      <a href="/privacy.html"><span class="zh">隱私權政策</span><span class="en">Privacy Policy</span></a>
-      <a href="/terms.html"><span class="zh">服務條款</span><span class="en">Terms of Use</span></a>
-      <a href="/support.html"><span class="zh">支援</span><span class="en">Support</span></a>
-      <a href="/delete-account.html"><span class="zh">刪除帳號</span><span class="en">Delete Account</span></a>
+      <a href="/"><span class="zh">首頁</span><span class="en">Home</span></a>
+      <a href="/privacy/"><span class="zh">隱私權政策</span><span class="en">Privacy Policy</span></a>
+      <a href="/terms/"><span class="zh">服務條款</span><span class="en">Terms of Use</span></a>
+      <a href="/support/"><span class="zh">支援</span><span class="en">Support</span></a>
+      <a href="/delete-account/"><span class="zh">刪除帳號</span><span class="en">Delete Account</span></a>
     </nav>
     <div class="legal">
       <span class="zh">
@@ -390,6 +394,7 @@
     </div>
   </div>
 </footer>
+<!-- @/partial:footer -->
 
 <script src="/assets/lang.js"></script>
 <script>

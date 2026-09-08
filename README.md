@@ -4,19 +4,41 @@
 
 上架審查會實際點開這裡的三個連結，所以它們必須永遠打得開：
 
-| 頁面 | 用途 | 誰會來看 |
-|---|---|---|
-| `privacy.html` | 隱私權政策 | App Store 審查、Google Play Data safety、使用者 |
-| `terms.html` | 服務條款／EULA | App Store 3.1.2（訂閱必備） |
-| `delete-account.html` | 帳號刪除說明 | Google Play 帳號刪除規定（必須免登入可存取） |
-| `support.html` | 支援與常見問題 | App Store Connect 的「支援網址」欄位 |
+| 網址 | 檔案 | 用途 | 誰會來看 |
+|---|---|---|---|
+| `/privacy/` | `privacy/index.html` | 隱私權政策 | App Store 審查、Google Play Data safety、使用者 |
+| `/terms/` | `terms/index.html` | 服務條款／EULA | App Store 3.1.2（訂閱必備） |
+| `/delete-account/` | `delete-account/index.html` | 帳號刪除說明 | Google Play 帳號刪除規定（必須免登入可存取） |
+| `/support/` | `support/index.html` | 支援與常見問題 | App Store Connect 的「支援網址」欄位 |
+
+## 網址沒有 .html
+
+正式路徑是 `/privacy/` 這種形式（`privacy/index.html`）。根目錄還留著
+`privacy.html` 等四個檔案，但它們只是轉址到新路徑的空殼 —— 因為送審資料、
+商店後台與**已經上架的 App 版本**裡都還寫著舊網址，那些連結必須繼續有效。
+新的連結一律寫沒有 .html 的版本。
+
+## 頁首頁尾只有一份
+
+`_partials/header.html`、`_partials/footer.html` 是唯一的來源。每一頁的
+`<!-- @partial:header -->` … `<!-- @/partial:header -->` 之間是展開後的內容，
+**不要直接改那一段**。改完片段後跑：
+
+```bash
+python build.py          # 展開到每一頁
+python build.py --check  # 只檢查有沒有人手改了展開後的內容
+```
+
+就地展開（而不是 src → dist）是因為 GitHub Pages 沒有建置步驟：頁面檔本身
+就是成品，這樣原始 HTML 裡就有頁首頁尾 —— 爬蟲讀得到、關掉 JS 也看得到、
+而且不會有「頁首晚一拍才出現」的版面跳動。
 
 ## 改完怎麼上線
 
 推到 `main` 就好，GitHub Pages 會自動部署，約一分鐘生效。
 
 ```bash
-git add -A && git commit -m "更新條款" && git push
+python build.py && git add -A && git commit -m "更新條款" && git push
 ```
 
 ## 注意事項

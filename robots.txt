@@ -1,4 +1,10 @@
 User-agent: *
 Allow: /
+# 模板來源與舊網址的轉址殼，不是頁面。
+Disallow: /_partials/
+Disallow: /privacy.html
+Disallow: /terms.html
+Disallow: /support.html
+Disallow: /delete-account.html
 
 Sitemap: https://pibook.app/sitemap.xml
