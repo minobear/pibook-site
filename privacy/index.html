@@ -42,10 +42,10 @@
     <div class="doc-meta">
       <span class="zh">生效日期：2026 年 8 月 28 日</span>
       <span class="en">Effective: 28 August 2026</span>
-      <span class="zh">最後更新：2026 年 8 月 28 日</span>
-      <span class="en">Last updated: 28 August 2026</span>
-      <span class="zh">版本 1.0</span>
-      <span class="en">Version 1.0</span>
+      <span class="zh">最後更新：2026 年 9 月 21 日</span>
+      <span class="en">Last updated: 21 September 2026</span>
+      <span class="zh">版本 1.1</span>
+      <span class="en">Version 1.1</span>
     </div>
   </div>
 
@@ -54,14 +54,14 @@
     <h2 class="en">THE SHORT VERSION</h2>
     <ul class="zh">
       <li><strong>你的照片不會離開這台裝置。</strong>相似比對、臉部偵測、品質評分全部在手機本機執行。唯一的例外是你主動下訂實體印製商品時，被你選中的那幾張照片才會上傳，用來完成訂單。</li>
-      <li><strong>我們不做臉部辨識。</strong>臉部偵測只用來判斷「這張裡的人臉清不清楚」，結果留在裝置上，我們不建立、不儲存、不傳送任何臉部特徵資料。</li>
+      <li><strong>我們不做臉部辨識。</strong>臉部偵測只用來判斷「這張裡的人臉清不清楚」，結果只存在你的裝置上；我們不建立臉部特徵樣板，也不會把任何臉部資料傳出裝置。詳見<a href="#face-data">第 3 節〈臉部資料〉</a>。</li>
       <li><strong>不登入也能用。</strong>登入是為了雲端備份與跨裝置的訂閱權益，不是使用條件。</li>
       <li><strong>我們不販售你的資料，也不做跨 App 廣告追蹤。</strong>使用分析可以在 App 內一鍵關閉。</li>
       <li><strong>帳號可以刪，而且是真的刪。</strong>App 內與<a href="/delete-account/">這個網頁</a>都能提出。</li>
     </ul>
     <ul class="en">
       <li><strong>Your photos never leave your device.</strong> Grouping, face detection and quality scoring all run locally. The one exception: when you place an order for a printed product, the photos you selected are uploaded to fulfil that order.</li>
-      <li><strong>We do not do facial recognition.</strong> Face detection is used only to judge whether faces in a shot are sharp. Results stay on your device. We never create, store or transmit facial templates.</li>
+      <li><strong>We do not do facial recognition.</strong> Face detection is used only to judge whether faces in a shot are sharp. Results stay on your device: we never create facial templates and no face data ever leaves the device. See <a href="#face-data">section 3, “Face data”</a>.</li>
       <li><strong>You can use the app without an account.</strong> Signing in exists for cloud backup and cross-device subscription access — it is not a condition of use.</li>
       <li><strong>We do not sell your data and we do not run cross-app advertising tracking.</strong> Usage analytics can be switched off inside the app.</li>
       <li><strong>You can delete your account, and it really is deleted.</strong> Available in the app and on <a href="/delete-account/">this page</a>.</li>
@@ -74,6 +74,7 @@
     <ol class="zh">
       <li><a href="#who">誰在處理你的資料</a></li>
       <li><a href="#photos">照片為什麼不離開裝置</a></li>
+      <li><a href="#face-data">臉部資料</a></li>
       <li><a href="#collect">我們蒐集哪些資料</a></li>
       <li><a href="#why">蒐集目的與法律依據</a></li>
       <li><a href="#share">我們與誰分享</a></li>
@@ -91,6 +92,7 @@
     <ol class="en">
       <li><a href="#who">Who processes your data</a></li>
       <li><a href="#photos">Why your photos stay on the device</a></li>
+      <li><a href="#face-data">Face data</a></li>
       <li><a href="#collect">What we collect</a></li>
       <li><a href="#why">Purposes and legal bases</a></li>
       <li><a href="#share">Who we share with</a></li>
@@ -159,12 +161,8 @@
 
     <h3 class="zh">關於臉部偵測</h3>
     <p class="zh">
-      本 App 使用裝置端的機器學習模型偵測照片中是否有人臉、人臉是否清晰、眼睛是否張開，
-      用途只有一個：在一組相似照片中挑出比較好的那一張。
-      我們<strong>不做身分辨識</strong>、<strong>不建立臉部特徵樣板（face template）</strong>、
-      <strong>不比對不同照片中的人是不是同一個人</strong>，
-      也不會把任何臉部相關資料傳出裝置。偵測結果只存在你手機本機的資料庫中，
-      解除安裝 App 即隨之消失。
+      臉部偵測同樣完全在你的裝置上進行，結果不會離開裝置。產生哪些資料、做什麼用、
+      存在哪裡、保存多久、如何刪除，完整說明在<a href="#face-data">第 3 節〈臉部資料〉</a>。
     </p>
 
     <h3 class="zh">兩個必須說明的例外</h3>
@@ -173,7 +171,7 @@
       如果你在 App 內購買相片書、明信片等需要印製的實體商品，
       你為該筆訂單所選擇的照片會被上傳到我們的伺服器，交付印製廠商完成製作。
       這是履行你所下訂單的必要行為，除此之外我們不會將它們用於任何其他目的。
-      訂單完成後的保存期間請見<a href="#retention">第 7 節</a>。
+      訂單完成後的保存期間請見<a href="#retention">第 8 節</a>。
     </p>
     <p class="zh">
       <strong>例外二：把座標變成地名時。</strong>
@@ -197,14 +195,9 @@
 
     <h3 class="en">About face detection</h3>
     <p class="en">
-      The App uses an on-device machine-learning model to detect whether a photo
-      contains faces, whether those faces are in focus, and whether eyes are open.
-      It serves exactly one purpose: picking the better shot out of a group of
-      similar ones. We do <strong>not</strong> perform identity recognition, we do
-      <strong>not</strong> build face templates, and we do <strong>not</strong> match
-      people across photos. No face-related data ever leaves your device. Detection
-      results live only in a local database on your phone and disappear when you
-      uninstall the App.
+      Face detection also runs entirely on your device, and its results never leave it.
+      What is produced, what it is used for, where it is stored, how long it is kept and how
+      to delete it are set out in full in <a href="#face-data">section 3, “Face data”</a>.
     </p>
 
     <h3 class="en">Two exceptions we must state clearly</h3>
@@ -214,7 +207,7 @@
       photos you selected for that order are uploaded to our servers and passed to
       the print partner who manufactures it. This is necessary to fulfil the order
       you placed; we use them for nothing else. Retention is covered in
-      <a href="#retention">section 7</a>.
+      <a href="#retention">section 8</a>.
     </p>
     <p class="en">
       <strong>Exception 2 — turning coordinates into place names.</strong>
@@ -227,8 +220,58 @@
   </section>
 
   <!-- ─────────────────────────────────────────────────────────── -->
+  <section id="face-data">
+    <h2><span class="num">3</span><span class="zh">臉部資料</span><span class="en">Face data</span></h2>
+
+    <p class="zh">
+      本 App 的「相似照片」功能會在一組相似的照片中，建議最值得保留的那一張。
+      為了做到這件事，本 App 會在你的裝置上分析照片裡的人臉。
+      這一節完整說明這些臉部資料是什麼、做什麼用、存在哪裡、保存多久，以及如何刪除。
+    </p>
+
+    <div class="table-wrap zh">
+      <table>
+        <thead><tr><th>項目</th><th>說明</th></tr></thead>
+        <tbody>
+          <tr><td>產生哪些資料</td><td>每一張被分析的照片會記下：<strong>人臉數量</strong>、一個 0 到 1 的<strong>人臉品質分數</strong>（臉是否清晰、曝光與表情是否自然、眼睛是否張開），以及畫面中最大那張臉的<strong>頭部轉向角度</strong>（左右、上下）。Android 版另外記下眼睛張開的程度與臉部區域的清晰度。<br>分析當下會暫時用到每張臉在畫面中的位置（一個方框），用來量清晰度、並略過畫面邊緣很小的路人臉；位置在分析完成後即捨棄，<strong>不會儲存</strong>。</td></tr>
+          <tr><td>怎麼產生</td><td>全部在你的裝置上完成：iPhone 使用 Apple 內建的 Vision 框架，Android 使用 Google ML Kit 的裝置端模型。分析讀取的是系統提供的縮圖，沒有任何照片或臉部影像離開裝置。</td></tr>
+          <tr><td>用途</td><td><strong>只有一個</strong>：在一組相似照片中排出順序，建議要保留哪一張。</td></tr>
+          <tr><td>我們不做的事</td><td>不辨識身分、不比對不同照片中的人是否為同一人、不建立臉部特徵樣板（face template）或任何生物特徵識別資料，也不儲存臉部影像或臉部特徵點。臉部資料<strong>不用於</strong>廣告、行銷、使用分析、建立使用者輪廓、追蹤或身分驗證，也不用來訓練任何模型。</td></tr>
+          <tr><td>存放地點</td><td>只存在本 App 於你裝置上的私有資料庫中。<strong>不會上傳到我們的伺服器</strong>，也不包含在拍簿的雲端備份裡。</td></tr>
+          <tr><td>分享</td><td><strong>不與任何人分享</strong>：不提供給我們、我們的服務提供者（包括使用分析服務）或任何第三方，也從不販售。</td></tr>
+          <tr><td>保存期間</td><td>保存在你的裝置上，直到你重設拍簿或解除安裝本 App 為止。留著是為了不必每次開啟都重新分析。分析方式更新時，舊的結果會自動刪除並重新計算。</td></tr>
+          <tr><td>如何刪除</td><td>在 App 內前往「我的 → 進階與重設 → 完全重設拍簿」，或直接解除安裝本 App，兩者都會立即刪除裝置上所有的臉部資料。這些資料從未傳給我們，所以我們這邊沒有任何需要刪除的副本。</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="en">
+      The App’s Similar Photos feature suggests which shot in a group of similar photos is
+      the best one to keep. To do that, the App analyses the faces in those photos on your
+      device. This section sets out exactly what that face data is, what it is used for, where
+      it is stored, how long it is kept and how to delete it.
+    </p>
+
+    <div class="table-wrap en">
+      <table>
+        <thead><tr><th>Topic</th><th>Details</th></tr></thead>
+        <tbody>
+          <tr><td>What is produced</td><td>For each photo that is analysed: the <strong>number of faces</strong>, a <strong>face-quality score</strong> between 0 and 1 (whether the faces are sharp, well exposed, naturally expressed and have their eyes open), and the <strong>head angle</strong> (left–right and up–down) of the largest face. The Android version also records how open the eyes are and how sharp the face area is.<br>While a photo is being analysed, the App briefly uses where each face sits in the frame (a rectangle) to measure sharpness and to ignore tiny faces at the edges of the shot. Those positions are discarded as soon as the analysis finishes and are <strong>never stored</strong>.</td></tr>
+          <tr><td>How it is produced</td><td>Entirely on your device: on iPhone with Apple’s built-in Vision framework, on Android with Google ML Kit’s on-device model. The analysis reads the thumbnail provided by the system; no photo and no face image leaves the device.</td></tr>
+          <tr><td>What it is used for</td><td><strong>One thing only</strong>: ranking the photos within a group of similar shots so the App can suggest which one to keep.</td></tr>
+          <tr><td>What we never do</td><td>We do not identify people, do not match faces across photos, do not create face templates or any biometric identifier, and do not store face images or facial landmarks. Face data is <strong>never used</strong> for advertising, marketing, analytics, profiling, tracking or authentication, and never used to train any model.</td></tr>
+          <tr><td>Where it is stored</td><td>Only in the App’s private database on your device. It is <strong>never uploaded to our servers</strong> and is not part of Pibook’s cloud backup.</td></tr>
+          <tr><td>Sharing</td><td><strong>None.</strong> It is not provided to us, to our service providers (including our analytics provider) or to any third party, and it is never sold.</td></tr>
+          <tr><td>How long it is kept</td><td>On your device until you reset Pibook or uninstall the App. It is kept so that photos do not have to be analysed again every time. When the analysis method is updated, old results are deleted automatically and recomputed.</td></tr>
+          <tr><td>How to delete it</td><td>In the App, go to Profile → Advanced &amp; reset → Reset Pibook completely, or simply uninstall the App. Either one immediately deletes all face data on the device. Because this data is never sent to us, there is no copy on our side to delete.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────────────── -->
   <section id="collect">
-    <h2><span class="num">3</span><span class="zh">我們蒐集哪些資料</span><span class="en">What we collect</span></h2>
+    <h2><span class="num">4</span><span class="zh">我們蒐集哪些資料</span><span class="en">What we collect</span></h2>
 
     <p class="zh">
       下表列出本 App 與本網站實際會蒐集的每一類資料。<strong>沒有列在表上的，我們就沒有蒐集。</strong>
@@ -335,6 +378,14 @@
     </div>
 
     <div class="callout zh">
+      <p><strong>臉部資料不在這張表上，</strong>因為我們從未取得它：臉部偵測的結果只存在你的裝置上，
+      不會傳給我們或任何第三方（見<a href="#face-data">第 3 節</a>）。</p>
+    </div>
+    <div class="callout en">
+      <p><strong>Face data is not in this table</strong> because we never receive it: face-detection results
+      stay on your device and are never sent to us or to any third party (see <a href="#face-data">section 3</a>).</p>
+    </div>
+    <div class="callout zh">
       <p><strong>本地通知不涉及伺服器。</strong>本 App 的提醒（例如「N 年前的今天」）完全由你的裝置在本機排程，
       不經過我們或任何第三方的推播伺服器，也不需要網路。</p>
     </div>
@@ -346,7 +397,7 @@
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="why">
-    <h2><span class="num">4</span><span class="zh">蒐集目的與法律依據</span><span class="en">Purposes and legal bases</span></h2>
+    <h2><span class="num">5</span><span class="zh">蒐集目的與法律依據</span><span class="en">Purposes and legal bases</span></h2>
 
     <div class="table-wrap zh">
       <table>
@@ -395,7 +446,7 @@
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="share">
-    <h2><span class="num">5</span><span class="zh">我們與誰分享</span><span class="en">Who we share with</span></h2>
+    <h2><span class="num">6</span><span class="zh">我們與誰分享</span><span class="en">Who we share with</span></h2>
 
     <p class="zh">我們只在必要範圍內，將資料交給以下協助我們營運的服務提供者。他們僅能依我們的指示處理，不得另作他用。</p>
 
@@ -445,7 +496,7 @@
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="where">
-    <h2><span class="num">6</span><span class="zh">資料存放地點與跨境傳輸</span><span class="en">Where data is stored and transferred</span></h2>
+    <h2><span class="num">7</span><span class="zh">資料存放地點與跨境傳輸</span><span class="en">Where data is stored and transferred</span></h2>
 
     <p class="zh">
       帳號、備份與訂單資料存放於 Supabase 位於<strong>新加坡</strong>的 Amazon Web Services 機房。
@@ -472,7 +523,7 @@
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="retention">
-    <h2><span class="num">7</span><span class="zh">我們保存多久</span><span class="en">How long we keep it</span></h2>
+    <h2><span class="num">8</span><span class="zh">我們保存多久</span><span class="en">How long we keep it</span></h2>
 
     <div class="table-wrap zh">
       <table>
@@ -485,6 +536,7 @@
           <tr><td>使用分析</td><td>最長 24 個月，之後自動刪除或彙總為無法識別個人的統計數字。</td></tr>
           <tr><td>畫面互動錄影</td><td>最長 90 日。</td></tr>
           <tr><td>客服往來紀錄</td><td>結案後 2 年。</td></tr>
+          <tr><td>臉部資料</td><td>我們沒有保存任何臉部資料。它只存在你的裝置上，保存到你重設拍簿或解除安裝本 App 為止（見<a href="#face-data">第 3 節</a>）。</td></tr>
         </tbody>
       </table>
     </div>
@@ -500,6 +552,7 @@
           <tr><td>Usage analytics</td><td>Up to 24 months, then deleted or aggregated into non-identifying statistics.</td></tr>
           <tr><td>Session replay</td><td>Up to 90 days.</td></tr>
           <tr><td>Support correspondence</td><td>2 years after the case closes.</td></tr>
+          <tr><td>Face data</td><td>We hold none. It exists only on your device and is kept until you reset Pibook or uninstall the App (see <a href="#face-data">section 3</a>).</td></tr>
         </tbody>
       </table>
     </div>
@@ -507,7 +560,7 @@
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="rights">
-    <h2><span class="num">8</span><span class="zh">你的權利</span><span class="en">Your rights</span></h2>
+    <h2><span class="num">9</span><span class="zh">你的權利</span><span class="en">Your rights</span></h2>
 
     <p class="zh">不論你身在何處，你都可以要求我們：</p>
     <ul class="zh">
@@ -555,7 +608,7 @@
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="delete">
-    <h2><span class="num">9</span><span class="zh">刪除帳號與資料</span><span class="en">Deleting your account and data</span></h2>
+    <h2><span class="num">10</span><span class="zh">刪除帳號與資料</span><span class="en">Deleting your account and data</span></h2>
 
     <p class="zh">
       你可以隨時刪除帳號，兩種方式效力相同：
@@ -583,7 +636,7 @@
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="children">
-    <h2><span class="num">10</span><span class="zh">兒童與青少年</span><span class="en">Children</span></h2>
+    <h2><span class="num">11</span><span class="zh">兒童與青少年</span><span class="en">Children</span></h2>
 
     <p class="zh">
       本 App 不以未滿 13 歲的兒童為對象，我們也不會在知情的情況下蒐集其個人資料。
@@ -605,7 +658,7 @@
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="security">
-    <h2><span class="num">11</span><span class="zh">安全措施</span><span class="en">Security</span></h2>
+    <h2><span class="num">12</span><span class="zh">安全措施</span><span class="en">Security</span></h2>
 
     <ul class="zh">
       <li>所有網路傳輸一律使用 TLS 加密。</li>
@@ -635,7 +688,7 @@
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="website">
-    <h2><span class="num">12</span><span class="zh">本網站與 Cookie</span><span class="en">This website and cookies</span></h2>
+    <h2><span class="num">13</span><span class="zh">本網站與 Cookie</span><span class="en">This website and cookies</span></h2>
 
     <p class="zh">
       本網站是靜態網頁，<strong>不使用任何追蹤 Cookie，也沒有分析或廣告程式碼</strong>。
@@ -654,7 +707,7 @@
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="changes">
-    <h2><span class="num">13</span><span class="zh">政策變更</span><span class="en">Changes to this policy</span></h2>
+    <h2><span class="num">14</span><span class="zh">政策變更</span><span class="en">Changes to this policy</span></h2>
 
     <p class="zh">
       我們可能因功能調整或法規變動而更新本政策。頁面頂端一律標示最新的生效日期與版本。
@@ -674,7 +727,7 @@
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="regional">
-    <h2><span class="num">14</span><span class="zh">各地區補充條款</span><span class="en">Regional supplements</span></h2>
+    <h2><span class="num">15</span><span class="zh">各地區補充條款</span><span class="en">Regional supplements</span></h2>
 
     <h3 class="zh">台灣：個人資料保護法告知事項</h3>
     <p class="zh">
@@ -683,11 +736,11 @@
     <ul class="zh">
       <li><strong>蒐集機構：</strong>八西歐科技有限公司</li>
       <li><strong>蒐集目的：</strong>資訊與通訊服務（代號 135）、消費者、客戶管理與服務（090）、網路購物及其他電子商務服務（148）、契約或類似契約之關係（069）、調查、統計與研究分析（157）。</li>
-      <li><strong>個人資料類別：</strong>識別類（C001 辨識個人者、C003 政府資料中之辨識者不適用）、特徵類（不適用）、社會情況（C038 職業不適用）、財務細節（C081 帳戶或契約），實際範圍以本政策第 3 節所列為準。</li>
-      <li><strong>利用期間：</strong>如本政策第 7 節所述。</li>
-      <li><strong>利用地區：</strong>台灣、新加坡、美國，以及本政策第 5 節所列服務提供者所在地。</li>
-      <li><strong>利用對象與方式：</strong>本政策第 4、5 節所述之目的與對象，以自動化機器或其他非自動化方式利用。</li>
-      <li><strong>你的權利：</strong>依同法第 3 條，你得向我們查詢、請求閱覽或製給複製本、請求補充或更正、請求停止蒐集處理利用、請求刪除。行使方式見本政策第 8 節。</li>
+      <li><strong>個人資料類別：</strong>識別類（C001 辨識個人者、C003 政府資料中之辨識者不適用）、特徵類（不適用）、社會情況（C038 職業不適用）、財務細節（C081 帳戶或契約），實際範圍以本政策第 4 節所列為準。</li>
+      <li><strong>利用期間：</strong>如本政策第 8 節所述。</li>
+      <li><strong>利用地區：</strong>台灣、新加坡、美國，以及本政策第 6 節所列服務提供者所在地。</li>
+      <li><strong>利用對象與方式：</strong>本政策第 5、6 節所述之目的與對象，以自動化機器或其他非自動化方式利用。</li>
+      <li><strong>你的權利：</strong>依同法第 3 條，你得向我們查詢、請求閱覽或製給複製本、請求補充或更正、請求停止蒐集處理利用、請求刪除。行使方式見本政策第 9 節。</li>
       <li><strong>不提供的影響：</strong>你可以選擇不提供個人資料。若不登入，仍可使用本 App 的核心整理功能，但無法使用雲端備份、跨裝置權益還原與實體商品訂購。</li>
     </ul>
 
@@ -700,7 +753,7 @@
     <h3 class="zh">美國加州</h3>
     <p class="zh">
       我們<strong>不曾、也不會「販售」或「分享」</strong>加州消費者隱私法（CCPA／CPRA）定義下的個人資訊。
-      加州居民享有知情、刪除、更正與不受差別待遇的權利，行使方式與本政策第 8 節相同。
+      加州居民享有知情、刪除、更正與不受差別待遇的權利，行使方式與本政策第 9 節相同。
     </p>
 
     <h3 class="en">Taiwan — PDPA notice</h3>
@@ -710,7 +763,7 @@
       information and communication services (code 135), customer management and service (090),
       online shopping and e-commerce (148), contractual relationships (069) and research and
       statistical analysis (157); the categories, retention periods, territories, recipients and
-      your rights are as set out in sections 3 to 8 above. You may decline to provide personal data:
+      your rights are as set out in sections 4 to 9 above. You may decline to provide personal data:
       without signing in you can still use the App’s core organising features, but not cloud backup,
       cross-device entitlement restore or physical product orders.
     </p>
@@ -726,13 +779,13 @@
     <p class="en">
       We have never “sold” or “shared” personal information as those terms are defined by the CCPA and
       CPRA, and we will not. California residents have rights to know, delete, correct and not be
-      discriminated against; exercise them as described in section 8.
+      discriminated against; exercise them as described in section 9.
     </p>
   </section>
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="contact">
-    <h2><span class="num">15</span><span class="zh">聯絡我們</span><span class="en">Contact us</span></h2>
+    <h2><span class="num">16</span><span class="zh">聯絡我們</span><span class="en">Contact us</span></h2>
 
     <p class="zh">
       隱私權相關事宜：<a href="mailto:privacy@pibook.app">privacy@pibook.app</a><br>
