@@ -139,8 +139,8 @@ export const EndCard: React.FC = () => {
       />
       <AbsoluteFill style={{ alignItems: 'center', justifyContent: 'center' }}>
         {[
-          { t: '照片', s: a, color: '#F4F1EA' },
-          { t: '不離開你的手機', s: b, color: C.gold },
+          { t: '照片不上傳', s: a, color: '#F4F1EA' },
+          { t: '連我們也看不到', s: b, color: C.gold },
         ].map(({ t, s, color }, i) => (
           <div key={i} style={{ overflow: 'hidden', paddingBottom: unit * 0.014 }}>
             <div

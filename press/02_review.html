@@ -16,19 +16,36 @@
   <div class="copy">
     <div class="kicker">整理</div>
     <h1>滑一下<br>就整理好一張</h1>
-    <p class="sub">左滑保留、下滑丟進待刪除<br>滑錯了往右滑就能撤回</p>
+    <p class="sub">左滑保留、下滑丟進待刪除<br>想歸類？點一下相簿就收好</p>
   </div>
 
-  <div class="stage">
-    <svg class="spark" style="left:5%;top:5%" width="26" height="26" viewBox="0 0 24 24"><path d="M12 0C13 7 17 11 24 12 17 13 13 17 12 24 11 17 7 13 0 12 7 11 11 7 12 0Z" fill="#F6C453"/></svg>
-    <svg class="spark" style="right:5%;top:30%" width="16" height="16" viewBox="0 0 24 24"><path d="M12 0C13 7 17 11 24 12 17 13 13 17 12 24 11 17 7 13 0 12 7 11 11 7 12 0Z" fill="#F6C453"/></svg>
+  <div class="stage stage--bleed">
+    <svg class="spark" style="left:5%;top:3%" width="24" height="24" viewBox="0 0 24 24"><path d="M12 0C13 7 17 11 24 12 17 13 13 17 12 24 11 17 7 13 0 12 7 11 11 7 12 0Z" fill="#F6C453"/></svg>
+    <svg class="spark" style="right:5%;top:30%" width="15" height="15" viewBox="0 0 24 24"><path d="M12 0C13 7 17 11 24 12 17 13 13 17 12 24 11 17 7 13 0 12 7 11 11 7 12 0Z" fill="#F6C453"/></svg>
 
-    <div class="phone-fit"><div class="phone"><div class="scr scr--img">
-      <img class="shot" src="../assets/shots/review_hd.jpg" alt="整理畫面：卡片滑到一半、保留章浮現">
-    </div></div></div>
+    <!-- 座標以手機左上角為原點（手機 372.6 寬、螢幕從 10.8 開始、素材每 px ＝ 0.325） -->
+    <div class="phone-wrap" style="margin-top:10px">
+      <div class="phone-fit" style="--ps:.9"><div class="phone"><div class="scr scr--img">
+        <img class="shot" src="../assets/shots/review_hd.jpg" alt="整理：巴哥犬的照片往左滑到一半、保留章浮現，後面是下一張">
+      </div></div></div>
+
+      <!-- 相簿軌放大：蓋在手機底部原本相簿軌的位置上，自訂圖示看得清楚 -->
+      <div class="ov rail-zoom" style="left:-63.7px;top:550px;width:500px;z-index:4">
+        <img src="../assets/shots/review_rail_hd.png" alt="相簿軌：家人、旅行、最愛、狗狗、生日、美食，每本都有自己的小圖示">
+      </div>
+
+      <!-- App 裡點相簿時，那張照片會飛進相簿；這裡把那一刻畫出來 -->
+      <svg class="ov" style="left:0;top:0;z-index:5;overflow:visible" width="373" height="700">
+        <path d="M175 440 Q 275 440 267.3 552" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="1 9"/>
+        <path d="M257.3 544 L267.3 558 L277.3 544" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="ov fly-photo" style="left:202px;top:424px;width:92px;height:92px;transform:rotate(-8deg);z-index:6">
+        <img src="../assets/shots/review_fly_photo.jpg" alt="">
+      </div>
+      <!-- 圈在「狗狗」那一格正中（格子在相簿軌圖上的位置：x 66.2%、y 40.6%，實測） -->
+      <span class="ov tap-ring" style="left:267.3px;top:595.5px;width:70px;height:70px;margin:-35px 0 0 -35px;z-index:6"></span>
+    </div>
   </div>
-
-  <div class="brandline"><img src="../assets/app_icon.png" alt="">拍簿 Pibook</div>
 </div>
 <script src="press.js"></script>
 </body>

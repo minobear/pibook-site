@@ -48,21 +48,15 @@
     0 36px 80px -24px rgba(26, 34, 43, .5);
 }
 
-.phone::after {                     /* 藥丸開孔 */
-  content: "";
-  position: absolute;
-  top: 26px; left: 50%;
-  width: 92px; height: 26px;
-  transform: translateX(-50%);
-  border-radius: 14px;
-  background: #10151B;
-  box-shadow: inset 0 1px 2px rgba(255,255,255,.06);
-}
+/* ⚠️ 2026-09-23 起商店截圖不再模擬任何系統機框元件（狀態列／藥丸開孔）——
+   商店規定不能出現非該平台的狀態列，最乾淨的解法是兩個平台都不畫，只留一支
+   通用的圓角機身。素材本身（shots/*.jpg）也已經在裁圖階段把系統狀態列與
+   Android 手勢列裁掉，所以這裡不需要、也不應該再疊一個裝飾用的藥丸開孔。 */
 
 .phone .scr {
   width: 390px;
-  height: 867px;   /* 與 1080×2400 實機截圖同比例（9:20），object-fit 零裁切 */
-  border-radius: 48px;
+  height: 816px;   /* 對應素材裁切後的比例（1080×2260，已去除狀態列與手勢列） */
+  border-radius: 44px;
   overflow: hidden;
   background: var(--pb-canvas);
   font-family: var(--pb-sans);
@@ -77,7 +71,7 @@
 .phone .scr * { box-sizing: border-box; margin: 0; }
 
 /* 縮放包裝：外層給 --ps 決定顯示大小（transform 不佔版面 → 用 width/height 收殮） */
-.phone-fit { --ps: 1; width: calc(414px * var(--ps)); height: calc(891px * var(--ps)); }
+.phone-fit { --ps: 1; width: calc(414px * var(--ps)); height: calc(840px * var(--ps)); }
 .phone-fit > .phone { transform: scale(var(--ps)); transform-origin: top left; }
 
 /* ── 狀態列 ── */

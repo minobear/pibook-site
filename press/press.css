@@ -63,9 +63,32 @@ body {
     radial-gradient(ellipse 80% 40% at 10% 106%, rgba(142,174,198,.22), transparent 72%);
 }
 
-/* ── 文字區 ── */
+/* ── 版面骨架：七張畫板共用同一條垂直基準線 ──────────────────────
+   商店會把截圖並排顯示，只要各板的標題塊高度不一樣（兩行 vs 三行），
+   手機的上緣就會忽高忽低，整排看起來就是參差的。
+   所以：文字區高度**寫死**、手機舞台**絕對定位**，
+   不論標題幾行、有沒有品牌列，視覺元素永遠從同一個 y 開始。
+   改任何一板之前先確認這兩個數字沒被個別覆寫。 */
 
-.copy { position: relative; z-index: 3; padding: 44px 30px 0; flex: 0 0 auto; width: 100%; }
+.copy {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  height: 306px;          /* 固定，不隨內容變動 */
+  padding: 46px 30px 0;
+  flex: 0 0 auto;
+}
+
+.stage {
+  position: absolute;
+  top: 306px;             /* ＝ .copy 的高度 */
+  left: 0; right: 0;
+  bottom: 58px;           /* 留給底部品牌列 */
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
 
 .kicker {
   font-size: 12.5px;
@@ -78,44 +101,30 @@ body {
 
 h1 {
   font-family: var(--pb-serif);
-  font-size: 37px;
+  font-size: 36px;
   font-weight: 700;
-  line-height: 1.34;
+  line-height: 1.32;
   letter-spacing: .015em;
   text-wrap: balance;
 }
 
+/* 英文的字比中文寬，同一個級數會多折行、撐破固定高度的文字區 */
+html[lang="en"] h1 { font-size: 32px; }
+html[lang="en"] .sub { font-size: 15px; }
+
 .sub {
-  margin-top: 12px;
+  margin: 12px auto 0;
   max-width: 340px;
-  margin-left: auto;
-  margin-right: auto;
   font-size: 15.5px;
-  line-height: 1.7;
+  line-height: 1.68;
   color: var(--pb-ink-soft);
   text-wrap: balance;
 }
 .board--night .sub { color: rgba(244, 241, 234, .78); }
 
-/* ── 手機舞台 ── */
-
-.stage {
-  position: relative;
-  z-index: 2;
-  flex: 1;
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-/* 手機縮到整支放得進畫布 —— 舊值 .74 會讓底部操作列（撤回／最愛／丟棄／下一張）
-   與首頁的「整理方式」被畫布下緣切一半，Google Play 那張特別明顯。
-   出血只留給「這張圖本來就講不完」的情況，重點元件不可以被切。 */
+/* 手機：全部同一個縮放，整支放得進畫布。
+   出血只留給「這張圖本來就講不完」的情況，操作列這類重點元件不可以被切。 */
 .stage .phone-fit { --ps: .615; }
-.stage { padding-bottom: 34px; align-items: flex-start; }
 
 /* 浮出畫面的重點膠囊 */
 .float-chip {
@@ -160,9 +169,8 @@ h1 {
 
 /* ── 封面品牌列 ── */
 .brand-top {
-  position: relative; z-index: 3;
   display: flex; align-items: center; justify-content: center; gap: 10px;
-  padding-top: 40px;
+  margin-bottom: 18px;
 }
 .brand-top img { width: 44px; height: 44px; border-radius: 12px;
   box-shadow: 0 6px 14px -6px rgba(42,55,68,.35); }
@@ -174,7 +182,7 @@ h1 {
 .checks {
   position: relative; z-index: 3;
   display: flex; flex-direction: column; gap: 12px;
-  width: min(340px, 84vw); margin: 26px auto 0;
+  width: min(340px, 84vw); margin: 22px auto 0;
 }
 .check-row {
   display: flex; align-items: center; gap: 12px; text-align: left;
@@ -186,7 +194,9 @@ h1 {
 .check-row small { display: block; font-size: 12px; font-weight: 500; color: var(--pb-ink-soft); margin-top: 2px; }
 
 
-/* ── UI 特寫板（不帶機框的放大細節，商店慣用板式）── */
+/* ── UI 特寫板：已停用 ──
+   七張並排時「白色卡片」與「深色機框」兩種輪廓混在一起最搶眼，
+   現在全部統一走機框，重點數字改用 .float-chip 帶出來。 */
 .uipanel {
   position: relative; z-index: 2;
   width: min(384px, calc(100vw - 44px));
@@ -197,3 +207,163 @@ h1 {
 }
 .uipanel img { display: block; width: 100%; }
 .stage--panel { flex-direction: column; align-items: center; justify-content: flex-start; gap: 0; }
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   2026-09-23 重構：出血、聚焦特寫、手勢指示 ── 讓七張畫板別再長得一模一樣
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* 出血：手機故意比舞台高、下緣被畫布裁掉 —— 用於封面等想要「更有存在感、
+   不是乖乖待在框裡」的畫板。.board 本身 overflow:hidden，裁切是免費的。 */
+.stage--bleed { align-items: flex-start; }
+.stage--bleed .phone-fit { margin-top: -6px; }
+
+/* 聚焦特寫卡：放大單一縮圖／單一操作局部，讓它看起來像被抽出來端詳，
+   而不是整張截圖的一部分。方形圖＋略大圓角＋比手機机身更亮的陰影。 */
+.zoom-card {
+  position: absolute; z-index: 3;
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow: 0 3px 8px rgba(42,55,68,.12), 0 30px 60px -22px rgba(42,55,68,.5);
+  background: #fff;
+}
+.zoom-card img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* 指到聚焦卡上某個標記的小標籤：白底膠囊＋一條細引線接到標記本身。
+   引線用漸層線條＋端點小圓點，兩種寫法都可能用到（水平／斜線）。 */
+.callout {
+  position: absolute; z-index: 4;
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #fff; border-radius: 999px;
+  padding: 9px 16px 9px 10px;
+  font-size: 14px; font-weight: 700; white-space: nowrap; color: var(--pb-ink);
+  box-shadow: 0 2px 4px rgba(42,55,68,.08), 0 16px 30px -14px rgba(42,55,68,.4);
+}
+.callout .dot {
+  width: 22px; height: 22px; border-radius: 50%; flex: 0 0 auto;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+}
+.callout .dot svg { display: block; }
+.callout--blue .dot { background: var(--pb-blue); }
+.callout--coral .dot { background: var(--pb-coral); }
+
+.leader {
+  position: absolute; z-index: 3;
+  transform-origin: 0 0;
+  height: 2px;
+  background: rgba(42,55,68,.32);
+}
+.leader::after {
+  content: ""; position: absolute; right: -3px; top: 50%;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: rgba(42,55,68,.4); transform: translateY(-50%);
+}
+
+/* 手勢方向指示：一道弧線＋箭頭，貼著卡片邊緣講「往哪滑」。
+   刻意手繪感（略粗、端點圓潤），不是系統圖示。 */
+.swipe-cue { position: absolute; z-index: 4; }
+.swipe-cue path { fill: none; stroke: var(--pb-coral-deep); stroke-width: 5; stroke-linecap: round; }
+.swipe-cue .head { fill: var(--pb-coral-deep); stroke: none; }
+.swipe-cue .word {
+  font-family: var(--pb-sans); font-size: 15px; font-weight: 700;
+  fill: var(--pb-coral-deep);
+}
+
+/* ── 滿版板：截圖本身就是重點（例如壓縮完成慶祝頁），
+   不再套手機機框、文案改成一行貼在頂端，把畫面留給截圖自己。
+   背景色直接取自截圖頂端的實際像素（#192C28），文案區與截圖無縫接上，
+   看不出「這裡是我們畫的、那裡是截圖」的接縫。 ── */
+.board--full { padding: 0; background: #192C28; }
+.board--full::before { display: none; }
+.board--full .full-copy {
+  position: relative; z-index: 3;
+  padding: 64px 34px 0;
+  text-align: center;
+}
+.board--full .full-copy .kicker { color: rgba(244,241,234,.7); }
+.board--full .full-copy h1 { color: #F4F1EA; font-size: 33px; }
+.board--full .full-shot {
+  position: absolute; z-index: 2;
+  left: 0; right: 0; bottom: 0; top: 232px;
+  overflow: hidden;
+}
+.board--full .full-shot img {
+  width: 100%; height: 100%; object-fit: cover; object-position: top;
+  display: block;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   2026-09-23 第二輪：畫面放大
+   使用者回報「有些畫面的預覽縮得小小的，不直觀」。文字區從 306 收到 250
+   （kicker＋兩行標題＋兩行說明實際只用到 ~232），手機放大到 ~.9 並從底部
+   出血 —— 手機下緣被畫布切掉，上面八成五的畫面都拿去給 App 本身。
+   底部品牌列在出血板上拿掉（它會壓在手機上）。
+   ═══════════════════════════════════════════════════════════════════════ */
+
+:root { --copy-h: 250px; }
+.copy { height: var(--copy-h); padding-top: 44px; }
+.stage { top: var(--copy-h); bottom: 0; }
+.stage .phone-fit { --ps: .9; }
+.stage--bleed .phone-fit { margin-top: 10px; }
+
+/* 高版特寫卡（相似照片三組完整）：寬度吃滿、讓縮圖夠大。
+   吉祥物掛在卡片右上角 —— 以卡片為原點定位（Play 畫板較寬，以畫板為原點會對歪） */
+.panel-wrap { position: relative; }
+.uipanel--wide { width: min(420px, calc(100vw - 26px)); border-radius: 28px; }
+
+/* 聚焦卡加一圈白邊：從手機上「抽出來」放大的那一塊，看起來像被拿起來端詳 */
+.zoom-card--framed { border: 5px solid #fff; }
+
+/* 口語化的說明泡泡：比 .callout 大一級、可以兩行 */
+.note {
+  position: absolute; z-index: 6;
+  background: #fff; border-radius: 18px;
+  padding: 11px 16px;
+  font-size: 15px; font-weight: 700; line-height: 1.45;
+  color: var(--pb-ink); text-align: left; white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(42,55,68,.08), 0 18px 34px -14px rgba(42,55,68,.42);
+}
+.note small { display: block; font-size: 12.5px; font-weight: 500; color: var(--pb-ink-soft); }
+
+/* 相簿軌特寫：直接用 App 裡那條玻璃膠囊（素材已裁成膠囊外框），放大後浮在手機上。
+   圓角要跟膠囊本身一致（App 內 22pt ≈ 膠囊高的 1/4），外面再加一層陰影把它「拿起來」。 */
+.rail-zoom {
+  position: absolute; z-index: 5;
+  border-radius: 24px; overflow: hidden;
+  box-shadow: 0 4px 10px rgba(42,55,68,.12), 0 30px 56px -18px rgba(42,55,68,.55);
+}
+.rail-zoom img { display: block; width: 100%; }
+
+/* 手機＋疊在它上面的特寫／說明：座標一律以「手機左上角」為原點。
+   iOS 畫板 430 寬、Play 524 寬，手機置中後左緣位置不同 —— 以畫板為原點的座標
+   換個尺寸就全部對歪。 */
+.phone-wrap { position: relative; }
+.phone-wrap > .ov { position: absolute; }
+
+.callout--gold .dot { background: #E0A63A; }
+/* 深色影片上的純文字膠囊（不帶圓點） */
+.callout--dark {
+  padding: 9px 16px; background: rgba(255,255,255,.94); color: var(--pb-ink);
+}
+
+/* 飛進相簿的那張照片（App 內點相簿時的動畫，畫成靜態的一刻） */
+.fly-photo {
+  border-radius: 16px; overflow: hidden;
+  border: 4px solid #fff;
+  box-shadow: 0 4px 10px rgba(42,55,68,.2), 0 22px 40px -14px rgba(42,55,68,.55);
+}
+.fly-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* 手指滑動的示意：觸控點＋拖過的軌跡（像手機錄影「顯示觸控」，不用滑鼠游標的手） */
+.touch-swipe { filter: drop-shadow(0 4px 12px rgba(0,0,0,.35)); }
+
+/* 點擊示意：兩圈光暈，讀起來是「手指點在這裡」 */
+.tap-ring {
+  position: absolute; z-index: 6;
+  width: 50px; height: 50px; margin: -25px 0 0 -25px;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: 0 0 0 3px rgba(199,95,78,.9), 0 0 0 8px rgba(232,128,110,.18);
+}

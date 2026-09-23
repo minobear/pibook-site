@@ -7,7 +7,7 @@
 # 字卡與轉場。片段之間用 xfade 交叉溶解，最後統一輸出。
 #
 # 用法：PIBOOK_REC_DIR=<素材資料夾> bash build.sh
-#       → store_assets/app_preview_ios.mp4
+#       → store_assets/videos/app_preview_ios.mp4
 #
 # 兩個踩過的坑（改動前先讀）：
 #  1. 字幕 PNG 一定要 `-loop 1 -t <長度>`。單張圖只有一格，overlay 的 enable
@@ -18,7 +18,7 @@
 set -e
 cd "$(dirname "$0")"
 SRC="${PIBOOK_REC_DIR:?請設定 PIBOOK_REC_DIR＝存放實機錄影原檔的資料夾}"
-OUT="$(cd ../../.. && pwd)/store_assets"
+OUT="$(cd ../../.. && pwd)/store_assets/videos"
 mkdir -p "$OUT"
 FF="$(python -c 'import imageio_ffmpeg;print(imageio_ffmpeg.get_ffmpeg_exe())')"
 W=886; H=1920; FPS=30
@@ -97,4 +97,4 @@ print('  總長 %.2f 秒（App Store 允收 15–30 秒）' % total)
 PYEOF
 
 "$FF" -i "$OUT/app_preview_ios.mp4" 2>&1 | grep -E "Duration|Stream #"
-echo "輸出：store_assets/app_preview_ios.mp4"
+echo "輸出：store_assets/videos/app_preview_ios.mp4"

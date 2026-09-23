@@ -62,5 +62,6 @@ python build.py && git add -A && git commit -m "更新條款" && git push
 bash press/render.sh
 ```
 
-會用無頭 Chrome 輸出到主 repo 的 `store_assets/`：
-`ios_6.9/`（1290×2796，App Store 6.9 吋）與 `play_phone/`（1080×1920，Google Play）。
+會用無頭 Chrome 輸出到主 repo 的 `store_assets/screenshots/`：
+`1290x2796/`（App Store 6.9 吋）與 `1080x1920/`（Google Play）—— 同一套畫板，兩個平台共用，
+只因兩家的比例規定互斥才分兩種尺寸（見 `store_assets/README.md`）。

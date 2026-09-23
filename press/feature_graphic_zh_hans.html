@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<title>Google Play 主题图片 1024×500（简体）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap">
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   Google Play 主題圖片（Feature Graphic）1024×500
+
+   三個限制決定了這個版面：
+   1. 若商店頁掛了宣傳影片，**正中央會被播放鍵蓋住** → 文字止於 x≈470、
+      手機從 x≈600 才開始，中間刻意留空。
+   2. 不同版位會左右裁切 → 重要內容不放在外側 7% 以內。
+   3. 縮到列表尺寸只剩幾百 px 寬 → 只講一句話，手機畫面當「這是真的 App」
+      的證據，不指望有人讀得到裡面的字。
+   ═══════════════════════════════════════════════════════════════════ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  width: 1024px; height: 500px;
+  overflow: hidden;
+  background: #131C25;
+}
+
+.fg {
+  position: relative;
+  width: 1024px; height: 500px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 60% 90% at 84% 18%, rgba(246,196,83,.20), transparent 66%),
+    radial-gradient(ellipse 70% 100% at 8% 96%, rgba(232,128,110,.26), transparent 70%),
+    linear-gradient(148deg, #1B2733 0%, #131C25 58%, #0F161D 100%);
+}
+
+/* 斜向細光帶，讓底不是一片死色 */
+.fg::before {
+  content: "";
+  position: absolute; inset: -20% -10%;
+  background: repeating-linear-gradient(
+    118deg,
+    rgba(255,255,255,.030) 0 1px,
+    transparent 1px 78px);
+}
+
+/* ── 左：品牌與訴求 ───────────────────────────────────────────── */
+.copy {
+  position: absolute;
+  left: 112px; top: 50%;
+  transform: translateY(-50%);
+  width: 400px;
+  z-index: 3;
+}
+
+.lockup { display: flex; align-items: center; gap: 14px; margin-bottom: 26px; }
+
+.lockup img {
+  width: 62px; height: 62px;
+  border-radius: 15px;
+  box-shadow: 0 2px 4px rgba(0,0,0,.3), 0 14px 28px -10px rgba(0,0,0,.6);
+}
+
+.words { display: flex; flex-direction: column; gap: 3px; }
+
+.words .zh {
+  font-family: "Noto Serif TC", Georgia, serif;
+  font-weight: 700; font-size: 27px; line-height: 1;
+  color: #F4F1EA; letter-spacing: .04em;
+}
+
+.words .en {
+  font-family: "Noto Serif TC", Georgia, serif;
+  font-size: 12px; line-height: 1;
+  letter-spacing: .34em; color: rgba(244,241,234,.56);
+}
+
+h1 {
+  font-family: "Noto Serif TC", Georgia, serif;
+  font-weight: 700;
+  font-size: 47px; line-height: 1.3;
+  color: #F7F4EE;
+  letter-spacing: .01em;
+  white-space: nowrap;
+}
+
+h1 b { color: #F6C453; font-weight: 700; }
+
+.sub {
+  margin-top: 22px;
+  display: flex; flex-direction: column; gap: 9px;
+}
+
+.sub span {
+  font-family: "Noto Sans TC", system-ui, sans-serif;
+  font-size: 16px; line-height: 1;
+  color: rgba(244,241,234,.80);
+  display: flex; align-items: center; gap: 10px;
+  white-space: nowrap;
+}
+
+.sub i {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #E8806E; flex: none;
+}
+
+/* ── 右：兩支實機畫面 ─────────────────────────────────────────── */
+.stage { position: absolute; inset: 0; z-index: 2; }
+
+.dev {
+  position: absolute;
+  border-radius: 34px;
+  padding: 7px;
+  background: linear-gradient(160deg, #3A4654 0%, #232C36 55%, #1A222B 100%);
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,.26),
+    inset 0 -1px 2px rgba(0,0,0,.55),
+    0 30px 70px -18px rgba(0,0,0,.75);
+}
+
+.dev img {
+  display: block;
+  border-radius: 27px;
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: top center;
+}
+
+/* 後面那支：襯深度，刻意壓暗、不搶主角 */
+.dev--back {
+  width: 222px; height: 446px;
+  left: 606px; top: 88px;
+  transform: rotate(-9deg);
+  opacity: .72;
+  filter: saturate(.9) brightness(.88);
+}
+
+/* 前面那支：滑到一半的整理卡，主視覺 */
+.dev--front {
+  width: 270px; height: 542px;
+  left: 764px; top: 58px;
+  transform: rotate(-5deg);
+}
+
+/* 右緣收邊：讓被裁掉的那半支看起來是設計、不是失誤 */
+.fade {
+  position: absolute; z-index: 4;
+  right: 0; top: 0; width: 84px; height: 100%;
+  background: linear-gradient(90deg, rgba(15,22,29,0) 0%, rgba(15,22,29,.30) 100%);
+}
+
+/* 幾顆品牌星點 */
+.spark { position: absolute; z-index: 3; opacity: .9; }
+</style>
+</head>
+<body>
+<div class="fg">
+
+  <div class="stage">
+    <div class="dev dev--back">
+      <img src="../assets/shots/zh_hans/browse_photos_hd.jpg" alt="">
+    </div>
+    <div class="dev dev--front">
+      <img src="../assets/shots/zh_hans/review_hd.jpg" alt="">
+    </div>
+  </div>
+  <div class="fade"></div>
+
+  <svg class="spark" style="left:548px;top:62px" width="22" height="22" viewBox="0 0 24 24"><path d="M12 0C13 7 17 11 24 12 17 13 13 17 12 24 11 17 7 13 0 12 7 11 11 7 12 0Z" fill="#F6C453"/></svg>
+  <svg class="spark" style="left:566px;top:412px" width="14" height="14" viewBox="0 0 24 24"><path d="M12 0C13 7 17 11 24 12 17 13 13 17 12 24 11 17 7 13 0 12 7 11 11 7 12 0Z" fill="#E8806E"/></svg>
+
+  <div class="copy">
+    <div class="lockup">
+      <img src="../assets/app_icon.png" alt="">
+      <span class="words">
+        <span class="zh">拍簿</span>
+        <span class="en">PIBOOK</span>
+      </span>
+    </div>
+
+    <h1>滑一下<br>就整理好<b>一张</b></h1>
+
+    <div class="sub">
+      <span><i></i>连拍自动挑出最美的那张</span>
+      <span><i></i>重复照片一次清干净</span>
+      <span><i></i>照片全程不离开你的手机</span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

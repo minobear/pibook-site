@@ -33,10 +33,10 @@ export const FeatureTitle: React.FC<{
 
   const line = (text: string, i: number) => {
     const s = spring({
-      frame: frame - 1 - i * 4,
+      frame: frame - i * 3,
       fps,
-      config: { damping: 200, mass: 0.55 },
-      durationInFrames: 15,
+      config: { damping: 200, mass: 0.5 },
+      durationInFrames: 12,
     });
     const y = interpolate(s, [0, 1], [58, 0]);
     const clip = interpolate(s, [0, 1], [100, 0]);
@@ -70,8 +70,8 @@ export const FeatureTitle: React.FC<{
     );
   };
 
-  const kick = spring({ frame, fps, config: { damping: 200 }, durationInFrames: 14 });
-  const rule = spring({ frame, fps, config: { damping: 200 }, durationInFrames: 16 });
+  const kick = spring({ frame, fps, config: { damping: 200 }, durationInFrames: 11 });
+  const rule = spring({ frame, fps, config: { damping: 200 }, durationInFrames: 13 });
 
   return (
     <AbsoluteFill style={{ backgroundColor: 'transparent' }}>
