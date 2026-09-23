@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Screenshot 05 — Memories</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap">
+<link rel="stylesheet" href="../../assets/phone.css">
+<link rel="stylesheet" href="../press.css">
+</head>
+<body>
+<div class="board board--night">
+
+  <div class="copy">
+    <div class="kicker">MEMORIES</div>
+    <h1>Relive them<br>like short videos</h1>
+    <p class="sub">Your photos and videos come back at random<br>each one takes you right back</p>
+  </div>
+
+  <div class="stage stage--bleed">
+    <svg class="spark" style="left:6%;top:4%" width="22" height="22" viewBox="0 0 24 24"><path d="M12 0C13 7 17 11 24 12 17 13 13 17 12 24 11 17 7 13 0 12 7 11 11 7 12 0Z" fill="#F6C453"/></svg>
+    <svg class="spark" style="right:6%;top:22%" width="14" height="14" viewBox="0 0 24 24"><path d="M12 0C13 7 17 11 24 12 17 13 13 17 12 24 11 17 7 13 0 12 7 11 11 7 12 0Z" fill="#F6C453"/></svg>
+
+    <!-- 回憶的「影片」分頁：影片滿版，手指往上滑到一半 —— 下一段回憶已經從底下冒出來 -->
+    <div class="phone-wrap" style="margin-top:10px">
+      <div class="phone-fit" style="--ps:.9"><div class="phone"><div class="scr scr--img">
+        <img class="shot" src="../../assets/shots/en/memory_hd.jpg" alt="Memories: a birthday video from 3 years ago, swiped halfway up to the next one">
+      </div></div></div>
+
+      <!-- 每一段都標著是多久以前：把 App 裡的「3 年前」點出來 -->
+      <svg class="ov" style="left:0;top:0;z-index:5;overflow:visible" width="373" height="700">
+        <line x1="44" y1="423" x2="44" y2="444" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>
+      </svg>
+      <div class="ov callout callout--gold" style="left:18px;top:387px;z-index:6">
+        <span class="dot"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><path d="M4 4v4.5h4.5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 8v4.3l2.8 1.7" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></span>
+        3 years back
+      </div>
+
+      <!-- 手指往上滑：觸控點＋拖過的軌跡（跟手機錄影「顯示觸控」同一個樣子，不是滑鼠游標） -->
+      <svg class="ov touch-swipe" style="left:0;top:0;z-index:6;overflow:visible" width="373" height="700">
+        <defs>
+          <linearGradient id="trailUp" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+            <stop offset="1" stop-color="#fff" stop-opacity=".7"/>
+          </linearGradient>
+        </defs>
+        <path d="M262 414 L288 414 L277.5 590 L272.5 590 Z" fill="url(#trailUp)"/>
+        <circle cx="275" cy="414" r="30" fill="rgba(255,255,255,.18)" stroke="rgba(255,255,255,.55)" stroke-width="2"/>
+        <circle cx="275" cy="414" r="19" fill="rgba(255,255,255,.95)"/>
+        <path d="M264 370 L275 358 L286 370" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="ov callout callout--dark" style="left:186px;top:612px;transform:translateX(-50%);z-index:6">Swipe up for a random one</div>
+    </div>
+  </div>
+</div>
+<script src="../press.js"></script>
+</body>
+</html>
