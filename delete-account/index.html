@@ -1,19 +1,114 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-Hant" data-lang="zh-Hant">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>刪除帳號與資料 — 拍簿 Pibook</title>
+<script type="application/json" id="page-titles">{"zh-Hant": "刪除帳號與資料 — 拍簿 Pibook", "zh-Hans": "删除账号与数据 — 拍簿 Pibook", "en": "Delete your account and data — Pibook", "ja": "アカウントとデータの削除 — Pibook", "ko": "계정 및 데이터 삭제 — Pibook"}</script>
+<!-- @partial:head -->
+<script>
+(function (d, w) {
+  var LANGS = ['zh-Hant', 'zh-Hans', 'en', 'ja', 'ko'];
+  var KEY = 'pibook-lang';
+  var FONTS = {
+    'zh-Hant': 'family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700',
+    'zh-Hans': 'family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@500;700',
+    'ja': 'family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;700',
+    'ko': 'family=Noto+Sans+KR:wght@400;500;700'
+  };
+
+  function norm(tag) { return String(tag || '').toLowerCase().replace(/_/g, '-'); }
+
+  /* 中文分繁簡：先看文字（Hant／Hans），再看地區 —— 台灣、香港、澳門與粵語是繁體，
+     中國、新加坡、馬來西亞是簡體。只寫「zh」答不出來，回 null。 */
+  function chinese(t) {
+    if (/-hans(-|$)/.test(t)) return 'zh-Hans';
+    if (/-hant(-|$)/.test(t) || /^yue(-|$)/.test(t) || /-(tw|hk|mo)(-|$)/.test(t)) return 'zh-Hant';
+    if (/-(cn|sg|my)(-|$)/.test(t)) return 'zh-Hans';
+    return null;
+  }
+
+  /* 一個語言標籤 → 我們有的語言；沒有就回 null，讓清單裡的下一個接手。 */
+  function match(tag, rest) {
+    var t = norm(tag);
+    if (!t) return null;
+    var base = t.split('-')[0];
+    if (base === 'zh' || base === 'yue') {
+      var v = chinese(t);
+      if (v) return v;
+      // 只寫「zh」：看清單後面有沒有更明確的中文，沒有就當簡體。
+      for (var j = 0; rest && j < rest.length; j++) {
+        var r = chinese(norm(rest[j]));
+        if (r) return r;
+      }
+      return 'zh-Hans';
+    }
+    if (base === 'en') return 'en';
+    if (base === 'ja') return 'ja';
+    if (base === 'ko') return 'ko';
+    return null;
+  }
+
+  function pick() {
+    var q = /[?&]lang=([^&#]+)/.exec(w.location.search);
+    var fromUrl = null;
+    try { fromUrl = q && match(decodeURIComponent(q[1])); } catch (e) { /* 網址參數壞掉就忽略 */ }
+    if (fromUrl) return fromUrl;
+    try {
+      var saved = w.localStorage.getItem(KEY);
+      if (LANGS.indexOf(saved) >= 0) return saved;
+    } catch (e) { /* 隱私模式或被封鎖：往下用裝置語言 */ }
+    var list = (w.navigator.languages && w.navigator.languages.length)
+      ? w.navigator.languages : [w.navigator.language || w.navigator.userLanguage];
+    for (var i = 0; i < list.length; i++) {
+      var m = match(list[i], list.slice(i + 1));
+      if (m) return m;
+    }
+    return 'en';
+  }
+
+  function loadFont(lang) {
+    var set = lang === 'en' ? 'zh-Hant' : lang;
+    if (d.getElementById('pb-font-' + set)) return;
+    var link = d.createElement('link');
+    link.rel = 'stylesheet';
+    link.id = 'pb-font-' + set;
+    link.href = 'https://fonts.googleapis.com/css2?' + FONTS[set] + '&display=swap';
+    d.head.appendChild(link);
+  }
+
+  function title(lang) {
+    var el = d.getElementById('page-titles');
+    if (!el) return;
+    try {
+      var map = JSON.parse(el.textContent);
+      if (map[lang]) d.title = map[lang];
+    } catch (e) { /* 標題維持原樣 */ }
+  }
+
+  function apply(lang) {
+    var root = d.documentElement;
+    root.setAttribute('lang', lang);
+    root.setAttribute('data-lang', lang);
+    loadFont(lang);
+    title(lang);
+  }
+
+  w.PibookLang = { langs: LANGS, key: KEY, match: match, apply: apply, current: pick() };
+  apply(w.PibookLang.current);
+})(document, window);
+</script>
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap"></noscript>
+<!-- @/partial:head -->
 <meta name="description" content="如何刪除你的拍簿帳號：會刪掉什麼、會保留什麼、需要多久。App 內與網頁皆可提出。">
 <meta name="theme-color" content="#FBF7F0" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#171E25" media="(prefers-color-scheme: dark)">
 <link rel="canonical" href="https://pibook.app/delete-account/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap">
-<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/assets/style.css?v=20260925">
 </head>
-<body data-lang="zh">
+<body>
 
 <!-- @partial:header -->
 <header class="site-header">
@@ -21,14 +116,33 @@
     <a class="brand" href="/">
       <img class="brand-logo" src="/assets/app_icon.png" alt="" aria-hidden="true">
       <span class="brand-words">
-        <span class="mark zh">拍簿</span>
-        <span class="mark en">Pibook</span>
-        <span class="latin zh">PIBOOK</span>
+        <span lang="zh-Hant" class="mark">拍簿</span>
+        <span lang="zh-Hans" class="mark">拍簿</span>
+        <span lang="en" class="mark">Pibook</span>
+        <span lang="ja" class="mark">Pibook</span>
+        <span lang="ko" class="mark">Pibook</span>
+        <span lang="zh-Hant" class="latin">PIBOOK</span>
+        <span lang="zh-Hans" class="latin">PIBOOK</span>
       </span>
     </a>
-    <div class="lang-toggle">
-      <button type="button" data-lang="zh" aria-pressed="true">繁體中文</button>
-      <button type="button" data-lang="en" aria-pressed="false">English</button>
+    <div class="lang-switch">
+      <button type="button" class="lang-button" id="lang-button"
+              aria-haspopup="menu" aria-expanded="false" aria-controls="lang-menu">
+        <svg class="lang-globe" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="M3.4 12h17.2"/><path d="M12 3.4c2.3 2.4 3.5 5.3 3.5 8.6s-1.2 6.2-3.5 8.6c-2.3-2.4-3.5-5.3-3.5-8.6s1.2-6.2 3.5-8.6z"/></svg>
+        <span lang="zh-Hant">繁體中文</span>
+        <span lang="zh-Hans">简体中文</span>
+        <span lang="en">English</span>
+        <span lang="ja">日本語</span>
+        <span lang="ko">한국어</span>
+        <svg class="lang-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.6 6 7.6 9 4.6"/></svg>
+      </button>
+      <ul class="lang-menu" id="lang-menu" role="menu" aria-labelledby="lang-button" hidden>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="zh-Hant"><span lang="zh-Hant">繁體中文</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="zh-Hans"><span lang="zh-Hans">简体中文</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="en"><span lang="en">English</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="ja"><span lang="ja">日本語</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="ko"><span lang="ko">한국어</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+      </ul>
     </div>
   </div>
 </header>
@@ -37,91 +151,185 @@
 <main class="doc">
 
   <div class="doc-head">
-    <h1 class="zh">刪除拍簿帳號與相關資料</h1>
-    <h1 class="en">Delete your Pibook account and data</h1>
+    <h1 lang="zh-Hant">刪除拍簿帳號與相關資料</h1>
+    <h1 lang="zh-Hans">删除拍簿账号与相关数据</h1>
+    <h1 lang="en">Delete your Pibook account and data</h1>
+    <h1 lang="ja">Pibook アカウントと関連データの削除</h1>
+    <h1 lang="ko">Pibook 계정과 관련 데이터 삭제</h1>
     <div class="doc-meta">
-      <span class="zh">適用 App：拍簿 Pibook（com.minobear.pibook）</span>
-      <span class="en">Applies to: Pibook (com.minobear.pibook)</span>
-      <span class="zh">最後更新：2026 年 8 月 28 日</span>
-      <span class="en">Last updated: 28 August 2026</span>
+      <span lang="zh-Hant">適用 App：拍簿 Pibook（com.minobear.pibook）</span>
+      <span lang="en">Applies to: Pibook (com.minobear.pibook)</span>
+      <span lang="zh-Hant">最後更新：2026 年 9 月 25 日</span>
+      <span lang="zh-Hans">适用 App：拍簿 Pibook（com.minobear.pibook）</span>
+      <span lang="zh-Hans">最后更新：2026 年 9 月 25 日</span>
+      <span lang="en">Last updated: 25 September 2026</span>
+      <span lang="ja">対象アプリ：Pibook（com.minobear.pibook）</span>
+      <span lang="ja">最終更新日：2026年9月25日</span>
+      <span lang="ko">적용 앱: Pibook(com.minobear.pibook)</span>
+      <span lang="ko">최종 수정일: 2026년 9월 25일</span>
     </div>
   </div>
 
   <div class="summary">
-    <h2 class="zh">最重要的一句</h2>
-    <h2 class="en">FIRST THING TO KNOW</h2>
-    <ul class="zh">
+    <h2 lang="zh-Hant">最重要的一句</h2>
+    <h2 lang="en">FIRST THING TO KNOW</h2>
+    <ul lang="zh-Hant">
       <li><strong>刪除帳號不會刪掉你手機裡的照片。</strong>那些照片從頭到尾都只存在你的裝置上，我們從來沒有它們的副本。</li>
     </ul>
-    <ul class="en">
+    <h2 lang="zh-Hans">最重要的一句话</h2>
+    <ul lang="zh-Hans">
+      <li><strong>删除账号不会删掉你手机里的照片。</strong>那些照片从头到尾都只存在于你的设备上，我们从来没有它们的副本。</li>
+    </ul>
+    <ul lang="en">
       <li><strong>Deleting your account does not delete the photos on your phone.</strong> Those photos only ever existed on your device — we never had a copy of them.</li>
+    </ul>
+    <h2 lang="ja">いちばん大切なこと</h2>
+    <ul lang="ja">
+      <li><strong>アカウントを削除しても、端末内の写真は削除されません。</strong>それらの写真は最初からお使いの端末の中にしか存在しておらず、私たちがそのコピーを持ったことは一度もありません。</li>
+    </ul>
+    <h2 lang="ko">가장 중요한 한 가지</h2>
+    <ul lang="ko">
+      <li><strong>계정을 삭제해도 휴대폰 속 사진은 삭제되지 않아요.</strong> 그 사진들은 처음부터 끝까지 기기 안에만 있었고, 저희는 한 번도 그 사본을 가진 적이 없어요.</li>
     </ul>
   </div>
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="how">
-    <h2><span class="num">1</span><span class="zh">兩種方式，效力相同</span><span class="en">Two routes, same result</span></h2>
+    <h2><span class="num">1</span><span lang="zh-Hant">兩種方式，效力相同</span><span lang="zh-Hans">两种方式，效力相同</span><span lang="en">Two routes, same result</span><span lang="ja">2 つの方法（どちらも効力は同じ）</span><span lang="ko">효력이 같은 두 가지 방법</span></h2>
 
-    <h3 class="zh">方式一：在 App 內（最快，立即執行）</h3>
-    <ol class="zh">
+    <h3 lang="zh-Hant">方式一：在 App 內（最快，立即執行）</h3>
+    <ol lang="zh-Hant">
       <li>開啟拍簿 App</li>
-      <li>點下方的<strong>「我的」</strong></li>
+      <li>點下方的<strong>「個人」</strong></li>
       <li>進入<strong>「帳號」</strong></li>
       <li>捲到底，選擇<strong>「刪除帳號」</strong></li>
       <li>依畫面指示<strong>長按確認</strong></li>
     </ol>
-    <p class="zh">確認後立即執行，不需要等我們人工處理。</p>
+    <p lang="zh-Hant">確認後立即執行，不需要等我們人工處理。</p>
 
-    <h3 class="zh">方式二：從這個網頁提出（不需要安裝 App）</h3>
-    <p class="zh">
+    <h3 lang="zh-Hant">方式二：從這個網頁提出（不需要安裝 App）</h3>
+    <p lang="zh-Hant">
       如果你已經刪除 App、換了手機，或無法登入，請用<strong>你當初註冊帳號時使用的電子郵件地址</strong>
       寄信給我們。點下面的按鈕會自動帶好收件人與主旨：
     </p>
-    <p class="zh">
+    <p lang="zh-Hant">
       <a class="btn" href="mailto:privacy@pibook.app?subject=%E5%88%AA%E9%99%A4%E5%B8%B3%E8%99%9F%E7%94%B3%E8%AB%8B%20Pibook%20Account%20Deletion%20Request&amp;body=%E6%88%91%E8%A6%81%E5%88%AA%E9%99%A4%E6%88%91%E7%9A%84%E6%8B%8D%E7%B0%BF%E5%B8%B3%E8%99%9F%E8%88%87%E6%89%80%E6%9C%89%E7%9B%B8%E9%97%9C%E8%B3%87%E6%96%99%E3%80%82%0A%0A%E8%A8%BB%E5%86%8A%E4%BF%A1%E7%AE%B1%EF%BC%88%E8%AB%8B%E4%BD%BF%E7%94%A8%E8%A9%B2%E4%BF%A1%E7%AE%B1%E5%AF%84%E5%87%BA%E6%9C%AC%E4%BF%A1%EF%BC%89%EF%BC%9A%0A%E7%99%BB%E5%85%A5%E6%96%B9%E5%BC%8F%EF%BC%88Apple%20%E6%88%96%20Google%EF%BC%89%EF%BC%9A%0A">
         寄出刪除帳號申請
       </a>
     </p>
-    <p class="zh">
+    <p lang="zh-Hant">
       信件中請註明你的<strong>註冊信箱</strong>與<strong>登入方式（Apple 或 Google）</strong>。
       為保護你的資料，我們會確認來信信箱與帳號信箱一致；
       若你使用 Apple 的「隱藏我的電子郵件」，請直接以該中繼位址寄信即可。
     </p>
+    <h3 lang="zh-Hans">方式一：在 App 内操作（最快，立即执行）</h3>
+    <ol lang="zh-Hans">
+      <li>打开拍簿 App</li>
+      <li>点击底部的<strong>“个人”</strong></li>
+      <li>进入<strong>“账号”</strong></li>
+      <li>滚动到底部，选择<strong>“删除账号”</strong></li>
+      <li>按照屏幕提示<strong>长按确认</strong></li>
+    </ol>
+    <p lang="zh-Hans">确认后立即执行，无需等待我们人工处理。</p>
+    <h3 lang="zh-Hans">方式二：通过本网页申请（无需安装 App）</h3>
+    <p lang="zh-Hans">
+      如果你已经删除 App、换了手机，或无法登录，请用<strong>你当初注册账号时使用的电子邮件地址</strong>给我们发邮件。
+      点击下面的按钮会自动填好收件人与主题：
+    </p>
+    <p lang="zh-Hans">
+      <a class="btn" href="mailto:privacy@pibook.app?subject=%E5%88%A0%E9%99%A4%E8%B4%A6%E5%8F%B7%E7%94%B3%E8%AF%B7%20Pibook%20Account%20Deletion%20Request&amp;body=%E6%88%91%E8%A6%81%E5%88%A0%E9%99%A4%E6%88%91%E7%9A%84%E6%8B%8D%E7%B0%BF%E8%B4%A6%E5%8F%B7%E4%B8%8E%E6%89%80%E6%9C%89%E7%9B%B8%E5%85%B3%E6%95%B0%E6%8D%AE%E3%80%82%0A%0A%E6%B3%A8%E5%86%8C%E9%82%AE%E7%AE%B1%EF%BC%88%E8%AF%B7%E4%BD%BF%E7%94%A8%E8%AF%A5%E9%82%AE%E7%AE%B1%E5%8F%91%E9%80%81%E6%9C%AC%E9%82%AE%E4%BB%B6%EF%BC%89%EF%BC%9A%0A%E7%99%BB%E5%BD%95%E6%96%B9%E5%BC%8F%EF%BC%88Apple%20%E6%88%96%20Google%EF%BC%89%EF%BC%9A%0A">
+        发送删除账号申请
+      </a>
+    </p>
+    <p lang="zh-Hans">
+      邮件中请注明你的<strong>注册邮箱</strong>与<strong>登录方式（Apple 或 Google）</strong>。
+      为保护你的数据，我们会核实发件邮箱与账号邮箱一致；
+      如果你使用了 Apple 的“隐藏邮件地址”，直接用该中继地址发送邮件即可。
+    </p>
 
-    <h3 class="en">Route 1 — in the app (fastest, takes effect immediately)</h3>
-    <ol class="en">
+    <h3 lang="en">Route 1 — in the app (fastest, takes effect immediately)</h3>
+    <ol lang="en">
       <li>Open Pibook</li>
       <li>Tap <strong>Profile</strong> in the bottom bar</li>
       <li>Open <strong>Account</strong></li>
-      <li>Scroll down and choose <strong>Delete Account</strong></li>
+      <li>Scroll down and choose <strong>Delete account</strong></li>
       <li><strong>Press and hold</strong> to confirm</li>
     </ol>
-    <p class="en">This runs immediately — no manual processing on our side is needed.</p>
+    <p lang="en">This runs immediately — no manual processing on our side is needed.</p>
 
-    <h3 class="en">Route 2 — request from this page (no app required)</h3>
-    <p class="en">
+    <h3 lang="en">Route 2 — request from this page (no app required)</h3>
+    <p lang="en">
       If you have already removed the app, changed phones, or cannot sign in, email us
       <strong>from the address your account uses</strong>. The button below fills in the
       recipient and subject for you:
     </p>
-    <p class="en">
+    <p lang="en">
       <a class="btn" href="mailto:privacy@pibook.app?subject=Pibook%20Account%20Deletion%20Request&amp;body=I%20would%20like%20to%20delete%20my%20Pibook%20account%20and%20all%20associated%20data.%0A%0AAccount%20email%20(please%20send%20from%20this%20address)%3A%0ASign-in%20method%20(Apple%20or%20Google)%3A%0A">
         Send a deletion request
       </a>
     </p>
-    <p class="en">
+    <p lang="en">
       Please state your <strong>account email</strong> and your <strong>sign-in method
       (Apple or Google)</strong>. To protect your data we check that the sending address matches the
       account. If you use Apple’s Hide My Email, simply write from that relay address.
+    </p>
+    <h3 lang="ja">方法 1：アプリ内で削除（最も早く、即時に実行）</h3>
+    <ol lang="ja">
+      <li>Pibook アプリを開きます</li>
+      <li>画面下部の<strong>「マイページ」</strong>をタップします</li>
+      <li><strong>「アカウント」</strong>を開きます</li>
+      <li>いちばん下までスクロールし、<strong>「アカウントを削除」</strong>を選びます</li>
+      <li>画面の案内に従って<strong>長押しで確定</strong>します</li>
+    </ol>
+    <p lang="ja">確定するとすぐに実行されます。私たちが手作業で処理するのを待つ必要はありません。</p>
+    <h3 lang="ja">方法 2：このページから申請（アプリのインストールは不要）</h3>
+    <p lang="ja">
+      すでにアプリを削除した、機種変更をした、またはサインインできない場合は、<strong>アカウント登録時に使用したメールアドレス</strong>から
+      私たちにメールをお送りください。下のボタンを押すと、宛先と件名が自動で入力されます。
+    </p>
+    <p lang="ja">
+      <a class="btn" href="mailto:privacy@pibook.app?subject=%E3%82%A2%E3%82%AB%E3%82%A6%E3%83%B3%E3%83%88%E5%89%8A%E9%99%A4%E7%94%B3%E8%AB%8B%20Pibook%20Account%20Deletion%20Request&amp;body=Pibook%20%E3%81%AE%E3%82%A2%E3%82%AB%E3%82%A6%E3%83%B3%E3%83%88%E3%81%A8%E3%80%81%E9%96%A2%E9%80%A3%E3%81%99%E3%82%8B%E3%81%99%E3%81%B9%E3%81%A6%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E5%89%8A%E9%99%A4%E3%82%92%E5%B8%8C%E6%9C%9B%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%0A%0A%E7%99%BB%E9%8C%B2%E3%83%A1%E3%83%BC%E3%83%AB%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%EF%BC%88%E3%81%93%E3%81%AE%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%E3%81%8B%E3%82%89%E9%80%81%E4%BF%A1%E3%81%97%E3%81%A6%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%EF%BC%89%EF%BC%9A%0A%E3%82%B5%E3%82%A4%E3%83%B3%E3%82%A4%E3%83%B3%E6%96%B9%E6%B3%95%EF%BC%88Apple%20%E3%81%BE%E3%81%9F%E3%81%AF%20Google%EF%BC%89%EF%BC%9A%0A">
+        アカウントの削除を申請する
+      </a>
+    </p>
+    <p lang="ja">
+      メールには、<strong>登録メールアドレス</strong>と<strong>サインイン方法（Apple または Google）</strong>をご記入ください。
+      データを保護するため、送信元のメールアドレスがアカウントのメールアドレスと一致していることを確認します。
+      Apple の「メールを非公開」を使用している場合は、その転送用アドレスからそのままお送りください。
+    </p>
+    <h3 lang="ko">방법 1: 앱에서 삭제(가장 빠름, 즉시 처리)</h3>
+    <ol lang="ko">
+      <li>Pibook 앱을 여세요</li>
+      <li>아래쪽의 <strong>‘프로필’</strong>을 누르세요</li>
+      <li><strong>‘계정’</strong>으로 들어가세요</li>
+      <li>맨 아래로 스크롤해 <strong>‘계정 삭제’</strong>를 누르세요</li>
+      <li>화면 안내에 따라 <strong>길게 눌러 확인</strong>하세요</li>
+    </ol>
+    <p lang="ko">확인하면 바로 처리되며, 저희 쪽의 수동 처리를 기다리실 필요가 없어요.</p>
+    <h3 lang="ko">방법 2: 이 웹페이지에서 신청(앱 설치 불필요)</h3>
+    <p lang="ko">
+      이미 앱을 삭제했거나 휴대폰을 바꿨거나 로그인할 수 없다면,
+      <strong>처음 계정을 만들 때 사용한 이메일 주소</strong>에서 저희에게 메일을 보내 주세요.
+      아래 버튼을 누르면 받는 사람과 제목이 자동으로 채워져요.
+    </p>
+    <p lang="ko">
+      <a class="btn" href="mailto:privacy@pibook.app?subject=%EA%B3%84%EC%A0%95%20%EC%82%AD%EC%A0%9C%20%EC%8B%A0%EC%B2%AD%20Pibook%20Account%20Deletion%20Request&amp;body=Pibook%20%EA%B3%84%EC%A0%95%EA%B3%BC%20%EA%B4%80%EB%A0%A8%EB%90%9C%20%EB%AA%A8%EB%93%A0%20%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%A5%BC%20%EC%82%AD%EC%A0%9C%ED%95%B4%20%EC%A3%BC%EC%84%B8%EC%9A%94.%0A%0A%EA%B0%80%EC%9E%85%20%EC%9D%B4%EB%A9%94%EC%9D%BC%28%EC%9D%B4%20%EC%A3%BC%EC%86%8C%EC%97%90%EC%84%9C%20%EB%B3%B4%EB%82%B4%20%EC%A3%BC%EC%84%B8%EC%9A%94%29%3A%0A%EB%A1%9C%EA%B7%B8%EC%9D%B8%20%EB%B0%A9%EC%8B%9D%28Apple%20%EB%98%90%EB%8A%94%20Google%29%3A%0A">
+        계정 삭제 신청 보내기
+      </a>
+    </p>
+    <p lang="ko">
+      메일에는 <strong>가입한 이메일 주소</strong>와 <strong>로그인 방식(Apple 또는 Google)</strong>을 적어 주세요.
+      데이터를 보호하기 위해 보낸 사람의 주소가 계정의 이메일 주소와 같은지 확인해요.
+      Apple의 ‘나의 이메일 가리기’를 쓰신다면 그 중계 주소에서 그대로 보내 주시면 돼요.
     </p>
   </section>
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="what">
-    <h2><span class="num">2</span><span class="zh">會刪掉什麼</span><span class="en">What gets deleted</span></h2>
+    <h2><span class="num">2</span><span lang="zh-Hant">會刪掉什麼</span><span lang="zh-Hans">会删除什么</span><span lang="en">What gets deleted</span><span lang="ja">削除されるもの</span><span lang="ko">삭제되는 항목</span></h2>
 
-    <p class="zh">下列資料會從我們的正式系統中<strong>完全移除</strong>：</p>
-    <div class="table-wrap zh">
+    <p lang="zh-Hant">下列資料會從我們的正式系統中<strong>完全移除</strong>：</p>
+    <div lang="zh-Hant" class="table-wrap">
       <table>
         <thead><tr><th>資料</th><th>說明</th></tr></thead>
         <tbody>
@@ -134,9 +342,23 @@
         </tbody>
       </table>
     </div>
+    <p lang="zh-Hans">下列数据会从我们的正式系统中<strong>完全移除</strong>：</p>
+    <div lang="zh-Hans" class="table-wrap">
+      <table>
+        <thead><tr><th>数据</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>账号本身</td><td>电子邮件地址、Apple／Google 提供的用户标识符、显示名称、登录凭证。</td></tr>
+          <tr><td>云端整理进度备份</td><td>所有备份文件及其中的照片指纹、整理状态。</td></tr>
+          <tr><td>设备记录</td><td>曾经登录过的设备代号与同步时间。</td></tr>
+          <tr><td>权益记录</td><td>Premium 有效期限、赚得的天数、来源标记。</td></tr>
+          <tr><td>订单上传的照片</td><td>如果你曾订购实体印制商品，为该订单上传的照片会一并删除（若仍在制作中，则在发货后删除）。</td></tr>
+          <tr><td>分析数据中的身份关联</td><td>你的用户标识会与分析数据解除关联。已有事件仅以无法识别个人的形式保留在统计中。</td></tr>
+        </tbody>
+      </table>
+    </div>
 
-    <p class="en">The following are <strong>completely removed</strong> from our production systems:</p>
-    <div class="table-wrap en">
+    <p lang="en">The following are <strong>completely removed</strong> from our production systems:</p>
+    <div lang="en" class="table-wrap">
       <table>
         <thead><tr><th>Data</th><th>Detail</th></tr></thead>
         <tbody>
@@ -149,17 +371,45 @@
         </tbody>
       </table>
     </div>
+    <p lang="ja">次のデータは、私たちの本番システムから<strong>完全に消去</strong>されます。</p>
+    <div lang="ja" class="table-wrap">
+      <table>
+        <thead><tr><th>データ</th><th>内容</th></tr></thead>
+        <tbody>
+          <tr><td>アカウント本体</td><td>メールアドレス、Apple／Google が提供するユーザー識別子、表示名、サインインの認証情報。</td></tr>
+          <tr><td>クラウド上の整理の記録のバックアップ</td><td>すべてのバックアップファイルと、そこに含まれる写真の指紋および整理状態。</td></tr>
+          <tr><td>端末の記録</td><td>これまでにサインインした端末の識別コードと同期日時。</td></tr>
+          <tr><td>利用権の記録</td><td>Premium の有効期限、獲得した日数、付与元の区分。</td></tr>
+          <tr><td>注文のためにアップロードした写真</td><td>プリント商品を注文したことがある場合、その注文のためにアップロードした写真もあわせて削除されます（製作中の場合は、発送後に削除されます）。</td></tr>
+          <tr><td>分析データとの紐づけ</td><td>ユーザー識別子と分析データとの紐づけが解除されます。既存のイベントは、個人を特定できない形でのみ統計に残ります。</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p lang="ko">아래 데이터는 저희 운영 시스템에서 <strong>완전히 삭제</strong>돼요.</p>
+    <div lang="ko" class="table-wrap">
+      <table>
+        <thead><tr><th>데이터</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td>계정 자체</td><td>이메일 주소, Apple/Google이 제공한 사용자 식별자, 표시 이름, 로그인 인증 정보</td></tr>
+          <tr><td>정리 진행 상황 클라우드 백업</td><td>모든 백업 파일과 그 안에 담긴 사진 지문, 정리 상태</td></tr>
+          <tr><td>기기 기록</td><td>로그인한 적이 있는 기기의 식별 코드와 동기화 시각</td></tr>
+          <tr><td>이용 권한 기록</td><td>Premium 유효 기간, 받은 일수, 획득 경로 표시</td></tr>
+          <tr><td>주문을 위해 업로드한 사진</td><td>실물 인화 상품을 주문한 적이 있다면 그 주문을 위해 업로드한 사진도 함께 삭제돼요(아직 제작 중이라면 출고 후에 삭제돼요).</td></tr>
+          <tr><td>분석 데이터와의 신원 연결</td><td>사용자 식별자와 분석 데이터의 연결이 끊어져요. 기존 이벤트는 개인을 식별할 수 없는 형태로만 통계에 남아요.</td></tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="kept">
-    <h2><span class="num">3</span><span class="zh">會保留什麼，以及為什麼</span><span class="en">What is retained, and why</span></h2>
+    <h2><span class="num">3</span><span lang="zh-Hant">會保留什麼，以及為什麼</span><span lang="zh-Hans">会保留什么，以及为什么</span><span lang="en">What is retained, and why</span><span lang="ja">保持されるものとその理由</span><span lang="ko">보관되는 항목과 그 이유</span></h2>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       有一小部分資料<strong>依法必須保留</strong>，無法應要求刪除。
       這些紀錄會與你的帳號解除連結，僅保留法律所要求的最少欄位：
     </p>
-    <div class="table-wrap zh">
+    <div lang="zh-Hant" class="table-wrap">
       <table>
         <thead><tr><th>保留項目</th><th>為什麼</th><th>多久</th></tr></thead>
         <tbody>
@@ -182,18 +432,50 @@
       </table>
     </div>
 
-    <div class="callout zh">
+    <div lang="zh-Hant" class="callout">
       <p><strong>你的訂閱不會因為刪除帳號而取消。</strong>
       訂閱是你與 Apple 或 Google 之間的計費關係，我們沒有權限終止它。
       如果你不想再被扣款，請另外到 iPhone 的「設定 → 你的姓名 → 訂閱項目」，
       或 Google Play 的「付款與訂閱 → 訂閱項目」取消。</p>
     </div>
+    <p lang="zh-Hans">
+      有一小部分数据<strong>依法必须保留</strong>，无法应要求删除。
+      这些记录会与你的账号解除关联，仅保留法律所要求的最少字段：
+    </p>
+    <div lang="zh-Hans" class="table-wrap">
+      <table>
+        <thead><tr><th>保留项目</th><th>为什么</th><th>多久</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>交易与购买凭证</td>
+            <td>台湾《税捐稽征法》与《商业会计法》要求保存交易凭证，以供税务稽查。</td>
+            <td>自账务发生年度起 <strong>5 年</strong></td>
+          </tr>
+          <tr>
+            <td>实体订单记录</td>
+            <td>同上，并用于处理保修、退换货与消费纠纷。</td>
+            <td><strong>5 年</strong></td>
+          </tr>
+          <tr>
+            <td>备份介质上的残留副本</td>
+            <td>数据库的灾难恢复备份会随轮替自动覆盖，无法对单条数据进行选择性删除。</td>
+            <td>最迟 <strong>90 日</strong>内覆盖</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div lang="zh-Hans" class="callout">
+      <p><strong>你的订阅不会因为删除账号而取消。</strong>
+      订阅是你与 Apple 或 Google 之间的计费关系，我们无权终止它。
+      如果你不想再被扣款，请另行前往 iPhone 的“设置 → 你的姓名 → 订阅”，
+      或 Google Play 的“付款和订阅 → 订阅”取消。</p>
+    </div>
 
-    <p class="en">
+    <p lang="en">
       A small amount of data <strong>must be kept by law</strong> and cannot be deleted on request.
       These records are unlinked from your account and reduced to the minimum fields the law requires:
     </p>
-    <div class="table-wrap en">
+    <div lang="en" class="table-wrap">
       <table>
         <thead><tr><th>Retained</th><th>Why</th><th>How long</th></tr></thead>
         <tbody>
@@ -204,19 +486,83 @@
       </table>
     </div>
 
-    <div class="callout en">
+    <div lang="en" class="callout">
       <p><strong>Deleting your account does not cancel your subscription.</strong> Billing is a
       relationship between you and Apple or Google, and we have no authority to end it. To stop being
       charged, cancel separately in Settings → your name → Subscriptions on iPhone, or Payments &amp;
       subscriptions → Subscriptions in Google Play.</p>
     </div>
+    <p lang="ja">
+      一部のデータは<strong>法令により保存が義務づけられている</strong>ため、ご依頼があっても削除できません。
+      これらの記録はアカウントとの紐づけを解除し、法令が求める最小限の項目だけを保持します。
+    </p>
+    <div lang="ja" class="table-wrap">
+      <table>
+        <thead><tr><th>保持する項目</th><th>理由</th><th>期間</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>取引と購入の証憑</td>
+            <td>台湾の「税捐稽徴法」および「商業会計法」により、税務調査に備えて取引の証憑を保存することが義務づけられています。</td>
+            <td>取引が発生した会計年度から <strong>5 年間</strong></td>
+          </tr>
+          <tr>
+            <td>プリント商品の注文記録</td>
+            <td>同上。あわせて、保証、返品・交換、消費者との紛争への対応に使用します。</td>
+            <td><strong>5 年間</strong></td>
+          </tr>
+          <tr>
+            <td>バックアップ媒体上に残る複製</td>
+            <td>データベースの災害復旧用バックアップはローテーションにより自動で上書きされるため、個別のデータだけを選んで削除することはできません。</td>
+            <td>遅くとも <strong>90 日</strong>以内に上書き</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div lang="ja" class="callout">
+      <p><strong>アカウントを削除しても、サブスクリプションは解約されません。</strong>
+      サブスクリプションはご自身と Apple または Google との間の課金関係であり、私たちにはそれを終了させる権限がありません。
+      今後の請求を止めたい場合は、iPhone の「設定 → 自分の名前 → サブスクリプション」、
+      または Google Play の「お支払いと定期購入 → 定期購入」から、別途解約してください。</p>
+    </div>
+    <p lang="ko">
+      일부 데이터는 <strong>법에 따라 반드시 보관해야 하므로</strong> 요청하셔도 삭제할 수 없어요.
+      이 기록은 계정과의 연결을 끊고, 법이 요구하는 최소한의 항목만 남겨 둬요.
+    </p>
+    <div lang="ko" class="table-wrap">
+      <table>
+        <thead><tr><th>보관 항목</th><th>이유</th><th>기간</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>거래 및 구매 증빙</td>
+            <td>대만 조세징수법(稅捐稽徵法)과 상업회계법(商業會計法)은 세무 조사에 대비해 거래 증빙을 보관하도록 요구해요.</td>
+            <td>거래가 발생한 회계연도부터 <strong>5년</strong></td>
+          </tr>
+          <tr>
+            <td>실물 주문 기록</td>
+            <td>위와 같은 이유에 더해, 품질 보증, 반품·교환, 소비자 분쟁 처리에도 필요해요.</td>
+            <td><strong>5년</strong></td>
+          </tr>
+          <tr>
+            <td>백업 매체의 잔여 사본</td>
+            <td>데이터베이스의 재해 복구용 백업은 순환하며 자동으로 덮어쓰이기 때문에, 특정 데이터만 골라 지울 수 없어요.</td>
+            <td>늦어도 <strong>90일</strong> 안에 덮어써요</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div lang="ko" class="callout">
+      <p><strong>계정을 삭제해도 구독은 해지되지 않아요.</strong>
+      구독은 Apple 또는 Google과 직접 맺은 결제 관계라서 저희에게는 이를 끝낼 권한이 없어요.
+      더 이상 요금이 청구되지 않게 하려면 iPhone의 ‘설정 → 사용자 이름 → 구독’이나
+      Google Play의 ‘결제 및 구독 → 구독’에서 따로 해지해 주세요.</p>
+    </div>
   </section>
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="when">
-    <h2><span class="num">4</span><span class="zh">需要多久</span><span class="en">How long it takes</span></h2>
+    <h2><span class="num">4</span><span lang="zh-Hant">需要多久</span><span lang="zh-Hans">需要多久</span><span lang="en">How long it takes</span><span lang="ja">完了までの期間</span><span lang="ko">처리 기간</span></h2>
 
-    <div class="table-wrap zh">
+    <div lang="zh-Hant" class="table-wrap">
       <table>
         <thead><tr><th>階段</th><th>時間</th></tr></thead>
         <tbody>
@@ -228,7 +574,7 @@
       </table>
     </div>
 
-    <div class="table-wrap en">
+    <div lang="en" class="table-wrap">
       <table>
         <thead><tr><th>Stage</th><th>Timing</th></tr></thead>
         <tbody>
@@ -240,43 +586,115 @@
       </table>
     </div>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       刪除是<strong>不可逆</strong>的。刪除後你仍然可以繼續使用拍簿的離線整理功能，
       也可以隨時重新註冊 —— 但先前的雲端整理進度無法復原。
     </p>
-    <p class="en">
+    <div lang="zh-Hans" class="table-wrap">
+      <table>
+        <thead><tr><th>阶段</th><th>时间</th></tr></thead>
+        <tbody>
+          <tr><td>App 内删除</td><td><strong>立即</strong>执行，账号当即失效</td></tr>
+          <tr><td>网页申请：我们回复</td><td>收到来信后 <strong>7 个工作日</strong>内</td></tr>
+          <tr><td>网页申请：完成删除</td><td>身份确认后 <strong>30 日</strong>内（通常数日内完成）</td></tr>
+          <tr><td>清除备份介质上的残留副本</td><td>最迟 <strong>90 日</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p lang="zh-Hans">
+      删除是<strong>不可逆</strong>的。删除后你仍然可以继续使用拍簿的离线整理功能，
+      也可以随时重新注册——但之前的云端整理进度无法恢复。
+    </p>
+    <p lang="en">
       Deletion is <strong>irreversible</strong>. You can keep using Pibook’s offline organising features
       afterwards and can sign up again at any time — but your previous cloud progress cannot be restored.
+    </p>
+    <div lang="ja" class="table-wrap">
+      <table>
+        <thead><tr><th>段階</th><th>期間</th></tr></thead>
+        <tbody>
+          <tr><td>アプリ内での削除</td><td><strong>即時</strong>に実行され、その時点でアカウントは無効になります</td></tr>
+          <tr><td>ウェブからの申請：私たちからの返信</td><td>メールの受信後 <strong>7 営業日</strong>以内</td></tr>
+          <tr><td>ウェブからの申請：削除の完了</td><td>本人確認後 <strong>30 日</strong>以内（通常は数日で完了します）</td></tr>
+          <tr><td>バックアップ媒体上に残る複製の消去</td><td>遅くとも <strong>90 日</strong>以内</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p lang="ja">
+      削除は<strong>元に戻せません</strong>。削除後も Pibook のオフラインの整理機能は引き続き利用でき、
+      いつでも改めて登録できます。ただし、以前のクラウド上の整理の記録は復元できません。
+    </p>
+    <div lang="ko" class="table-wrap">
+      <table>
+        <thead><tr><th>단계</th><th>기간</th></tr></thead>
+        <tbody>
+          <tr><td>앱에서 삭제</td><td><strong>즉시</strong> 처리되며, 계정은 그 자리에서 효력을 잃어요</td></tr>
+          <tr><td>웹 신청: 저희의 답장</td><td>메일을 받은 뒤 <strong>영업일 기준 7일</strong> 이내</td></tr>
+          <tr><td>웹 신청: 삭제 완료</td><td>본인 확인 후 <strong>30일</strong> 이내(대개 며칠 안에 완료)</td></tr>
+          <tr><td>백업 매체의 잔여 사본 삭제</td><td>늦어도 <strong>90일</strong> 이내</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p lang="ko">
+      삭제는 <strong>되돌릴 수 없어요</strong>. 삭제한 뒤에도 Pibook의 오프라인 정리 기능은 계속 쓸 수 있고,
+      언제든 다시 가입할 수도 있어요. 다만 이전의 클라우드 정리 진행 상황은 복원할 수 없어요.
     </p>
   </section>
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="alt">
-    <h2><span class="num">5</span><span class="zh">只想刪部分資料？</span><span class="en">Want to delete only part of your data?</span></h2>
+    <h2><span class="num">5</span><span lang="zh-Hant">只想刪部分資料？</span><span lang="zh-Hans">只想删除部分数据？</span><span lang="en">Want to delete only part of your data?</span><span lang="ja">一部のデータだけを削除したい場合</span><span lang="ko">일부 데이터만 삭제하고 싶을 때</span></h2>
 
-    <ul class="zh">
-      <li><strong>只想停止使用分析：</strong>不必刪帳號。在 App 內「我的 → 偏好設定」關閉即可。</li>
-      <li><strong>只想刪雲端備份、保留帳號：</strong>在 App 內「我的 → 帳號」關閉雲端備份，並選擇刪除既有備份。</li>
+    <ul lang="zh-Hant">
+      <li><strong>只想停止使用分析：</strong>不必刪帳號。在 App 內「個人 → 進階與重設」關閉「分享匿名使用數據」即可。</li>
+      <li><strong>只想刪雲端備份、保留帳號：</strong>在 App 內「個人 → 帳號」關閉雲端備份，並選擇刪除既有備份。</li>
       <li><strong>想先取得一份資料副本：</strong>刪除前來信 <a href="mailto:privacy@pibook.app">privacy@pibook.app</a>，我們會以可機器讀取的格式提供。</li>
     </ul>
+    <ul lang="zh-Hans">
+      <li><strong>只想停止使用分析：</strong>无需删除账号。在 App 内前往“个人 → 进阶与重设 → 分享匿名使用数据”关闭即可。</li>
+      <li><strong>只想删除云端备份、保留账号：</strong>在 App 内的“个人 → 账号”中关闭云端备份，并选择删除现有备份。</li>
+      <li><strong>想先获取一份数据副本：</strong>删除前发邮件至 <a href="mailto:privacy@pibook.app">privacy@pibook.app</a>，我们会以机器可读的格式提供。</li>
+    </ul>
 
-    <ul class="en">
-      <li><strong>Just want analytics off:</strong> no need to delete your account — switch it off in Profile → Preferences.</li>
+    <ul lang="en">
+      <li><strong>Just want analytics off:</strong> no need to delete your account — switch off Share usage data in Profile → Advanced &amp; reset.</li>
       <li><strong>Just want the cloud backup gone:</strong> turn off cloud backup in Profile → Account and choose to delete existing backups.</li>
       <li><strong>Want a copy of your data first:</strong> write to <a href="mailto:privacy@pibook.app">privacy@pibook.app</a> before deleting and we will provide it in a machine-readable format.</li>
+    </ul>
+    <ul lang="ja">
+      <li><strong>利用状況の分析だけを止めたい場合：</strong>アカウントを削除する必要はありません。アプリ内の「マイページ → 詳細とリセット → 利用データを共有」をオフにするだけです。</li>
+      <li><strong>バックアップだけを削除し、アカウントは残したい場合：</strong>アプリ内の「マイページ → アカウント」の「バックアップ」で「自動バックアップ」をオフにし、既存のバックアップの削除を選択してください。</li>
+      <li><strong>先にデータのコピーがほしい場合：</strong>削除する前に <a href="mailto:privacy@pibook.app">privacy@pibook.app</a> までご連絡ください。機械で読み取り可能な形式でお渡しします。</li>
+    </ul>
+    <ul lang="ko">
+      <li><strong>이용 분석만 끄고 싶다면:</strong> 계정을 삭제할 필요가 없어요. 앱의 ‘프로필 → 고급 설정과 초기화 → 이용 데이터 공유’를 끄면 돼요.</li>
+      <li><strong>계정은 두고 클라우드 백업만 지우고 싶다면:</strong> 앱의 ‘프로필 → 계정’에서 ‘백업’을 끄고, 기존 백업을 삭제하도록 선택하세요.</li>
+      <li><strong>삭제하기 전에 데이터 사본을 받고 싶다면:</strong> 삭제하기 전에 <a href="mailto:privacy@pibook.app">privacy@pibook.app</a>에 메일을 보내 주세요. 기계가 읽을 수 있는 형식으로 보내 드려요.</li>
     </ul>
   </section>
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="contact">
-    <h2><span class="num">6</span><span class="zh">有問題？</span><span class="en">Questions?</span></h2>
-    <p class="zh">
+    <h2><span class="num">6</span><span lang="zh-Hant">有問題？</span><span lang="zh-Hans">有问题？</span><span lang="en">Questions?</span><span lang="ja">お問い合わせ</span><span lang="ko">궁금한 점이 있으신가요?</span></h2>
+    <p lang="zh-Hant">
       來信 <a href="mailto:privacy@pibook.app">privacy@pibook.app</a>，
       或參考完整的<a href="/privacy/">隱私權政策</a>。
     </p>
-    <p class="en">
+    <p lang="zh-Hans">
+      发邮件至 <a href="mailto:privacy@pibook.app">privacy@pibook.app</a>，
+      或参阅完整的<a href="/privacy/">隐私权政策</a>。
+    </p>
+    <p lang="en">
       Write to <a href="mailto:privacy@pibook.app">privacy@pibook.app</a>, or read the full
       <a href="/privacy/">Privacy Policy</a>.
+    </p>
+    <p lang="ja">
+      <a href="mailto:privacy@pibook.app">privacy@pibook.app</a> までメールでお問い合わせいただくか、
+      <a href="/privacy/">プライバシーポリシー</a>の全文をご覧ください。
+    </p>
+    <p lang="ko">
+      <a href="mailto:privacy@pibook.app">privacy@pibook.app</a>에 메일을 보내 주시거나,
+      전체 <a href="/privacy/">개인정보 처리방침</a>을 참고해 주세요.
     </p>
   </section>
 
@@ -286,22 +704,40 @@
 <footer class="site-footer">
   <div class="inner">
     <nav>
-      <a href="/"><span class="zh">首頁</span><span class="en">Home</span></a>
-      <a href="/privacy/"><span class="zh">隱私權政策</span><span class="en">Privacy Policy</span></a>
-      <a href="/terms/"><span class="zh">服務條款</span><span class="en">Terms of Use</span></a>
-      <a href="/support/"><span class="zh">支援</span><span class="en">Support</span></a>
-      <a href="/delete-account/"><span class="zh">刪除帳號</span><span class="en">Delete Account</span></a>
+      <a href="/"><span lang="zh-Hant">首頁</span><span lang="zh-Hans">首页</span><span lang="en">Home</span><span lang="ja">ホーム</span><span lang="ko">홈</span></a>
+      <a href="/privacy/"><span lang="zh-Hant">隱私權政策</span><span lang="zh-Hans">隐私权政策</span><span lang="en">Privacy Policy</span><span lang="ja">プライバシーポリシー</span><span lang="ko">개인정보 처리방침</span></a>
+      <a href="/terms/"><span lang="zh-Hant">服務條款</span><span lang="zh-Hans">服务条款</span><span lang="en">Terms of Use</span><span lang="ja">利用規約</span><span lang="ko">이용약관</span></a>
+      <a href="/support/"><span lang="zh-Hant">支援</span><span lang="zh-Hans">支持</span><span lang="en">Support</span><span lang="ja">サポート</span><span lang="ko">지원</span></a>
+      <a href="/delete-account/"><span lang="zh-Hant">刪除帳號</span><span lang="zh-Hans">删除账号</span><span lang="en">Delete Account</span><span lang="ja">アカウント削除</span><span lang="ko">계정 삭제</span></a>
     </nav>
     <div class="legal">
-      <span class="zh">
+      <span lang="zh-Hant">
         八西歐科技有限公司<br>
         統一編號 60773047<br>
         support@pibook.app<br>
         © 2026 Pibook. 保留一切權利。
       </span>
-      <span class="en">
+      <span lang="zh-Hans">
+        八西欧科技有限公司<br>
+        统一编号 60773047<br>
+        support@pibook.app<br>
+        © 2026 Pibook. 保留所有权利。
+      </span>
+      <span lang="en">
         8CO Technology Co., Ltd.<br>
         Tax ID 60773047<br>
+        support@pibook.app<br>
+        © 2026 Pibook. All rights reserved.
+      </span>
+      <span lang="ja">
+        8CO Technology Co., Ltd.<br>
+        統一編号 60773047<br>
+        support@pibook.app<br>
+        © 2026 Pibook. All rights reserved.
+      </span>
+      <span lang="ko">
+        8CO Technology Co., Ltd.<br>
+        사업자 통일번호 60773047<br>
         support@pibook.app<br>
         © 2026 Pibook. All rights reserved.
       </span>
@@ -310,6 +746,6 @@
 </footer>
 <!-- @/partial:footer -->
 
-<script src="/assets/lang.js"></script>
+<script src="/assets/lang.js?v=20260925"></script>
 </body>
 </html>

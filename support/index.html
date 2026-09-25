@@ -1,19 +1,114 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-Hant" data-lang="zh-Hant">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>支援 — 拍簿 Pibook</title>
+<script type="application/json" id="page-titles">{"zh-Hant": "支援 — 拍簿 Pibook", "zh-Hans": "支持 — 拍簿 Pibook", "en": "Support — Pibook", "ja": "サポート — Pibook", "ko": "지원 — Pibook"}</script>
+<!-- @partial:head -->
+<script>
+(function (d, w) {
+  var LANGS = ['zh-Hant', 'zh-Hans', 'en', 'ja', 'ko'];
+  var KEY = 'pibook-lang';
+  var FONTS = {
+    'zh-Hant': 'family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700',
+    'zh-Hans': 'family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@500;700',
+    'ja': 'family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;700',
+    'ko': 'family=Noto+Sans+KR:wght@400;500;700'
+  };
+
+  function norm(tag) { return String(tag || '').toLowerCase().replace(/_/g, '-'); }
+
+  /* 中文分繁簡：先看文字（Hant／Hans），再看地區 —— 台灣、香港、澳門與粵語是繁體，
+     中國、新加坡、馬來西亞是簡體。只寫「zh」答不出來，回 null。 */
+  function chinese(t) {
+    if (/-hans(-|$)/.test(t)) return 'zh-Hans';
+    if (/-hant(-|$)/.test(t) || /^yue(-|$)/.test(t) || /-(tw|hk|mo)(-|$)/.test(t)) return 'zh-Hant';
+    if (/-(cn|sg|my)(-|$)/.test(t)) return 'zh-Hans';
+    return null;
+  }
+
+  /* 一個語言標籤 → 我們有的語言；沒有就回 null，讓清單裡的下一個接手。 */
+  function match(tag, rest) {
+    var t = norm(tag);
+    if (!t) return null;
+    var base = t.split('-')[0];
+    if (base === 'zh' || base === 'yue') {
+      var v = chinese(t);
+      if (v) return v;
+      // 只寫「zh」：看清單後面有沒有更明確的中文，沒有就當簡體。
+      for (var j = 0; rest && j < rest.length; j++) {
+        var r = chinese(norm(rest[j]));
+        if (r) return r;
+      }
+      return 'zh-Hans';
+    }
+    if (base === 'en') return 'en';
+    if (base === 'ja') return 'ja';
+    if (base === 'ko') return 'ko';
+    return null;
+  }
+
+  function pick() {
+    var q = /[?&]lang=([^&#]+)/.exec(w.location.search);
+    var fromUrl = null;
+    try { fromUrl = q && match(decodeURIComponent(q[1])); } catch (e) { /* 網址參數壞掉就忽略 */ }
+    if (fromUrl) return fromUrl;
+    try {
+      var saved = w.localStorage.getItem(KEY);
+      if (LANGS.indexOf(saved) >= 0) return saved;
+    } catch (e) { /* 隱私模式或被封鎖：往下用裝置語言 */ }
+    var list = (w.navigator.languages && w.navigator.languages.length)
+      ? w.navigator.languages : [w.navigator.language || w.navigator.userLanguage];
+    for (var i = 0; i < list.length; i++) {
+      var m = match(list[i], list.slice(i + 1));
+      if (m) return m;
+    }
+    return 'en';
+  }
+
+  function loadFont(lang) {
+    var set = lang === 'en' ? 'zh-Hant' : lang;
+    if (d.getElementById('pb-font-' + set)) return;
+    var link = d.createElement('link');
+    link.rel = 'stylesheet';
+    link.id = 'pb-font-' + set;
+    link.href = 'https://fonts.googleapis.com/css2?' + FONTS[set] + '&display=swap';
+    d.head.appendChild(link);
+  }
+
+  function title(lang) {
+    var el = d.getElementById('page-titles');
+    if (!el) return;
+    try {
+      var map = JSON.parse(el.textContent);
+      if (map[lang]) d.title = map[lang];
+    } catch (e) { /* 標題維持原樣 */ }
+  }
+
+  function apply(lang) {
+    var root = d.documentElement;
+    root.setAttribute('lang', lang);
+    root.setAttribute('data-lang', lang);
+    loadFont(lang);
+    title(lang);
+  }
+
+  w.PibookLang = { langs: LANGS, key: KEY, match: match, apply: apply, current: pick() };
+  apply(w.PibookLang.current);
+})(document, window);
+</script>
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap"></noscript>
+<!-- @/partial:head -->
 <meta name="description" content="拍簿的常見問題與聯絡方式：權限、訂閱、還原購買、換手機、刪除帳號。">
 <meta name="theme-color" content="#FBF7F0" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#171E25" media="(prefers-color-scheme: dark)">
 <link rel="canonical" href="https://pibook.app/support/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap">
-<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/assets/style.css?v=20260925">
 </head>
-<body data-lang="zh">
+<body>
 
 <!-- @partial:header -->
 <header class="site-header">
@@ -21,14 +116,33 @@
     <a class="brand" href="/">
       <img class="brand-logo" src="/assets/app_icon.png" alt="" aria-hidden="true">
       <span class="brand-words">
-        <span class="mark zh">拍簿</span>
-        <span class="mark en">Pibook</span>
-        <span class="latin zh">PIBOOK</span>
+        <span lang="zh-Hant" class="mark">拍簿</span>
+        <span lang="zh-Hans" class="mark">拍簿</span>
+        <span lang="en" class="mark">Pibook</span>
+        <span lang="ja" class="mark">Pibook</span>
+        <span lang="ko" class="mark">Pibook</span>
+        <span lang="zh-Hant" class="latin">PIBOOK</span>
+        <span lang="zh-Hans" class="latin">PIBOOK</span>
       </span>
     </a>
-    <div class="lang-toggle">
-      <button type="button" data-lang="zh" aria-pressed="true">繁體中文</button>
-      <button type="button" data-lang="en" aria-pressed="false">English</button>
+    <div class="lang-switch">
+      <button type="button" class="lang-button" id="lang-button"
+              aria-haspopup="menu" aria-expanded="false" aria-controls="lang-menu">
+        <svg class="lang-globe" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="M3.4 12h17.2"/><path d="M12 3.4c2.3 2.4 3.5 5.3 3.5 8.6s-1.2 6.2-3.5 8.6c-2.3-2.4-3.5-5.3-3.5-8.6s1.2-6.2 3.5-8.6z"/></svg>
+        <span lang="zh-Hant">繁體中文</span>
+        <span lang="zh-Hans">简体中文</span>
+        <span lang="en">English</span>
+        <span lang="ja">日本語</span>
+        <span lang="ko">한국어</span>
+        <svg class="lang-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.6 6 7.6 9 4.6"/></svg>
+      </button>
+      <ul class="lang-menu" id="lang-menu" role="menu" aria-labelledby="lang-button" hidden>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="zh-Hant"><span lang="zh-Hant">繁體中文</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="zh-Hans"><span lang="zh-Hans">简体中文</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="en"><span lang="en">English</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="ja"><span lang="ja">日本語</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="ko"><span lang="ko">한국어</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+      </ul>
     </div>
   </div>
 </header>
@@ -37,33 +151,54 @@
 <main class="doc">
 
   <div class="doc-head">
-    <h1 class="zh">支援</h1>
-    <h1 class="en">Support</h1>
+    <h1 lang="zh-Hant">支援</h1>
+    <h1 lang="zh-Hans">支持</h1>
+    <h1 lang="en">Support</h1>
+    <h1 lang="ja">サポート</h1>
+    <h1 lang="ko">지원</h1>
     <div class="doc-meta">
-      <span class="zh">最後更新：2026 年 8 月 28 日</span>
-      <span class="en">Last updated: 28 August 2026</span>
+      <span lang="zh-Hant">最後更新：2026 年 9 月 25 日</span>
+      <span lang="zh-Hans">最后更新：2026 年 9 月 25 日</span>
+      <span lang="en">Last updated: 25 September 2026</span>
+      <span lang="ja">最終更新日：2026年9月25日</span>
+      <span lang="ko">최종 수정일: 2026년 9월 25일</span>
     </div>
   </div>
 
   <div class="summary">
-    <h2 class="zh">直接聯絡我們</h2>
-    <h2 class="en">TALK TO US</h2>
-    <ul class="zh">
+    <h2 lang="zh-Hant">直接聯絡我們</h2>
+    <h2 lang="en">TALK TO US</h2>
+    <ul lang="zh-Hant">
       <li>來信 <a href="mailto:support@pibook.app">support@pibook.app</a>，我們會在 <strong>7 個工作日</strong>內回覆。</li>
-      <li>回報問題時，附上你的<strong>手機型號</strong>、<strong>系統版本</strong>與 <strong>App 版本</strong>（在「我的」頁最下方）會讓我們快很多。</li>
+      <li>回報問題時，附上你的<strong>手機型號</strong>、<strong>系統版本</strong>與 <strong>App 版本</strong>（在「個人」頁下方）會讓我們快很多。</li>
     </ul>
-    <ul class="en">
+    <h2 lang="zh-Hans">直接联系我们</h2>
+    <ul lang="zh-Hans">
+      <li>发邮件至 <a href="mailto:support@pibook.app">support@pibook.app</a>，我们会在 <strong>7 个工作日</strong>内回复。</li>
+      <li>反馈问题时，附上你的<strong>手机型号</strong>、<strong>系统版本</strong>与 <strong>App 版本</strong>（在“个人”页最下方），能让我们处理得快很多。</li>
+    </ul>
+    <ul lang="en">
       <li>Email <a href="mailto:support@pibook.app">support@pibook.app</a> — we reply within <strong>7 business days</strong>.</li>
-      <li>Including your <strong>phone model</strong>, <strong>OS version</strong> and <strong>app version</strong> (at the bottom of the Profile tab) helps us a great deal.</li>
+      <li>Including your <strong>phone model</strong>, <strong>OS version</strong> and <strong>app version</strong> (near the bottom of the Profile tab) helps us a great deal.</li>
+    </ul>
+    <h2 lang="ja">お問い合わせ窓口</h2>
+    <ul lang="ja">
+      <li><a href="mailto:support@pibook.app">support@pibook.app</a> までメールでご連絡ください。<strong>7 営業日</strong>以内にお返事します。</li>
+      <li>不具合をご報告いただく際に、<strong>端末の機種</strong>、<strong>OS のバージョン</strong>、<strong>アプリのバージョン</strong>（「マイページ」の下部に表示されています）を添えていただけると、ずっと早く対応できます。</li>
+    </ul>
+    <h2 lang="ko">직접 문의하기</h2>
+    <ul lang="ko">
+      <li><a href="mailto:support@pibook.app">support@pibook.app</a>에 메일을 보내 주시면 <strong>영업일 기준 7일</strong> 이내에 답장해 드려요.</li>
+      <li>문제를 알려 주실 때 <strong>휴대폰 기종</strong>, <strong>OS 버전</strong>, <strong>앱 버전</strong>(‘프로필’ 탭 맨 아래에 있어요)을 함께 적어 주시면 훨씬 빨리 확인할 수 있어요.</li>
     </ul>
   </div>
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section>
-    <h2 class="zh">關於照片與隱私</h2>
-    <h2 class="en">Photos and privacy</h2>
+    <h2 lang="zh-Hant">關於照片與隱私</h2>
+    <h2 lang="en">Photos and privacy</h2>
 
-    <div class="faq zh">
+    <div lang="zh-Hant" class="faq">
       <details>
         <summary>我的照片會被上傳嗎？</summary>
         <div class="answer">
@@ -87,12 +222,41 @@
       <details>
         <summary>我可以關掉使用數據回報嗎？</summary>
         <div class="answer">
-          <p>可以，隨時都行：「我的 → 偏好設定」裡有開關。關掉之後 App 不會再送出任何分析事件。</p>
+          <p>可以，隨時都行：在「個人 → 進階與重設」關閉「分享匿名使用數據」。關掉之後 App 不會再送出任何分析事件。</p>
+        </div>
+      </details>
+    </div>
+    <h2 lang="zh-Hans">关于照片与隐私</h2>
+    <div lang="zh-Hans" class="faq">
+      <details>
+        <summary>我的照片会被上传吗？</summary>
+        <div class="answer">
+          <p>不会。相似照片分组、人脸检测、质量评分、压缩，全部在你的手机上完成，我们的服务器上没有你的任何照片。</p>
+          <p>唯一的例外是你主动订购实体印制商品时，为那笔订单选择的照片才会上传，用于制作商品，并在发货后 90 天内删除。</p>
+        </div>
+      </details>
+      <details>
+        <summary>你们会识别照片里的人是谁吗？</summary>
+        <div class="answer">
+          <p>不会。人脸检测只用来判断“这张照片里的脸清不清楚、眼睛有没有闭上”，以便在一组相似照片中挑出更好的那张。我们不建立人脸特征模板，也不比对不同照片里的人是不是同一个人，这些数据完全不会离开你的设备。</p>
+        </div>
+      </details>
+      <details>
+        <summary>为什么需要“完整”的相册权限？</summary>
+        <div class="answer">
+          <p>拍簿的核心是“帮你把整个相册看一遍”——找出相似的、重复的、模糊的照片。如果只给部分照片的权限，App 只能看到你手动选择的那几张，整理与统计都会失去意义。</p>
+          <p>你当然可以只给部分权限，App 仍然可以运行，只是能帮上的忙有限。</p>
+        </div>
+      </details>
+      <details>
+        <summary>我可以关闭使用数据上报吗？</summary>
+        <div class="answer">
+          <p>可以，随时都行：开关在“个人 → 进阶与重设 → 分享匿名使用数据”。关闭之后 App 不会再发送任何分析事件。</p>
         </div>
       </details>
     </div>
 
-    <div class="faq en">
+    <div lang="en" class="faq">
       <details>
         <summary>Are my photos uploaded?</summary>
         <div class="answer">
@@ -116,7 +280,65 @@
       <details>
         <summary>Can I turn off usage analytics?</summary>
         <div class="answer">
-          <p>Yes, at any time — the switch is in Profile → Preferences. After that the app sends no analytics events at all.</p>
+          <p>Yes, at any time — switch off Share usage data in Profile → Advanced &amp; reset. After that the app sends no analytics events at all.</p>
+        </div>
+      </details>
+    </div>
+    <h2 lang="ja">写真とプライバシー</h2>
+    <div lang="ja" class="faq">
+      <details>
+        <summary>写真はアップロードされますか？</summary>
+        <div class="answer">
+          <p>いいえ。似ている写真のグループ分け、顔検出、品質評価、圧縮は、すべてお使いの端末上で行われます。私たちのサーバーに写真は 1 枚もありません。</p>
+          <p>唯一の例外は、ご自身でプリント商品を注文したときです。その注文のために選んだ写真だけが商品の製作のためにアップロードされ、発送後 90 日以内に削除されます。</p>
+        </div>
+      </details>
+      <details>
+        <summary>写真に写っている人が誰なのかを識別しますか？</summary>
+        <div class="answer">
+          <p>いいえ。顔検出は「この写真の顔ははっきり写っているか、目を閉じていないか」を判断するためだけに使い、似ている写真のグループの中から、より良い 1 枚を選ぶのに役立てています。顔の特徴テンプレートを作ることはなく、別々の写真に写っている人が同一人物かどうかを照合することもありません。これらのデータが端末の外に出ることは一切ありません。</p>
+        </div>
+      </details>
+      <details>
+        <summary>なぜ「すべての写真」へのアクセスが必要なのですか？</summary>
+        <div class="answer">
+          <p>Pibook の核心は、ライブラリ全体にひととおり目を通し、似ている写真、重複した写真、ブレた写真を見つけ出すことにあります。一部の写真だけへのアクセスでは、アプリに見えるのは手動で選んだ数枚だけになり、整理も統計も意味をなさなくなります。</p>
+          <p>もちろん、一部の写真だけへのアクセスを許可することもできます。その場合もアプリは動作しますが、お手伝いできることは限られます。</p>
+        </div>
+      </details>
+      <details>
+        <summary>利用データの共有はオフにできますか？</summary>
+        <div class="answer">
+          <p>はい、いつでもオフにできます。スイッチは「マイページ → 詳細とリセット → 利用データを共有」にあります。オフにすると、アプリから分析イベントが送信されることは一切なくなります。</p>
+        </div>
+      </details>
+    </div>
+    <h2 lang="ko">사진과 개인정보</h2>
+    <div lang="ko" class="faq">
+      <details>
+        <summary>제 사진이 업로드되나요?</summary>
+        <div class="answer">
+          <p>아니요. 비슷한 사진 묶기, 얼굴 감지, 품질 평가, 압축은 모두 휴대폰 안에서 이루어져요. 저희 서버에는 사진이 한 장도 없어요.</p>
+          <p>유일한 예외는 실물 인화 상품을 직접 주문하실 때예요. 그 주문을 위해 고르신 사진만 상품 제작을 위해 업로드되고, 출고 후 90일 이내에 삭제돼요.</p>
+        </div>
+      </details>
+      <details>
+        <summary>사진 속 사람이 누구인지 식별하나요?</summary>
+        <div class="answer">
+          <p>아니요. 얼굴 감지는 ‘이 사진 속 얼굴이 선명한지, 눈을 감지는 않았는지’를 판단하는 데에만 쓰여요. 비슷한 사진 묶음에서 더 잘 나온 한 장을 고르기 위해서예요. 얼굴 특징 템플릿을 만들지 않고, 여러 사진 속 사람이 같은 사람인지 비교하지도 않아요. 이 데이터는 기기 밖으로 전혀 나가지 않아요.</p>
+        </div>
+      </details>
+      <details>
+        <summary>왜 보관함 ‘전체’ 접근 권한이 필요한가요?</summary>
+        <div class="answer">
+          <p>Pibook의 핵심은 ‘보관함 전체를 대신 한 번 훑어보는 것’이에요. 그래야 비슷한 사진, 중복된 사진, 흐린 사진을 찾아낼 수 있어요. 일부 사진만 허용하면 앱은 직접 고르신 몇 장만 볼 수 있어서, 정리도 통계도 의미가 없어져요.</p>
+          <p>물론 일부만 허용하셔도 앱은 작동해요. 다만 도와드릴 수 있는 일이 줄어들어요.</p>
+        </div>
+      </details>
+      <details>
+        <summary>이용 데이터 공유를 끌 수 있나요?</summary>
+        <div class="answer">
+          <p>네, 언제든지 끌 수 있어요. ‘프로필 → 고급 설정과 초기화 → 이용 데이터 공유’ 스위치를 끄면 돼요. 끈 뒤에는 앱이 분석 이벤트를 하나도 보내지 않아요.</p>
         </div>
       </details>
     </div>
@@ -124,10 +346,10 @@
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section>
-    <h2 class="zh">訂閱與購買</h2>
-    <h2 class="en">Subscriptions and purchases</h2>
+    <h2 lang="zh-Hant">訂閱與購買</h2>
+    <h2 lang="en">Subscriptions and purchases</h2>
 
-    <div class="faq zh">
+    <div lang="zh-Hant" class="faq">
       <details>
         <summary>我換手機了，Premium 怎麼拿回來？</summary>
         <div class="answer">
@@ -159,8 +381,41 @@
         </div>
       </details>
     </div>
+    <h2 lang="zh-Hans">订阅与购买</h2>
+    <div lang="zh-Hans" class="faq">
+      <details>
+        <summary>我换手机了，Premium 怎么找回来？</summary>
+        <div class="answer">
+          <p>用<strong>同一个</strong> Apple ID 或 Google 账号登录商店，然后在 App 的 Premium 页面点击<strong>“恢复购买”</strong>。</p>
+          <p>如果你当初登录过拍簿账号，登录同一个账号也会自动恢复权益。</p>
+        </div>
+      </details>
+      <details>
+        <summary>怎么取消订阅？</summary>
+        <div class="answer">
+          <p><strong>iPhone／iPad：</strong>设置 → 你的姓名 → 订阅 → 拍簿 → 取消订阅。</p>
+          <p><strong>Android：</strong>Google Play → 个人资料 → 付款和订阅 → 订阅 → 拍簿 → 取消订阅。</p>
+          <p>取消后，Premium 会持续到你已付费的期间结束为止。<strong>在 App 内删除账号不会取消订阅</strong>，一定要在上面的位置操作。</p>
+        </div>
+      </details>
+      <details>
+        <summary>我想退款</summary>
+        <div class="answer">
+          <p>App 内购买的款项由 Apple 或 Google 收取，我们收不到也退不了，必须向他们申请：</p>
+          <p>Apple 请前往 <a href="https://reportaproblem.apple.com" target="_blank" rel="noopener noreferrer">reportaproblem.apple.com</a>；Android 请在 Google Play 的订单记录中申请。</p>
+          <p>如果问题是 App 的缺陷造成的，请先写信告诉我们，我们会协助你向商店说明，也会在能力范围内补偿你。</p>
+        </div>
+      </details>
+      <details>
+        <summary>付了钱但 Premium 没有开通</summary>
+        <div class="answer">
+          <p>请先确认网络畅通，然后在 Premium 页面点一次“恢复购买”。大多数情况下这样就能解决。</p>
+          <p>如果仍未开通，请发邮件告诉我们你的购买时间与购买平台，我们会查明并手动为你开通。</p>
+        </div>
+      </details>
+    </div>
 
-    <div class="faq en">
+    <div lang="en" class="faq">
       <details>
         <summary>I changed phones — how do I get Premium back?</summary>
         <div class="answer">
@@ -191,14 +446,80 @@
         </div>
       </details>
     </div>
+    <h2 lang="ja">サブスクリプションと購入</h2>
+    <div lang="ja" class="faq">
+      <details>
+        <summary>機種変更しました。Premium はどうすれば戻せますか？</summary>
+        <div class="answer">
+          <p><strong>同じ</strong> Apple ID または Google アカウントでストアにサインインし、アプリの Premium 画面で<strong>「購入を復元」</strong>をタップしてください。</p>
+          <p>Pibook のアカウントにサインインしていた場合は、同じアカウントにサインインするだけでも利用権が自動的に戻ります。</p>
+        </div>
+      </details>
+      <details>
+        <summary>サブスクリプションはどうすれば解約できますか？</summary>
+        <div class="answer">
+          <p><strong>iPhone／iPad：</strong>設定 → 自分の名前 → サブスクリプション → Pibook → サブスクリプションをキャンセル</p>
+          <p><strong>Android：</strong>Google Play → プロフィール → お支払いと定期購入 → 定期購入 → Pibook → 定期購入を解約</p>
+          <p>解約後も、支払い済みの期間が終わるまで Premium を利用できます。<strong>アプリ内でアカウントを削除しても、サブスクリプションは解約されません。</strong>必ず上記の場所で手続きしてください。</p>
+        </div>
+      </details>
+      <details>
+        <summary>返金を受けたい</summary>
+        <div class="answer">
+          <p>アプリ内での購入代金は Apple または Google が受け取っているため、私たちが受け取ることはなく、返金することもできません。返金は各社に申請してください。</p>
+          <p>Apple の場合は <a href="https://reportaproblem.apple.com" target="_blank" rel="noopener noreferrer">reportaproblem.apple.com</a> から、Android の場合は Google Play の注文履歴から申請できます。</p>
+          <p>問題の原因がアプリの不具合にある場合は、まず私たちにメールでお知らせください。ストアへの説明をお手伝いするとともに、できる範囲で補償いたします。</p>
+        </div>
+      </details>
+      <details>
+        <summary>支払ったのに Premium が有効にならない</summary>
+        <div class="answer">
+          <p>まずネットワークに接続できていることを確認し、Premium 画面で「購入を復元」を 1 回タップしてください。ほとんどの場合、これで解決します。</p>
+          <p>それでも有効にならない場合は、購入日時と購入したプラットフォームをメールでお知らせください。確認のうえ、手動で有効にします。</p>
+        </div>
+      </details>
+    </div>
+    <h2 lang="ko">구독과 구매</h2>
+    <div lang="ko" class="faq">
+      <details>
+        <summary>휴대폰을 바꿨는데 Premium은 어떻게 되찾나요?</summary>
+        <div class="answer">
+          <p><strong>같은</strong> Apple ID 또는 Google 계정으로 스토어에 로그인한 다음, 앱의 Premium 화면에서 <strong>‘구매 복원’</strong>을 누르세요.</p>
+          <p>예전에 Pibook 계정에 로그인해 두셨다면, 같은 계정으로 로그인하기만 해도 이용 권한이 자동으로 돌아와요.</p>
+        </div>
+      </details>
+      <details>
+        <summary>구독은 어떻게 해지하나요?</summary>
+        <div class="answer">
+          <p><strong>iPhone/iPad:</strong> 설정 → 사용자 이름 → 구독 → Pibook → 구독 취소</p>
+          <p><strong>Android:</strong> Google Play → 프로필 → 결제 및 구독 → 구독 → Pibook → 구독 취소</p>
+          <p>해지해도 이미 결제한 기간이 끝날 때까지는 Premium을 계속 쓸 수 있어요. <strong>앱에서 계정을 삭제해도 구독은 해지되지 않으니</strong> 꼭 위의 경로에서 해지해 주세요.</p>
+        </div>
+      </details>
+      <details>
+        <summary>환불받고 싶어요</summary>
+        <div class="answer">
+          <p>앱 내 구매 대금은 Apple 또는 Google이 받기 때문에 저희는 받을 수도, 환불해 드릴 수도 없어요. 환불은 Apple 또는 Google에 직접 신청하셔야 해요.</p>
+          <p>Apple은 <a href="https://reportaproblem.apple.com" target="_blank" rel="noopener noreferrer">reportaproblem.apple.com</a>에서, Android는 Google Play의 주문 내역에서 신청할 수 있어요.</p>
+          <p>앱의 결함 때문에 생긴 문제라면 먼저 메일로 알려 주세요. 스토어에 사정을 설명하실 수 있도록 도와드리고, 저희가 할 수 있는 범위에서 보상도 해 드릴게요.</p>
+        </div>
+      </details>
+      <details>
+        <summary>결제했는데 Premium이 활성화되지 않았어요</summary>
+        <div class="answer">
+          <p>먼저 인터넷 연결을 확인한 다음, Premium 화면에서 ‘구매 복원’을 한 번 눌러 보세요. 대부분은 이것으로 해결돼요.</p>
+          <p>그래도 안 되면 구매 일시와 구매하신 플랫폼을 메일로 알려 주세요. 확인한 뒤 수동으로 활성화해 드릴게요.</p>
+        </div>
+      </details>
+    </div>
   </section>
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section>
-    <h2 class="zh">整理與刪除</h2>
-    <h2 class="en">Organising and deleting</h2>
+    <h2 lang="zh-Hant">整理與刪除</h2>
+    <h2 lang="en">Organising and deleting</h2>
 
-    <div class="faq zh">
+    <div lang="zh-Hant" class="faq">
       <details>
         <summary>我不小心刪掉照片了，救得回來嗎？</summary>
         <div class="answer">
@@ -223,12 +544,42 @@
       <details>
         <summary>怎麼刪除我的帳號？</summary>
         <div class="answer">
-          <p>「我的 → 帳號 → 刪除帳號」，或從<a href="/delete-account/">這一頁</a>提出申請。完整說明（會刪什麼、留什麼、多久）都在那裡。</p>
+          <p>「個人 → 帳號 → 刪除帳號」，或從<a href="/delete-account/">這一頁</a>提出申請。完整說明（會刪什麼、留什麼、多久）都在那裡。</p>
+        </div>
+      </details>
+    </div>
+    <h2 lang="zh-Hans">整理与删除</h2>
+    <div lang="zh-Hans" class="faq">
+      <details>
+        <summary>我不小心删掉了照片，还能找回来吗？</summary>
+        <div class="answer">
+          <p>拍簿本身没有你的照片副本，所以我们没办法直接帮你找回。但操作系统通常还保留着：</p>
+          <p><strong>iPhone：</strong>照片 App → 相簿 → 最近删除（保留 30 天）。<br>
+          <strong>Android：</strong>Google 相册 → 合集 → 回收站（保留 30 或 60 天）。</p>
+          <p>建议在整理前先确认你有可靠的云端备份。</p>
+        </div>
+      </details>
+      <details>
+        <summary>整理进度会不会丢失？</summary>
+        <div class="answer">
+          <p>进度保存在你的手机上。如果你登录并开启了云端备份，换手机时可以恢复——我们用照片的“指纹”（由拍摄时间与文件特征推导出的单向哈希）认出同一张照片，因为系统相册里的照片编号换一台手机就完全不同了。</p>
+        </div>
+      </details>
+      <details>
+        <summary>为什么有些照片分析得比较慢？</summary>
+        <div class="answer">
+          <p>如果照片只存在 iCloud 而不在本机，App 需要先向系统请求下载一份，这一步的速度取决于你的网络。手机发烫时 App 也会主动放慢，避免影响你正在做的事。</p>
+        </div>
+      </details>
+      <details>
+        <summary>怎么删除我的账号？</summary>
+        <div class="answer">
+          <p>“个人 → 账号 → 删除账号”，或通过<a href="/delete-account/">这一页</a>提出申请。完整说明（会删除什么、保留什么、需要多久）都在那里。</p>
         </div>
       </details>
     </div>
 
-    <div class="faq en">
+    <div lang="en" class="faq">
       <details>
         <summary>I deleted a photo by mistake — can it be recovered?</summary>
         <div class="answer">
@@ -253,7 +604,67 @@
       <details>
         <summary>How do I delete my account?</summary>
         <div class="answer">
-          <p>Profile → Account → Delete Account, or submit a request from <a href="/delete-account/">this page</a>, which explains exactly what is deleted, what is retained and how long it takes.</p>
+          <p>Profile → Account → Delete account, or submit a request from <a href="/delete-account/">this page</a>, which explains exactly what is deleted, what is retained and how long it takes.</p>
+        </div>
+      </details>
+    </div>
+    <h2 lang="ja">整理と削除</h2>
+    <div lang="ja" class="faq">
+      <details>
+        <summary>誤って写真を削除してしまいました。元に戻せますか？</summary>
+        <div class="answer">
+          <p>Pibook は写真のコピーを持っていないため、私たちが直接復元することはできません。ただし、多くの場合は OS 側にまだ残っています。</p>
+          <p><strong>iPhone：</strong>写真アプリ → アルバム → 最近削除した項目（30 日間保存）<br>
+          <strong>Android：</strong>Google フォト → ライブラリ → ゴミ箱（30 日間または 60 日間保存）</p>
+          <p>整理を始める前に、信頼できるクラウドのバックアップがあるかどうかを確認しておくことをおすすめします。</p>
+        </div>
+      </details>
+      <details>
+        <summary>整理の記録が消えてしまうことはありますか？</summary>
+        <div class="answer">
+          <p>記録はお使いの端末に保存されています。サインインしてバックアップをオンにしていれば、機種変更のときに復元できます。システムの写真ライブラリの写真 ID は端末が変わるとまったく別のものになるため、私たちは写真の「指紋」（撮影日時とファイルの特徴から導き出した一方向ハッシュ）を使って同じ写真を見分けています。</p>
+        </div>
+      </details>
+      <details>
+        <summary>分析に時間がかかる写真があるのはなぜですか？</summary>
+        <div class="answer">
+          <p>写真が iCloud にだけあり、端末に保存されていない場合、アプリはまずシステムに写真の取得を依頼する必要があり、その速さはネットワーク環境によって変わります。また、端末が熱くなっているときは、使用中の操作に影響しないよう、アプリが自ら処理のペースを落とします。</p>
+        </div>
+      </details>
+      <details>
+        <summary>アカウントはどうすれば削除できますか？</summary>
+        <div class="answer">
+          <p>「マイページ → アカウント → アカウントを削除」から削除するか、<a href="/delete-account/">こちらのページ</a>から申請してください。何が削除され、何が残り、どのくらいかかるかといった詳しい説明も、そちらにまとめています。</p>
+        </div>
+      </details>
+    </div>
+    <h2 lang="ko">정리와 삭제</h2>
+    <div lang="ko" class="faq">
+      <details>
+        <summary>실수로 사진을 지웠어요. 되살릴 수 있나요?</summary>
+        <div class="answer">
+          <p>Pibook에는 사진 사본이 없어서 저희가 직접 되살려 드릴 수는 없어요. 하지만 대개는 운영체제에 아직 남아 있어요.</p>
+          <p><strong>iPhone:</strong> 사진 앱 → 앨범 → 최근 삭제된 항목(30일 동안 보관)<br>
+          <strong>Android:</strong> Google 포토 → 라이브러리 → 휴지통(30일 또는 60일 동안 보관)</p>
+          <p>정리를 시작하기 전에 믿을 수 있는 클라우드 백업이 있는지 먼저 확인해 두시길 권해요.</p>
+        </div>
+      </details>
+      <details>
+        <summary>정리 진행 상황이 사라지지는 않나요?</summary>
+        <div class="answer">
+          <p>진행 상황은 휴대폰에 저장돼요. 로그인하고 클라우드 백업을 켜 두셨다면 기기를 바꿀 때 복원할 수 있어요. 시스템 보관함의 사진 식별 번호는 기기가 바뀌면 완전히 달라지기 때문에, 저희는 사진의 ‘지문’(촬영 시각과 파일 특징으로 만든 단방향 해시)으로 같은 사진을 다시 알아봐요.</p>
+        </div>
+      </details>
+      <details>
+        <summary>왜 어떤 사진은 분석이 느린가요?</summary>
+        <div class="answer">
+          <p>사진이 기기에 없고 iCloud에만 있다면, 앱이 먼저 시스템에 요청해 사진을 받아 와야 해요. 이 단계의 속도는 네트워크 상태에 따라 달라져요. 또 휴대폰이 뜨거워지면 앱이 스스로 속도를 늦춰, 지금 하고 계신 일에 방해가 되지 않게 해요.</p>
+        </div>
+      </details>
+      <details>
+        <summary>계정은 어떻게 삭제하나요?</summary>
+        <div class="answer">
+          <p>‘프로필 → 계정 → 계정 삭제’에서 삭제하거나, <a href="/delete-account/">이 페이지</a>에서 신청하세요. 무엇이 삭제되고 무엇이 남는지, 얼마나 걸리는지 모두 그 페이지에 자세히 나와 있어요.</p>
         </div>
       </details>
     </div>
@@ -261,21 +672,45 @@
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section>
-    <h2 class="zh">還是沒有解決？</h2>
-    <h2 class="en">Still stuck?</h2>
-    <p class="zh">
+    <h2 lang="zh-Hant">還是沒有解決？</h2>
+    <h2 lang="en">Still stuck?</h2>
+    <p lang="zh-Hant">
       <a class="btn" href="mailto:support@pibook.app?subject=%E6%8B%8D%E7%B0%BF%E6%94%AF%E6%8F%B4%E8%AB%8B%E6%B1%82">寄信給我們</a>
     </p>
-    <p class="zh">
+    <p lang="zh-Hant">
       <a href="mailto:support@pibook.app">support@pibook.app</a>　·
       隱私權相關請寄 <a href="mailto:privacy@pibook.app">privacy@pibook.app</a>
     </p>
-    <p class="en">
+    <h2 lang="zh-Hans">还是没有解决？</h2>
+    <p lang="zh-Hans">
+      <a class="btn" href="mailto:support@pibook.app?subject=%E6%8B%8D%E7%B0%BF%E6%94%AF%E6%8C%81%E8%AF%B7%E6%B1%82">给我们发邮件</a>
+    </p>
+    <p lang="zh-Hans">
+      <a href="mailto:support@pibook.app">support@pibook.app</a>　·
+      隐私相关问题请发送至 <a href="mailto:privacy@pibook.app">privacy@pibook.app</a>
+    </p>
+    <p lang="en">
       <a class="btn" href="mailto:support@pibook.app?subject=Pibook%20support%20request">Email us</a>
     </p>
-    <p class="en">
+    <p lang="en">
       <a href="mailto:support@pibook.app">support@pibook.app</a>　·
       for privacy matters, <a href="mailto:privacy@pibook.app">privacy@pibook.app</a>
+    </p>
+    <h2 lang="ja">それでも解決しない場合</h2>
+    <p lang="ja">
+      <a class="btn" href="mailto:support@pibook.app?subject=Pibook%20%E3%82%B5%E3%83%9D%E3%83%BC%E3%83%88%E3%81%B8%E3%81%AE%E3%81%8A%E5%95%8F%E3%81%84%E5%90%88%E3%82%8F%E3%81%9B">メールで問い合わせる</a>
+    </p>
+    <p lang="ja">
+      <a href="mailto:support@pibook.app">support@pibook.app</a>　·
+      プライバシーに関するお問い合わせは <a href="mailto:privacy@pibook.app">privacy@pibook.app</a> まで
+    </p>
+    <h2 lang="ko">아직 해결되지 않았나요?</h2>
+    <p lang="ko">
+      <a class="btn" href="mailto:support@pibook.app?subject=Pibook%20%EC%A7%80%EC%9B%90%20%EC%9A%94%EC%B2%AD">메일 보내기</a>
+    </p>
+    <p lang="ko">
+      <a href="mailto:support@pibook.app">support@pibook.app</a>　·
+      개인정보 관련 문의: <a href="mailto:privacy@pibook.app">privacy@pibook.app</a>
     </p>
   </section>
 
@@ -285,22 +720,40 @@
 <footer class="site-footer">
   <div class="inner">
     <nav>
-      <a href="/"><span class="zh">首頁</span><span class="en">Home</span></a>
-      <a href="/privacy/"><span class="zh">隱私權政策</span><span class="en">Privacy Policy</span></a>
-      <a href="/terms/"><span class="zh">服務條款</span><span class="en">Terms of Use</span></a>
-      <a href="/support/"><span class="zh">支援</span><span class="en">Support</span></a>
-      <a href="/delete-account/"><span class="zh">刪除帳號</span><span class="en">Delete Account</span></a>
+      <a href="/"><span lang="zh-Hant">首頁</span><span lang="zh-Hans">首页</span><span lang="en">Home</span><span lang="ja">ホーム</span><span lang="ko">홈</span></a>
+      <a href="/privacy/"><span lang="zh-Hant">隱私權政策</span><span lang="zh-Hans">隐私权政策</span><span lang="en">Privacy Policy</span><span lang="ja">プライバシーポリシー</span><span lang="ko">개인정보 처리방침</span></a>
+      <a href="/terms/"><span lang="zh-Hant">服務條款</span><span lang="zh-Hans">服务条款</span><span lang="en">Terms of Use</span><span lang="ja">利用規約</span><span lang="ko">이용약관</span></a>
+      <a href="/support/"><span lang="zh-Hant">支援</span><span lang="zh-Hans">支持</span><span lang="en">Support</span><span lang="ja">サポート</span><span lang="ko">지원</span></a>
+      <a href="/delete-account/"><span lang="zh-Hant">刪除帳號</span><span lang="zh-Hans">删除账号</span><span lang="en">Delete Account</span><span lang="ja">アカウント削除</span><span lang="ko">계정 삭제</span></a>
     </nav>
     <div class="legal">
-      <span class="zh">
+      <span lang="zh-Hant">
         八西歐科技有限公司<br>
         統一編號 60773047<br>
         support@pibook.app<br>
         © 2026 Pibook. 保留一切權利。
       </span>
-      <span class="en">
+      <span lang="zh-Hans">
+        八西欧科技有限公司<br>
+        统一编号 60773047<br>
+        support@pibook.app<br>
+        © 2026 Pibook. 保留所有权利。
+      </span>
+      <span lang="en">
         8CO Technology Co., Ltd.<br>
         Tax ID 60773047<br>
+        support@pibook.app<br>
+        © 2026 Pibook. All rights reserved.
+      </span>
+      <span lang="ja">
+        8CO Technology Co., Ltd.<br>
+        統一編号 60773047<br>
+        support@pibook.app<br>
+        © 2026 Pibook. All rights reserved.
+      </span>
+      <span lang="ko">
+        8CO Technology Co., Ltd.<br>
+        사업자 통일번호 60773047<br>
         support@pibook.app<br>
         © 2026 Pibook. All rights reserved.
       </span>
@@ -309,6 +762,6 @@
 </footer>
 <!-- @/partial:footer -->
 
-<script src="/assets/lang.js"></script>
+<script src="/assets/lang.js?v=20260925"></script>
 </body>
 </html>

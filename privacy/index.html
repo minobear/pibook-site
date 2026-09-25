@@ -1,19 +1,114 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-Hant" data-lang="zh-Hant">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>隱私權政策 — 拍簿 Pibook</title>
+<script type="application/json" id="page-titles">{"zh-Hant": "隱私權政策 — 拍簿 Pibook", "zh-Hans": "隐私权政策 — 拍簿 Pibook", "en": "Privacy Policy — Pibook", "ja": "プライバシーポリシー — Pibook", "ko": "개인정보 처리방침 — Pibook"}</script>
+<!-- @partial:head -->
+<script>
+(function (d, w) {
+  var LANGS = ['zh-Hant', 'zh-Hans', 'en', 'ja', 'ko'];
+  var KEY = 'pibook-lang';
+  var FONTS = {
+    'zh-Hant': 'family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700',
+    'zh-Hans': 'family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@500;700',
+    'ja': 'family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;700',
+    'ko': 'family=Noto+Sans+KR:wght@400;500;700'
+  };
+
+  function norm(tag) { return String(tag || '').toLowerCase().replace(/_/g, '-'); }
+
+  /* 中文分繁簡：先看文字（Hant／Hans），再看地區 —— 台灣、香港、澳門與粵語是繁體，
+     中國、新加坡、馬來西亞是簡體。只寫「zh」答不出來，回 null。 */
+  function chinese(t) {
+    if (/-hans(-|$)/.test(t)) return 'zh-Hans';
+    if (/-hant(-|$)/.test(t) || /^yue(-|$)/.test(t) || /-(tw|hk|mo)(-|$)/.test(t)) return 'zh-Hant';
+    if (/-(cn|sg|my)(-|$)/.test(t)) return 'zh-Hans';
+    return null;
+  }
+
+  /* 一個語言標籤 → 我們有的語言；沒有就回 null，讓清單裡的下一個接手。 */
+  function match(tag, rest) {
+    var t = norm(tag);
+    if (!t) return null;
+    var base = t.split('-')[0];
+    if (base === 'zh' || base === 'yue') {
+      var v = chinese(t);
+      if (v) return v;
+      // 只寫「zh」：看清單後面有沒有更明確的中文，沒有就當簡體。
+      for (var j = 0; rest && j < rest.length; j++) {
+        var r = chinese(norm(rest[j]));
+        if (r) return r;
+      }
+      return 'zh-Hans';
+    }
+    if (base === 'en') return 'en';
+    if (base === 'ja') return 'ja';
+    if (base === 'ko') return 'ko';
+    return null;
+  }
+
+  function pick() {
+    var q = /[?&]lang=([^&#]+)/.exec(w.location.search);
+    var fromUrl = null;
+    try { fromUrl = q && match(decodeURIComponent(q[1])); } catch (e) { /* 網址參數壞掉就忽略 */ }
+    if (fromUrl) return fromUrl;
+    try {
+      var saved = w.localStorage.getItem(KEY);
+      if (LANGS.indexOf(saved) >= 0) return saved;
+    } catch (e) { /* 隱私模式或被封鎖：往下用裝置語言 */ }
+    var list = (w.navigator.languages && w.navigator.languages.length)
+      ? w.navigator.languages : [w.navigator.language || w.navigator.userLanguage];
+    for (var i = 0; i < list.length; i++) {
+      var m = match(list[i], list.slice(i + 1));
+      if (m) return m;
+    }
+    return 'en';
+  }
+
+  function loadFont(lang) {
+    var set = lang === 'en' ? 'zh-Hant' : lang;
+    if (d.getElementById('pb-font-' + set)) return;
+    var link = d.createElement('link');
+    link.rel = 'stylesheet';
+    link.id = 'pb-font-' + set;
+    link.href = 'https://fonts.googleapis.com/css2?' + FONTS[set] + '&display=swap';
+    d.head.appendChild(link);
+  }
+
+  function title(lang) {
+    var el = d.getElementById('page-titles');
+    if (!el) return;
+    try {
+      var map = JSON.parse(el.textContent);
+      if (map[lang]) d.title = map[lang];
+    } catch (e) { /* 標題維持原樣 */ }
+  }
+
+  function apply(lang) {
+    var root = d.documentElement;
+    root.setAttribute('lang', lang);
+    root.setAttribute('data-lang', lang);
+    loadFont(lang);
+    title(lang);
+  }
+
+  w.PibookLang = { langs: LANGS, key: KEY, match: match, apply: apply, current: pick() };
+  apply(w.PibookLang.current);
+})(document, window);
+</script>
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap"></noscript>
+<!-- @/partial:head -->
 <meta name="description" content="拍簿的隱私權政策：我們蒐集什麼、為什麼蒐集、保存多久，以及你可以怎麼行使權利。">
 <meta name="theme-color" content="#FBF7F0" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#171E25" media="(prefers-color-scheme: dark)">
 <link rel="canonical" href="https://pibook.app/privacy/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap">
-<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/assets/style.css?v=20260925">
 </head>
-<body data-lang="zh">
+<body>
 
 <!-- @partial:header -->
 <header class="site-header">
@@ -21,14 +116,33 @@
     <a class="brand" href="/">
       <img class="brand-logo" src="/assets/app_icon.png" alt="" aria-hidden="true">
       <span class="brand-words">
-        <span class="mark zh">拍簿</span>
-        <span class="mark en">Pibook</span>
-        <span class="latin zh">PIBOOK</span>
+        <span lang="zh-Hant" class="mark">拍簿</span>
+        <span lang="zh-Hans" class="mark">拍簿</span>
+        <span lang="en" class="mark">Pibook</span>
+        <span lang="ja" class="mark">Pibook</span>
+        <span lang="ko" class="mark">Pibook</span>
+        <span lang="zh-Hant" class="latin">PIBOOK</span>
+        <span lang="zh-Hans" class="latin">PIBOOK</span>
       </span>
     </a>
-    <div class="lang-toggle">
-      <button type="button" data-lang="zh" aria-pressed="true">繁體中文</button>
-      <button type="button" data-lang="en" aria-pressed="false">English</button>
+    <div class="lang-switch">
+      <button type="button" class="lang-button" id="lang-button"
+              aria-haspopup="menu" aria-expanded="false" aria-controls="lang-menu">
+        <svg class="lang-globe" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="M3.4 12h17.2"/><path d="M12 3.4c2.3 2.4 3.5 5.3 3.5 8.6s-1.2 6.2-3.5 8.6c-2.3-2.4-3.5-5.3-3.5-8.6s1.2-6.2 3.5-8.6z"/></svg>
+        <span lang="zh-Hant">繁體中文</span>
+        <span lang="zh-Hans">简体中文</span>
+        <span lang="en">English</span>
+        <span lang="ja">日本語</span>
+        <span lang="ko">한국어</span>
+        <svg class="lang-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.6 6 7.6 9 4.6"/></svg>
+      </button>
+      <ul class="lang-menu" id="lang-menu" role="menu" aria-labelledby="lang-button" hidden>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="zh-Hant"><span lang="zh-Hant">繁體中文</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="zh-Hans"><span lang="zh-Hans">简体中文</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="en"><span lang="en">English</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="ja"><span lang="ja">日本語</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="ko"><span lang="ko">한국어</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+      </ul>
     </div>
   </div>
 </header>
@@ -37,41 +151,77 @@
 <main class="doc">
 
   <div class="doc-head">
-    <h1 class="zh">隱私權政策</h1>
-    <h1 class="en">Privacy Policy</h1>
+    <h1 lang="zh-Hant">隱私權政策</h1>
+    <h1 lang="zh-Hans">隐私权政策</h1>
+    <h1 lang="en">Privacy Policy</h1>
+    <h1 lang="ja">プライバシーポリシー</h1>
+    <h1 lang="ko">개인정보 처리방침</h1>
     <div class="doc-meta">
-      <span class="zh">生效日期：2026 年 8 月 28 日</span>
-      <span class="en">Effective: 28 August 2026</span>
-      <span class="zh">最後更新：2026 年 9 月 21 日</span>
-      <span class="en">Last updated: 21 September 2026</span>
-      <span class="zh">版本 1.1</span>
-      <span class="en">Version 1.1</span>
+      <span lang="zh-Hant">生效日期：2026 年 8 月 28 日</span>
+      <span lang="en">Effective: 28 August 2026</span>
+      <span lang="zh-Hant">最後更新：2026 年 9 月 25 日</span>
+      <span lang="en">Last updated: 25 September 2026</span>
+      <span lang="zh-Hant">版本 1.1</span>
+      <span lang="zh-Hans">生效日期：2026 年 8 月 28 日</span>
+      <span lang="zh-Hans">最后更新：2026 年 9 月 25 日</span>
+      <span lang="zh-Hans">版本 1.1</span>
+      <span lang="en">Version 1.1</span>
+      <span lang="ja">施行日：2026年8月28日</span>
+      <span lang="ja">最終更新日：2026年9月25日</span>
+      <span lang="ja">バージョン 1.1</span>
+      <span lang="ko">시행일: 2026년 8월 28일</span>
+      <span lang="ko">최종 수정일: 2026년 9월 25일</span>
+      <span lang="ko">버전 1.1</span>
     </div>
   </div>
 
   <div class="summary">
-    <h2 class="zh">三十秒摘要</h2>
-    <h2 class="en">THE SHORT VERSION</h2>
-    <ul class="zh">
+    <h2 lang="zh-Hant">三十秒摘要</h2>
+    <h2 lang="en">THE SHORT VERSION</h2>
+    <ul lang="zh-Hant">
       <li><strong>你的照片不會離開這台裝置。</strong>相似比對、臉部偵測、品質評分全部在手機本機執行。唯一的例外是你主動下訂實體印製商品時，被你選中的那幾張照片才會上傳，用來完成訂單。</li>
       <li><strong>我們不做臉部辨識。</strong>臉部偵測只用來判斷「這張裡的人臉清不清楚」，結果只存在你的裝置上；我們不建立臉部特徵樣板，也不會把任何臉部資料傳出裝置。詳見<a href="#face-data">第 3 節〈臉部資料〉</a>。</li>
       <li><strong>不登入也能用。</strong>登入是為了雲端備份與跨裝置的訂閱權益，不是使用條件。</li>
       <li><strong>我們不販售你的資料，也不做跨 App 廣告追蹤。</strong>使用分析可以在 App 內一鍵關閉。</li>
       <li><strong>帳號可以刪，而且是真的刪。</strong>App 內與<a href="/delete-account/">這個網頁</a>都能提出。</li>
     </ul>
-    <ul class="en">
+    <h2 lang="zh-Hans">三十秒摘要</h2>
+    <ul lang="zh-Hans">
+      <li><strong>你的照片不会离开这台设备。</strong>相似比对、人脸检测、质量评分全部在手机本地执行。唯一的例外是你主动下单订购实体印制商品时，你选中的那几张照片才会上传，用于完成订单。</li>
+      <li><strong>我们不做人脸识别。</strong>人脸检测只用来判断“这张照片里的人脸清不清楚”，结果只存在你的设备上；我们不建立人脸特征模板，也不会把任何人脸数据传出设备。详见<a href="#face-data">第 3 节“人脸数据”</a>。</li>
+      <li><strong>不登录也能用。</strong>登录是为了云端备份与跨设备的订阅权益，不是使用条件。</li>
+      <li><strong>我们不出售你的数据，也不做跨 App 广告追踪。</strong>使用分析可以在 App 内一键关闭。</li>
+      <li><strong>账号可以删除，而且是真的删除。</strong>在 App 内和<a href="/delete-account/">这个网页</a>上都能提出申请。</li>
+    </ul>
+    <ul lang="en">
       <li><strong>Your photos never leave your device.</strong> Grouping, face detection and quality scoring all run locally. The one exception: when you place an order for a printed product, the photos you selected are uploaded to fulfil that order.</li>
       <li><strong>We do not do facial recognition.</strong> Face detection is used only to judge whether faces in a shot are sharp. Results stay on your device: we never create facial templates and no face data ever leaves the device. See <a href="#face-data">section 3, “Face data”</a>.</li>
       <li><strong>You can use the app without an account.</strong> Signing in exists for cloud backup and cross-device subscription access — it is not a condition of use.</li>
       <li><strong>We do not sell your data and we do not run cross-app advertising tracking.</strong> Usage analytics can be switched off inside the app.</li>
       <li><strong>You can delete your account, and it really is deleted.</strong> Available in the app and on <a href="/delete-account/">this page</a>.</li>
     </ul>
+    <h2 lang="ja">30 秒でわかる要点</h2>
+    <ul lang="ja">
+      <li><strong>写真がこの端末の外に出ることはありません。</strong>似ている写真の判定、顔検出、品質評価は、すべて端末上で実行されます。唯一の例外は自らプリント商品を注文するときで、その注文のために選んだ写真だけが、注文を処理するためにアップロードされます。</li>
+      <li><strong>顔認識は行いません。</strong>顔検出は「写っている顔が鮮明かどうか」を判断するためだけに使い、その結果は端末内にのみ保存されます。顔の特徴テンプレートを作成することはなく、顔に関するデータを端末の外に送ることも一切ありません。詳しくは<a href="#face-data">第 3 節「顔データ」</a>をご覧ください。</li>
+      <li><strong>サインインしなくても使えます。</strong>サインインは、バックアップと、端末をまたいでサブスクリプションの利用権を引き継ぐためのものであり、利用の条件ではありません。</li>
+      <li><strong>データを販売することも、アプリをまたいだ広告トラッキングを行うこともありません。</strong>利用状況の分析は、アプリ内のスイッチひとつでオフにできます。</li>
+      <li><strong>アカウントは削除でき、本当に削除されます。</strong>削除の手続きはアプリ内からも、<a href="/delete-account/">こちらのページ</a>からも行えます。</li>
+    </ul>
+    <h2 lang="ko">30초 요약</h2>
+    <ul lang="ko">
+      <li><strong>사진은 이 기기를 벗어나지 않습니다.</strong> 비슷한 사진 비교, 얼굴 감지, 품질 평가는 모두 휴대폰 안에서 실행됩니다. 유일한 예외는 이용자가 직접 실물 인화 상품을 주문하는 경우이며, 이때 이용자가 고른 사진만 주문 처리를 위해 업로드됩니다.</li>
+      <li><strong>회사는 얼굴 인식을 하지 않습니다.</strong> 얼굴 감지는 ‘이 사진 속 얼굴이 선명한지’를 판단하는 데에만 쓰이며, 그 결과는 이용자의 기기에만 저장됩니다. 회사는 얼굴 특징 템플릿을 만들지 않으며, 어떠한 얼굴 데이터도 기기 밖으로 전송하지 않습니다. 자세한 내용은 <a href="#face-data">제3조(얼굴 데이터)</a>를 참고하시기 바랍니다.</li>
+      <li><strong>로그인하지 않아도 이용할 수 있습니다.</strong> 로그인은 클라우드 백업과 여러 기기에서의 구독 이용 권한을 위한 것이며, 이용 조건이 아닙니다.</li>
+      <li><strong>회사는 이용자의 정보를 판매하지 않으며, 앱 간 광고 추적도 하지 않습니다.</strong> 이용 분석은 앱에서 스위치 하나로 끌 수 있습니다.</li>
+      <li><strong>계정은 삭제할 수 있으며, 실제로 삭제됩니다.</strong> 앱과 <a href="/delete-account/">이 웹페이지</a> 어디에서든 신청할 수 있습니다.</li>
+    </ul>
   </div>
 
   <div class="toc">
-    <h2 class="zh">目錄</h2>
-    <h2 class="en">CONTENTS</h2>
-    <ol class="zh">
+    <h2 lang="zh-Hant">目錄</h2>
+    <h2 lang="en">CONTENTS</h2>
+    <ol lang="zh-Hant">
       <li><a href="#who">誰在處理你的資料</a></li>
       <li><a href="#photos">照片為什麼不離開裝置</a></li>
       <li><a href="#face-data">臉部資料</a></li>
@@ -89,7 +239,26 @@
       <li><a href="#regional">各地區補充條款</a></li>
       <li><a href="#contact">聯絡我們</a></li>
     </ol>
-    <ol class="en">
+    <h2 lang="zh-Hans">目录</h2>
+    <ol lang="zh-Hans">
+      <li><a href="#who">谁在处理你的数据</a></li>
+      <li><a href="#photos">照片为什么不离开设备</a></li>
+      <li><a href="#face-data">人脸数据</a></li>
+      <li><a href="#collect">我们收集哪些数据</a></li>
+      <li><a href="#why">收集目的与法律依据</a></li>
+      <li><a href="#share">我们与谁共享</a></li>
+      <li><a href="#where">数据存储地点与跨境传输</a></li>
+      <li><a href="#retention">我们保存多久</a></li>
+      <li><a href="#rights">你的权利</a></li>
+      <li><a href="#delete">删除账号与数据</a></li>
+      <li><a href="#children">儿童与青少年</a></li>
+      <li><a href="#security">安全措施</a></li>
+      <li><a href="#website">本网站与 Cookie</a></li>
+      <li><a href="#changes">政策变更</a></li>
+      <li><a href="#regional">各地区补充条款</a></li>
+      <li><a href="#contact">联系我们</a></li>
+    </ol>
+    <ol lang="en">
       <li><a href="#who">Who processes your data</a></li>
       <li><a href="#photos">Why your photos stay on the device</a></li>
       <li><a href="#face-data">Face data</a></li>
@@ -107,27 +276,77 @@
       <li><a href="#regional">Regional supplements</a></li>
       <li><a href="#contact">Contact us</a></li>
     </ol>
+    <h2 lang="ja">目次</h2>
+    <ol lang="ja">
+      <li><a href="#who">データを取り扱う事業者</a></li>
+      <li><a href="#photos">写真が端末の外に出ない理由</a></li>
+      <li><a href="#face-data">顔データ</a></li>
+      <li><a href="#collect">収集するデータ</a></li>
+      <li><a href="#why">収集の目的と法的根拠</a></li>
+      <li><a href="#share">データの共有先</a></li>
+      <li><a href="#where">データの保存場所と国外への移転</a></li>
+      <li><a href="#retention">保存期間</a></li>
+      <li><a href="#rights">ユーザーの権利</a></li>
+      <li><a href="#delete">アカウントとデータの削除</a></li>
+      <li><a href="#children">子どもと青少年</a></li>
+      <li><a href="#security">安全管理措置</a></li>
+      <li><a href="#website">本ウェブサイトと Cookie</a></li>
+      <li><a href="#changes">本ポリシーの変更</a></li>
+      <li><a href="#regional">地域別の補足条項</a></li>
+      <li><a href="#contact">お問い合わせ</a></li>
+    </ol>
+    <h2 lang="ko">목차</h2>
+    <ol lang="ko">
+      <li><a href="#who">개인정보를 처리하는 회사</a></li>
+      <li><a href="#photos">사진이 기기를 벗어나지 않는 이유</a></li>
+      <li><a href="#face-data">얼굴 데이터</a></li>
+      <li><a href="#collect">수집하는 정보</a></li>
+      <li><a href="#why">수집 목적과 법적 근거</a></li>
+      <li><a href="#share">정보를 공유하는 대상</a></li>
+      <li><a href="#where">저장 위치와 국외 이전</a></li>
+      <li><a href="#retention">보유 기간</a></li>
+      <li><a href="#rights">이용자의 권리</a></li>
+      <li><a href="#delete">계정 및 데이터 삭제</a></li>
+      <li><a href="#children">아동 및 청소년</a></li>
+      <li><a href="#security">보안 조치</a></li>
+      <li><a href="#website">본 웹사이트와 쿠키</a></li>
+      <li><a href="#changes">처리방침의 변경</a></li>
+      <li><a href="#regional">지역별 추가 조항</a></li>
+      <li><a href="#contact">문의처</a></li>
+    </ol>
   </div>
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="who">
-    <h2><span class="num">1</span><span class="zh">誰在處理你的資料</span><span class="en">Who processes your data</span></h2>
+    <h2><span class="num">1</span><span lang="zh-Hant">誰在處理你的資料</span><span lang="zh-Hans">谁在处理你的数据</span><span lang="en">Who processes your data</span><span lang="ja">データを取り扱う事業者</span><span lang="ko">개인정보를 처리하는 회사</span></h2>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       拍簿（Pibook，以下稱「本 App」）由 八西歐科技有限公司
       （統一編號 60773047，以下稱「我們」）開發與營運。
       就個人資料保護法而言，我們是本 App 個人資料的<strong>蒐集者與處理者</strong>；
       就歐盟一般資料保護規則（GDPR）而言，我們是<strong>資料控管者（Controller）</strong>。
     </p>
-    <p class="zh">
+    <p lang="zh-Hant">
       隱私權相關聯絡信箱：<a href="mailto:privacy@pibook.app">privacy@pibook.app</a>
     </p>
-    <p class="zh">
+    <p lang="zh-Hant">
       這份政策說明我們在你使用本 App 與本網站時，如何蒐集、使用、分享與保護你的個人資料。
       本 App 與本網站以外的第三方服務（例如你點擊連結後前往的網站）有各自的隱私權政策，不在本政策範圍內。
     </p>
+    <p lang="zh-Hans">
+      拍簿（Pibook，以下称“本 App”）由八西欧科技有限公司（统一编号 60773047，以下称“我们”）开发与运营。
+      就台湾《个人资料保护法》而言，我们是本 App 个人信息的<strong>收集者与处理者</strong>；
+      就欧盟《通用数据保护条例》（GDPR）而言，我们是<strong>数据控制者（Controller）</strong>。
+    </p>
+    <p lang="zh-Hans">
+      隐私相关联系邮箱：<a href="mailto:privacy@pibook.app">privacy@pibook.app</a>
+    </p>
+    <p lang="zh-Hans">
+      本政策说明我们在你使用本 App 与本网站时，如何收集、使用、共享与保护你的个人信息。
+      本 App 与本网站以外的第三方服务（例如你点击链接后前往的网站）有各自的隐私权政策，不在本政策范围内。
+    </p>
 
-    <p class="en">
+    <p lang="en">
       Pibook (the “App”) is developed and operated by
       8CO Technology Co., Ltd.
       (Taiwan Unified Business No. 60773047, “we”, “us”).
@@ -135,73 +354,126 @@
       UK GDPR, we are the <strong>data controller</strong>. Under Taiwan’s Personal
       Data Protection Act (PDPA), we are the collector and processor of your personal data.
     </p>
-    <p class="en">
+    <p lang="en">
       Privacy contact: <a href="mailto:privacy@pibook.app">privacy@pibook.app</a>
     </p>
-    <p class="en">
+    <p lang="en">
       This policy explains how we collect, use, share and protect your personal data
       when you use the App and this website. Third-party sites you may reach through
       links have their own policies and are outside the scope of this one.
+    </p>
+    <p lang="ja">
+      Pibook（以下「本アプリ」といいます）は、8CO Technology Co., Ltd.（八西歐科技有限公司、台湾統一編号 60773047。以下「当社」といいます）が開発・運営しています。
+      台湾の個人資料保護法上、当社は本アプリにおける個人データの<strong>収集者および処理者</strong>であり、
+      EU 一般データ保護規則（GDPR）上は<strong>管理者（Controller）</strong>にあたります。
+    </p>
+    <p lang="ja">
+      プライバシーに関するお問い合わせ先：<a href="mailto:privacy@pibook.app">privacy@pibook.app</a>
+    </p>
+    <p lang="ja">
+      本ポリシーは、ユーザーが本アプリおよび本ウェブサイトを利用する際に、当社が個人データをどのように収集、利用、共有、保護するかを説明するものです。
+      本アプリおよび本ウェブサイト以外の第三者のサービス（リンクから移動した先のウェブサイトなど）にはそれぞれのプライバシーポリシーがあり、本ポリシーの対象外です。
+    </p>
+    <p lang="ko">
+      Pibook(이하 “본 앱”)은 8CO Technology Co., Ltd.(八西歐科技有限公司, 대만 사업자 통일번호 60773047, 이하 “회사”)가
+      개발하고 운영합니다.
+      회사는 대만 개인정보보호법(個人資料保護法)상 본 앱에서 다루는 개인정보의 <strong>수집자이자 처리자</strong>이며,
+      EU 일반 개인정보 보호법(GDPR)상 <strong>데이터 컨트롤러(Controller)</strong>입니다.
+    </p>
+    <p lang="ko">
+      개인정보 관련 문의: <a href="mailto:privacy@pibook.app">privacy@pibook.app</a>
+    </p>
+    <p lang="ko">
+      본 방침은 이용자가 본 앱과 본 웹사이트를 이용할 때 회사가 개인정보를 어떻게 수집·이용·공유·보호하는지 설명합니다.
+      본 앱과 본 웹사이트 외의 제3자 서비스(예: 이용자가 링크를 눌러 이동한 웹사이트)에는 각 서비스의 개인정보 처리방침이 적용되며, 본 방침의 적용 대상이 아닙니다.
     </p>
   </section>
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="photos">
-    <h2><span class="num">2</span><span class="zh">照片為什麼不離開裝置</span><span class="en">Why your photos stay on the device</span></h2>
+    <h2><span class="num">2</span><span lang="zh-Hant">照片為什麼不離開裝置</span><span lang="zh-Hans">照片为什么不离开设备</span><span lang="en">Why your photos stay on the device</span><span lang="ja">写真が端末の外に出ない理由</span><span lang="ko">사진이 기기를 벗어나지 않는 이유</span></h2>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       這是本 App 最核心的設計決定，不是一句行銷詞。本 App 的所有影像處理
       —— 相似照分群、臉部偵測、清晰度與構圖評分、截圖與分類判斷、縮圖產生、
       壓縮與轉檔 —— <strong>全部在你的裝置上完成</strong>。這些工作不需要伺服器，
       我們也沒有為它們建置任何伺服器。
     </p>
-    <p class="zh">
+    <p lang="zh-Hant">
       因此：<strong>我們的伺服器上沒有你的任何照片或影片，也沒有從照片中萃取出的影像特徵。</strong>
     </p>
 
-    <h3 class="zh">關於臉部偵測</h3>
-    <p class="zh">
+    <h3 lang="zh-Hant">關於臉部偵測</h3>
+    <p lang="zh-Hant">
       臉部偵測同樣完全在你的裝置上進行，結果不會離開裝置。產生哪些資料、做什麼用、
       存在哪裡、保存多久、如何刪除，完整說明在<a href="#face-data">第 3 節〈臉部資料〉</a>。
     </p>
 
-    <h3 class="zh">兩個必須說明的例外</h3>
-    <p class="zh">
+    <h3 lang="zh-Hant">兩個必須說明的例外</h3>
+    <p lang="zh-Hant">
       <strong>例外一：你下訂實體印製商品時。</strong>
       如果你在 App 內購買相片書、明信片等需要印製的實體商品，
       你為該筆訂單所選擇的照片會被上傳到我們的伺服器，交付印製廠商完成製作。
       這是履行你所下訂單的必要行為，除此之外我們不會將它們用於任何其他目的。
       訂單完成後的保存期間請見<a href="#retention">第 8 節</a>。
     </p>
-    <p class="zh">
+    <p lang="zh-Hant">
       <strong>例外二：把座標變成地名時。</strong>
       如果你的照片含有 GPS 座標，且你使用了依地點瀏覽的功能，
       本 App 會呼叫你裝置作業系統內建的地理編碼服務，把座標換成可讀的地名。
       這個查詢由 Apple 或 Google 處理，適用它們各自的隱私權政策。
       我們不會儲存這些座標，也不會將它們傳送到我們的伺服器。
     </p>
+    <p lang="zh-Hans">
+      这是本 App 最核心的设计决定，不是一句营销口号。
+      本 App 的所有图像处理——相似照片分组、人脸检测、清晰度与构图评分、截图与分类判断、缩略图生成、压缩与转码——<strong>全部在你的设备上完成</strong>。
+      这些工作不需要服务器，我们也没有为它们搭建任何服务器。
+    </p>
+    <p lang="zh-Hans">
+      因此：<strong>我们的服务器上没有你的任何照片或视频，也没有从照片中提取的图像特征。</strong>
+    </p>
+    <h3 lang="zh-Hans">关于人脸检测</h3>
+    <p lang="zh-Hans">
+      人脸检测同样完全在你的设备上进行，结果不会离开设备。会产生哪些数据、用于什么、
+      存储在哪里、保存多久、如何删除，完整说明见<a href="#face-data">第 3 节“人脸数据”</a>。
+    </p>
+    <h3 lang="zh-Hans">两个必须说明的例外</h3>
+    <p lang="zh-Hans">
+      <strong>例外一：你下单订购实体印制商品时。</strong>
+      如果你在 App 内购买照片书、明信片等需要印制的实体商品，
+      你为该笔订单所选择的照片会被上传到我们的服务器，交由印制厂商完成制作。
+      这是履行你所下订单的必要行为，除此之外我们不会将它们用于任何其他目的。
+      订单完成后的保存期限请见<a href="#retention">第 8 节</a>。
+    </p>
+    <p lang="zh-Hans">
+      <strong>例外二：把坐标转换为地名时。</strong>
+      如果你的照片含有 GPS 坐标，且你使用了按地点浏览的功能，
+      本 App 会调用你设备操作系统内置的地理编码服务，把坐标转换为可读的地名。
+      这一查询由 Apple 或 Google 处理，适用它们各自的隐私权政策。
+      我们不会存储这些坐标，也不会将它们发送到我们的服务器。
+    </p>
 
-    <p class="en">
+    <p lang="en">
       This is the App’s central design decision, not a marketing line. All image
       processing — similar-photo grouping, face detection, sharpness and composition
       scoring, screenshot and category classification, thumbnail generation,
       compression and transcoding — <strong>happens entirely on your device</strong>.
       None of it requires a server, and we have not built one for it.
     </p>
-    <p class="en">
+    <p lang="en">
       As a result: <strong>our servers hold none of your photos or videos, and none
       of the image features extracted from them.</strong>
     </p>
 
-    <h3 class="en">About face detection</h3>
-    <p class="en">
+    <h3 lang="en">About face detection</h3>
+    <p lang="en">
       Face detection also runs entirely on your device, and its results never leave it.
       What is produced, what it is used for, where it is stored, how long it is kept and how
       to delete it are set out in full in <a href="#face-data">section 3, “Face data”</a>.
     </p>
 
-    <h3 class="en">Two exceptions we must state clearly</h3>
-    <p class="en">
+    <h3 lang="en">Two exceptions we must state clearly</h3>
+    <p lang="en">
       <strong>Exception 1 — when you order a printed product.</strong>
       If you order a photo book, postcard or other printed item inside the App, the
       photos you selected for that order are uploaded to our servers and passed to
@@ -209,7 +481,7 @@
       you placed; we use them for nothing else. Retention is covered in
       <a href="#retention">section 8</a>.
     </p>
-    <p class="en">
+    <p lang="en">
       <strong>Exception 2 — turning coordinates into place names.</strong>
       If your photos carry GPS coordinates and you use the place-based browsing
       feature, the App asks your operating system’s built-in geocoding service to
@@ -217,19 +489,77 @@
       Apple or Google under their own privacy policies. We do not store the
       coordinates and do not send them to our servers.
     </p>
+    <p lang="ja">
+      これは本アプリの設計の根幹にある判断であり、宣伝文句ではありません。本アプリの画像処理
+      （似ている写真のグループ分け、顔検出、鮮明さと構図の評価、スクリーンショットの判定と分類、サムネイルの生成、
+      圧縮と形式変換）は、<strong>すべて端末上で完結します</strong>。これらの処理にサーバーは必要なく、
+      当社がそのためのサーバーを構築したこともありません。
+    </p>
+    <p lang="ja">
+      そのため、<strong>当社のサーバーには、ユーザーの写真や動画は一切なく、写真から抽出した画像の特徴量もありません。</strong>
+    </p>
+    <h3 lang="ja">顔検出について</h3>
+    <p lang="ja">
+      顔検出もすべて端末上で行われ、その結果が端末の外に出ることはありません。どのようなデータが生成され、何に使われ、
+      どこに保存され、どのくらいの期間保持され、どのように削除できるかは、<a href="#face-data">第 3 節「顔データ」</a>で詳しく説明しています。
+    </p>
+    <h3 lang="ja">説明が必要な 2 つの例外</h3>
+    <p lang="ja">
+      <strong>例外 1：プリント商品を注文するとき。</strong>
+      本アプリ内でフォトブックやポストカードなど、印刷して製作する商品を購入した場合、
+      その注文のために選んだ写真は当社のサーバーにアップロードされ、製作のために印刷会社へ引き渡されます。
+      これは注文を履行するために必要な処理であり、当社がそれ以外の目的に写真を使用することはありません。
+      注文完了後の保存期間については<a href="#retention">第 8 節</a>をご覧ください。
+    </p>
+    <p lang="ja">
+      <strong>例外 2：座標を地名に変換するとき。</strong>
+      写真に GPS 座標が含まれており、場所別に写真を見る機能を使用した場合、
+      本アプリは座標を読みやすい地名に変換するため、端末の OS に組み込まれたジオコーディングサービスを呼び出します。
+      この照会は Apple または Google が処理し、それぞれのプライバシーポリシーが適用されます。
+      当社がこれらの座標を保存することはなく、当社のサーバーに送信することもありません。
+    </p>
+    <p lang="ko">
+      이는 마케팅 문구가 아니라 본 앱의 가장 핵심적인 설계 결정입니다. 본 앱의 모든 이미지 처리(비슷한 사진 그룹화,
+      얼굴 감지, 선명도 및 구도 평가, 스크린샷 판별 및 분류, 썸네일 생성, 압축 및 형식 변환)는
+      <strong>전부 이용자의 기기에서 이루어집니다</strong>. 이러한 작업에는 서버가 필요하지 않으며,
+      회사는 이를 위한 서버를 전혀 구축하지 않았습니다.
+    </p>
+    <p lang="ko">
+      따라서 <strong>회사의 서버에는 이용자의 사진이나 동영상이 전혀 없으며, 사진에서 추출한 이미지 특징 정보도 없습니다.</strong>
+    </p>
+    <h3 lang="ko">얼굴 감지에 관하여</h3>
+    <p lang="ko">
+      얼굴 감지 역시 전적으로 이용자의 기기에서 이루어지며, 그 결과는 기기 밖으로 나가지 않습니다. 어떤 데이터가 생성되는지, 어디에 쓰이는지,
+      어디에 저장되는지, 얼마나 보관되는지, 어떻게 삭제하는지는 <a href="#face-data">제3조(얼굴 데이터)</a>에서 자세히 설명합니다.
+    </p>
+    <h3 lang="ko">반드시 밝혀 두어야 할 두 가지 예외</h3>
+    <p lang="ko">
+      <strong>예외 1: 실물 인화 상품을 주문하는 경우</strong><br>
+      이용자가 본 앱에서 포토북, 엽서 등 인화가 필요한 실물 상품을 구매하면,
+      이용자가 해당 주문을 위해 선택한 사진이 회사의 서버에 업로드되어 제작을 위해 인화 업체에 전달됩니다.
+      이는 이용자의 주문을 이행하는 데 반드시 필요한 행위이며, 회사는 이 사진을 그 밖의 어떠한 목적으로도 이용하지 않습니다.
+      주문 완료 후의 보관 기간은 <a href="#retention">제8조</a>를 참고하시기 바랍니다.
+    </p>
+    <p lang="ko">
+      <strong>예외 2: 좌표를 지명으로 바꾸는 경우</strong><br>
+      사진에 GPS 좌표가 포함되어 있고 이용자가 장소별로 둘러보는 기능을 사용하면,
+      본 앱은 기기 운영체제에 내장된 지오코딩 서비스를 호출해 좌표를 읽을 수 있는 지명으로 바꿉니다.
+      이 조회는 Apple 또는 Google이 처리하며, 각 회사의 개인정보 처리방침이 적용됩니다.
+      회사는 이 좌표를 저장하지 않으며, 회사의 서버로 전송하지도 않습니다.
+    </p>
   </section>
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="face-data">
-    <h2><span class="num">3</span><span class="zh">臉部資料</span><span class="en">Face data</span></h2>
+    <h2><span class="num">3</span><span lang="zh-Hant">臉部資料</span><span lang="zh-Hans">人脸数据</span><span lang="en">Face data</span><span lang="ja">顔データ</span><span lang="ko">얼굴 데이터</span></h2>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       本 App 的「相似照片」功能會在一組相似的照片中，建議最值得保留的那一張。
       為了做到這件事，本 App 會在你的裝置上分析照片裡的人臉。
       這一節完整說明這些臉部資料是什麼、做什麼用、存在哪裡、保存多久，以及如何刪除。
     </p>
 
-    <div class="table-wrap zh">
+    <div lang="zh-Hant" class="table-wrap">
       <table>
         <thead><tr><th>項目</th><th>說明</th></tr></thead>
         <tbody>
@@ -240,19 +570,39 @@
           <tr><td>存放地點</td><td>只存在本 App 於你裝置上的私有資料庫中。<strong>不會上傳到我們的伺服器</strong>，也不包含在拍簿的雲端備份裡。</td></tr>
           <tr><td>分享</td><td><strong>不與任何人分享</strong>：不提供給我們、我們的服務提供者（包括使用分析服務）或任何第三方，也從不販售。</td></tr>
           <tr><td>保存期間</td><td>保存在你的裝置上，直到你重設拍簿或解除安裝本 App 為止。留著是為了不必每次開啟都重新分析。分析方式更新時，舊的結果會自動刪除並重新計算。</td></tr>
-          <tr><td>如何刪除</td><td>在 App 內前往「我的 → 進階與重設 → 完全重設拍簿」，或直接解除安裝本 App，兩者都會立即刪除裝置上所有的臉部資料。這些資料從未傳給我們，所以我們這邊沒有任何需要刪除的副本。</td></tr>
+          <tr><td>如何刪除</td><td>在 App 內前往「個人 → 進階與重設 → 完全重設拍簿」，或直接解除安裝本 App，兩者都會立即刪除裝置上所有的臉部資料。這些資料從未傳給我們，所以我們這邊沒有任何需要刪除的副本。</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p lang="zh-Hans">
+      本 App 的“相似照片”功能会在一组相似的照片中，建议最值得保留的那一张。
+      为此，本 App 会在你的设备上分析照片中的人脸。
+      本节完整说明这些人脸数据是什么、用于什么、存储在哪里、保存多久，以及如何删除。
+    </p>
+    <div lang="zh-Hans" class="table-wrap">
+      <table>
+        <thead><tr><th>项目</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>产生哪些数据</td><td>每一张被分析的照片会记录：<strong>人脸数量</strong>、一个 0 到 1 之间的<strong>人脸质量分数</strong>（脸部是否清晰、曝光与表情是否自然、眼睛是否睁开），以及画面中最大那张脸的<strong>头部转向角度</strong>（左右、上下）。Android 版还会记录眼睛睁开的程度与脸部区域的清晰度。<br>分析时会临时用到每张脸在画面中的位置（一个方框），用于测量清晰度，并略过画面边缘很小的路人脸；这些位置在分析完成后即被丢弃，<strong>不会存储</strong>。</td></tr>
+          <tr><td>如何产生</td><td>全部在你的设备上完成：iPhone 使用 Apple 内置的 Vision 框架，Android 使用 Google ML Kit 的设备端模型。分析读取的是系统提供的缩略图，没有任何照片或人脸图像离开设备。</td></tr>
+          <tr><td>用途</td><td><strong>只有一个</strong>：在一组相似照片中排出顺序，建议保留哪一张。</td></tr>
+          <tr><td>我们不做的事</td><td>不识别身份、不比对不同照片中的人是否为同一人、不建立人脸特征模板（face template）或任何生物识别信息，也不存储人脸图像或人脸特征点。人脸数据<strong>不用于</strong>广告、营销、使用分析、建立用户画像、追踪或身份验证，也不用于训练任何模型。</td></tr>
+          <tr><td>存储地点</td><td>仅存储在本 App 位于你设备上的私有数据库中。<strong>不会上传到我们的服务器</strong>，也不包含在拍簿的云端备份中。</td></tr>
+          <tr><td>共享</td><td><strong>不与任何人共享</strong>：不提供给我们、我们的服务提供商（包括使用分析服务）或任何第三方，也从不出售。</td></tr>
+          <tr><td>保存期限</td><td>保存在你的设备上，直到你重置拍簿或卸载本 App 为止。保留这些数据是为了不必每次打开都重新分析。分析方式更新时，旧的结果会自动删除并重新计算。</td></tr>
+          <tr><td>如何删除</td><td>在 App 内前往“个人 → 进阶与重设 → 完全重置拍簿”，或直接卸载本 App，两者都会立即删除设备上所有的人脸数据。这些数据从未传给我们，所以我们这边没有任何需要删除的副本。</td></tr>
         </tbody>
       </table>
     </div>
 
-    <p class="en">
+    <p lang="en">
       The App’s Similar Photos feature suggests which shot in a group of similar photos is
       the best one to keep. To do that, the App analyses the faces in those photos on your
       device. This section sets out exactly what that face data is, what it is used for, where
       it is stored, how long it is kept and how to delete it.
     </p>
 
-    <div class="table-wrap en">
+    <div lang="en" class="table-wrap">
       <table>
         <thead><tr><th>Topic</th><th>Details</th></tr></thead>
         <tbody>
@@ -267,17 +617,57 @@
         </tbody>
       </table>
     </div>
+    <p lang="ja">
+      本アプリの「似ている写真」機能は、似ている写真のグループの中から、最も残す価値のある 1 枚を提案します。
+      そのために、本アプリは端末上で、写真に写っている顔を分析します。
+      この節では、これらの顔データが何であり、何に使われ、どこに保存され、どのくらいの期間保持され、どのように削除できるかをすべて説明します。
+    </p>
+    <div lang="ja" class="table-wrap">
+      <table>
+        <thead><tr><th>項目</th><th>内容</th></tr></thead>
+        <tbody>
+          <tr><td>生成されるデータ</td><td>分析した写真ごとに、<strong>顔の数</strong>、0 から 1 までの<strong>顔の品質スコア</strong>（顔が鮮明か、露出と表情が自然か、目が開いているか）、画面内で最も大きい顔の<strong>頭の向きの角度</strong>（左右・上下）を記録します。Android 版では、目の開き具合と顔の領域の鮮明さもあわせて記録します。<br>分析の間は、画面内での各顔の位置（矩形の枠）を一時的に使い、鮮明さの測定や、画面の端に小さく写り込んだ通行人の顔の除外に用います。顔の位置は分析が完了した時点で破棄され、<strong>保存されません</strong>。</td></tr>
+          <tr><td>生成方法</td><td>すべて端末上で行われます。iPhone では Apple の組み込みの Vision フレームワークを、Android では Google ML Kit のオンデバイスモデルを使用します。分析で読み込むのはシステムが提供するサムネイルであり、写真や顔の画像が端末の外に出ることは一切ありません。</td></tr>
+          <tr><td>用途</td><td><strong>1 つだけ</strong>です。似ている写真のグループの中で順位を付け、どの 1 枚を残すかを提案するために使います。</td></tr>
+          <tr><td>当社が行わないこと</td><td>人物の身元の識別、異なる写真に写った人物が同一人物かどうかの照合、顔の特徴テンプレート（face template）その他の生体識別情報の作成は行いません。顔の画像や顔の特徴点を保存することもありません。顔データは、広告、マーケティング、利用状況の分析、ユーザーのプロファイル作成、トラッキング、本人認証には<strong>一切使用せず</strong>、いかなるモデルの学習にも使用しません。</td></tr>
+          <tr><td>保存場所</td><td>端末内にある本アプリ専用のデータベースにのみ保存されます。<strong>当社のサーバーにアップロードされることはなく</strong>、Pibook のバックアップにも含まれません。</td></tr>
+          <tr><td>共有</td><td><strong>誰とも共有しません</strong>。当社、当社のサービス提供者（利用状況の分析サービスを含みます）、その他いかなる第三者にも提供せず、販売することも決してありません。</td></tr>
+          <tr><td>保存期間</td><td>Pibook をリセットするか本アプリをアンインストールするまで、端末内に保存されます。保存するのは、起動のたびに分析し直さずに済むようにするためです。分析方法が更新された場合、古い結果は自動的に削除され、再計算されます。</td></tr>
+          <tr><td>削除方法</td><td>本アプリ内で「マイページ → 詳細とリセット → Pibook を完全にリセット」を実行するか、本アプリをアンインストールしてください。どちらの場合も、端末内の顔データはすべて直ちに削除されます。これらのデータが当社に送信されたことはないため、当社側に削除すべきコピーは存在しません。</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p lang="ko">
+      본 앱의 ‘비슷한 사진’ 기능은 비슷한 사진 묶음 가운데 가장 남길 만한 한 장을 추천합니다.
+      이를 위해 본 앱은 이용자의 기기에서 사진 속 얼굴을 분석합니다.
+      이 조에서는 이러한 얼굴 데이터가 무엇인지, 어디에 쓰이는지, 어디에 저장되는지, 얼마나 보관되는지, 그리고 어떻게 삭제하는지를 빠짐없이 설명합니다.
+    </p>
+    <div lang="ko" class="table-wrap">
+      <table>
+        <thead><tr><th>항목</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td>생성되는 데이터</td><td>분석한 사진마다 <strong>얼굴 수</strong>, 0에서 1 사이의 <strong>얼굴 품질 점수</strong>(얼굴이 선명한지, 노출과 표정이 자연스러운지, 눈을 뜨고 있는지), 그리고 화면에서 가장 큰 얼굴의 <strong>머리 방향 각도</strong>(좌우, 상하)를 기록합니다. Android 버전은 이에 더해 눈을 뜬 정도와 얼굴 영역의 선명도도 기록합니다.<br>분석하는 동안에는 각 얼굴의 화면 속 위치(사각형 영역)를 잠시 사용해 선명도를 측정하고, 화면 가장자리에 아주 작게 찍힌 행인의 얼굴을 제외합니다. 이 위치 정보는 분석이 끝나는 즉시 폐기되며 <strong>저장되지 않습니다</strong>.</td></tr>
+          <tr><td>생성 방식</td><td>모든 처리는 이용자의 기기에서 이루어집니다. iPhone에서는 Apple이 기본 제공하는 Vision 프레임워크를, Android에서는 Google ML Kit의 온디바이스 모델을 사용합니다. 분석에는 시스템이 제공하는 썸네일을 사용하며, 어떠한 사진이나 얼굴 이미지도 기기 밖으로 나가지 않습니다.</td></tr>
+          <tr><td>이용 목적</td><td><strong>단 한 가지입니다.</strong> 비슷한 사진 묶음 안에서 순위를 매겨, 어느 사진을 남길지 추천하는 데에만 쓰입니다.</td></tr>
+          <tr><td>하지 않는 일</td><td>신원을 식별하지 않고, 서로 다른 사진 속 인물이 같은 사람인지 대조하지 않으며, 얼굴 특징 템플릿(face template)이나 어떠한 생체인식정보도 만들지 않고, 얼굴 이미지나 얼굴 특징점도 저장하지 않습니다. 얼굴 데이터는 광고, 마케팅, 이용 분석, 프로파일링, 추적 또는 본인 인증에 <strong>쓰이지 않으며</strong>, 어떠한 모델의 학습에도 쓰이지 않습니다.</td></tr>
+          <tr><td>저장 위치</td><td>이용자의 기기 안에 있는 본 앱 전용 데이터베이스에만 저장됩니다. <strong>회사의 서버로 업로드되지 않으며</strong>, Pibook의 클라우드 백업에도 포함되지 않습니다.</td></tr>
+          <tr><td>공유</td><td><strong>누구와도 공유하지 않습니다.</strong> 회사, 회사의 서비스 제공업체(이용 분석 서비스 포함), 그 밖의 어떠한 제3자에게도 제공하지 않으며, 판매하지도 않습니다.</td></tr>
+          <tr><td>보관 기간</td><td>이용자가 Pibook을 초기화하거나 본 앱을 삭제할 때까지 기기에 보관됩니다. 앱을 열 때마다 다시 분석하지 않아도 되도록 보관하는 것입니다. 분석 방식이 업데이트되면 이전 결과는 자동으로 삭제되고 다시 계산됩니다.</td></tr>
+          <tr><td>삭제 방법</td><td>앱에서 ‘프로필 → 고급 설정과 초기화 → Pibook 완전 초기화’를 실행하거나, 본 앱을 삭제하면 됩니다. 두 방법 모두 기기에 있는 얼굴 데이터를 즉시 모두 삭제합니다. 이 데이터는 회사에 전송된 적이 없으므로, 회사 측에는 삭제할 사본이 없습니다.</td></tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="collect">
-    <h2><span class="num">4</span><span class="zh">我們蒐集哪些資料</span><span class="en">What we collect</span></h2>
+    <h2><span class="num">4</span><span lang="zh-Hant">我們蒐集哪些資料</span><span lang="zh-Hans">我们收集哪些数据</span><span lang="en">What we collect</span><span lang="ja">収集するデータ</span><span lang="ko">수집하는 정보</span></h2>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       下表列出本 App 與本網站實際會蒐集的每一類資料。<strong>沒有列在表上的，我們就沒有蒐集。</strong>
     </p>
 
-    <div class="table-wrap zh">
+    <div lang="zh-Hant" class="table-wrap">
       <table>
         <thead>
           <tr><th>類別</th><th>具體內容</th><th>什麼時候</th></tr>
@@ -306,7 +696,7 @@
           <tr>
             <td>使用分析<br>（可關閉）</td>
             <td>事件名稱與畫面名稱、App 版本與建置編號、作業系統與版本、裝置機型與記憶體級距、語言、使用天數級距、圖庫規模級距、當機與錯誤報告（含堆疊資訊）、由 IP 位址推得的<strong>概略國家或地區</strong>。</td>
-            <td>使用 App 時；可於「我的 → 偏好設定」關閉</td>
+            <td>使用 App 時；可於「個人 → 進階與重設」關閉</td>
           </tr>
           <tr>
             <td>畫面互動錄影<br>（抽樣、可關閉）</td>
@@ -327,7 +717,7 @@
       </table>
     </div>
 
-    <div class="table-wrap en">
+    <div lang="en" class="table-wrap">
       <table>
         <thead>
           <tr><th>Category</th><th>What it contains</th><th>When</th></tr>
@@ -356,7 +746,7 @@
           <tr>
             <td>Usage analytics<br>(optional)</td>
             <td>Event and screen names, app version and build, OS and version, device model and memory tier, language, tenure bucket, library-size bucket, crash and error reports including stack traces, and an <strong>approximate country or region</strong> inferred from your IP address.</td>
-            <td>While using the app; switch off in Profile → Preferences</td>
+            <td>While using the app; switch off in Profile → Advanced &amp; reset</td>
           </tr>
           <tr>
             <td>Session replay<br>(sampled, optional)</td>
@@ -377,29 +767,209 @@
       </table>
     </div>
 
-    <div class="callout zh">
+    <div lang="zh-Hant" class="callout">
       <p><strong>臉部資料不在這張表上，</strong>因為我們從未取得它：臉部偵測的結果只存在你的裝置上，
       不會傳給我們或任何第三方（見<a href="#face-data">第 3 節</a>）。</p>
     </div>
-    <div class="callout en">
+    <div lang="en" class="callout">
       <p><strong>Face data is not in this table</strong> because we never receive it: face-detection results
       stay on your device and are never sent to us or to any third party (see <a href="#face-data">section 3</a>).</p>
     </div>
-    <div class="callout zh">
+    <div lang="zh-Hant" class="callout">
       <p><strong>本地通知不涉及伺服器。</strong>本 App 的提醒（例如「N 年前的今天」）完全由你的裝置在本機排程，
       不經過我們或任何第三方的推播伺服器，也不需要網路。</p>
     </div>
-    <div class="callout en">
+    <p lang="zh-Hans">
+      下表列出本 App 与本网站实际会收集的每一类数据。<strong>没有列在表上的，我们就没有收集。</strong>
+    </p>
+    <div lang="zh-Hans" class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>类别</th><th>具体内容</th><th>何时</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>匿名安装标识符</td>
+            <td>App 首次启动时在本地生成的随机字符串。它不是设备标识符，也不含任何可识别你身份的信息；卸载后重新安装会生成一个新的标识符。</td>
+            <td>启动 App 时（可随分析功能一并关闭）</td>
+          </tr>
+          <tr>
+            <td>账号信息</td>
+            <td>电子邮件地址、由 Apple 或 Google 提供的用户标识符、你选择提供的显示名称。如果你使用 Apple 的“隐藏邮件地址”，我们收到的是 Apple 提供的中继转发地址，看不到你的真实邮箱。</td>
+            <td>仅在你主动选择登录时</td>
+          </tr>
+          <tr>
+            <td>整理进度备份<br>（云端备份，可选）</td>
+            <td>照片<strong>指纹</strong>（由拍摄时间、文件大小、图像感知哈希等推导出的单向哈希值，<strong>无法还原成图像</strong>）、你设备系统相册中的照片编号、各项整理状态（已整理／待删除／已压缩等）、备份设备代号、平台与 App 版本。</td>
+            <td>登录并开启云端备份后，定期自动进行</td>
+          </tr>
+          <tr>
+            <td>订阅与购买记录</td>
+            <td>商品代号、商店交易编号、购买与到期时间、购买平台、权益状态。<strong>我们不会接触到你的信用卡号、银行账号或任何支付凭证</strong>——订阅付款全程由 Apple 或 Google 处理。</td>
+            <td>你购买或恢复购买时</td>
+          </tr>
+          <tr>
+            <td>使用分析<br>（可关闭）</td>
+            <td>事件名称与页面名称、App 版本与构建编号、操作系统与版本、设备型号与内存区间、语言、使用天数区间、图库规模区间、崩溃与错误报告（含堆栈信息）、由 IP 地址推断出的<strong>大致国家或地区</strong>。</td>
+            <td>使用 App 时；可在“个人 → 进阶与重设 → 分享匿名使用数据”关闭</td>
+          </tr>
+          <tr>
+            <td>界面交互录屏<br>（抽样、可关闭）</td>
+            <td>为了了解用户卡在哪一步，我们会抽样录制操作过程。<strong>录屏采用全面遮罩</strong>：所有图像、所有文字、所有原生视图都以色块替代，录下来的只有点击位置与操作节奏。<strong>录屏中看不到任何一张照片，也看不到任何文字内容。</strong>每秒最多一张快照。</td>
+            <td>随使用分析一同关闭</td>
+          </tr>
+          <tr>
+            <td>实体商品订单<br>（仅在你下单时）</td>
+            <td>收件人姓名、电话、收件地址、订单内容与金额、支付方式与支付状态、物流单号，以及你为该笔订单选择的照片。<strong>信用卡信息由第三方支付服务商直接处理，我们的服务器不存储完整卡号。</strong></td>
+            <td>仅在你下单时</td>
+          </tr>
+          <tr>
+            <td>客服往来记录</td>
+            <td>你发给我们的邮件内容与联系方式。</td>
+            <td>仅在你主动联系我们时</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div lang="zh-Hans" class="callout">
+      <p><strong>人脸数据不在这张表上，</strong>因为我们从未获取它：人脸检测的结果只存在你的设备上，
+      不会传给我们或任何第三方（见<a href="#face-data">第 3 节</a>）。</p>
+    </div>
+    <div lang="zh-Hans" class="callout">
+      <p><strong>本地通知不涉及服务器。</strong>本 App 的提醒（例如“N 年前的今天”）完全由你的设备在本地安排，
+      不经过我们或任何第三方的推送服务器，也不需要网络。</p>
+    </div>
+    <div lang="en" class="callout">
       <p><strong>Notifications involve no server.</strong> Reminders such as “on this day” are scheduled
       entirely on your device. They do not pass through our servers or any push service and need no network.</p>
+    </div>
+    <p lang="ja">
+      次の表は、本アプリと本ウェブサイトが実際に収集するデータを、種類ごとにすべて示したものです。<strong>表にないデータは収集していません。</strong>
+    </p>
+    <div lang="ja" class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>種類</th><th>具体的な内容</th><th>収集のタイミング</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>匿名のインストール ID</td>
+            <td>本アプリの初回起動時に端末内で生成されるランダムな文字列です。端末識別子ではなく、個人を特定できる情報も含みません。アンインストール後に再インストールすると、新しいものが生成されます。</td>
+            <td>アプリの起動時（分析機能と一緒にオフにできます）</td>
+          </tr>
+          <tr>
+            <td>アカウント情報</td>
+            <td>メールアドレス、Apple または Google が提供するユーザー識別子、任意で設定した表示名。Apple の「メールを非公開」を使用している場合、当社が受け取るのは Apple が発行する転送用アドレスであり、実際のメールアドレスを知ることはできません。</td>
+            <td>自らサインインを選んだ場合のみ</td>
+          </tr>
+          <tr>
+            <td>整理の記録のバックアップ<br>（クラウド、任意）</td>
+            <td>写真の<strong>指紋</strong>（撮影日時、ファイルサイズ、画像の知覚ハッシュなどから導き出した一方向ハッシュ値で、<strong>画像に復元することはできません</strong>）、端末のシステム写真ライブラリにおける写真の ID、各種の整理状態（整理済み／削除予定／圧縮済みなど）、バックアップ元端末の識別コード、プラットフォーム、アプリのバージョン。</td>
+            <td>サインインしてバックアップをオンにした後、定期的に自動で行われます</td>
+          </tr>
+          <tr>
+            <td>サブスクリプションと購入の記録</td>
+            <td>商品 ID、ストアの取引番号、購入日時と有効期限、購入したプラットフォーム、利用権の状態。<strong>当社がクレジットカード番号、銀行口座、その他の支払い認証情報に触れることはありません。</strong>サブスクリプションの支払いは、最初から最後まで Apple または Google が処理します。</td>
+            <td>購入時、または購入を復元したとき</td>
+          </tr>
+          <tr>
+            <td>利用状況の分析<br>（オフにできます）</td>
+            <td>イベント名と画面名、アプリのバージョンとビルド番号、OS とそのバージョン、端末の機種とメモリ容量の区分、言語、利用日数の区分、写真ライブラリの規模の区分、クラッシュとエラーのレポート（スタックトレースを含みます）、IP アドレスから推定した<strong>おおよその国または地域</strong>。</td>
+            <td>アプリの使用中。「マイページ → 詳細とリセット → 利用データを共有」でオフにできます</td>
+          </tr>
+          <tr>
+            <td>画面操作の録画<br>（一部のみ・オフにできます）</td>
+            <td>ユーザーがどこで操作につまずいているかを把握するため、操作の様子を抽出（サンプリング）して録画します。<strong>録画はすべてマスクされます</strong>。すべての画像、すべてのテキスト、すべてのネイティブビューが単色のブロックに置き換えられ、記録されるのはタップした位置と操作のリズムだけです。<strong>録画に写真やテキストの内容が映ることは一切ありません。</strong>スナップショットは最大で毎秒 1 枚です。</td>
+            <td>利用状況の分析と一緒にオフになります</td>
+          </tr>
+          <tr>
+            <td>プリント商品の注文<br>（注文した場合のみ）</td>
+            <td>受取人の氏名、電話番号、配送先住所、注文内容と金額、支払い方法と支払い状況、配送の追跡番号、その注文のために選んだ写真。<strong>クレジットカード情報は第三者の決済サービス事業者が直接処理し、当社のサーバーがカード番号の全桁を保存することはありません。</strong></td>
+            <td>注文したときのみ</td>
+          </tr>
+          <tr>
+            <td>サポートとのやり取りの記録</td>
+            <td>当社に送られたメールの内容と連絡先。</td>
+            <td>自ら当社に問い合わせた場合のみ</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div lang="ja" class="callout">
+      <p><strong>顔データがこの表にないのは、</strong>当社がそれを取得することがないからです。顔検出の結果は端末内にのみ存在し、
+      当社にもいかなる第三者にも送信されません（<a href="#face-data">第 3 節</a>を参照）。</p>
+    </div>
+    <div lang="ja" class="callout">
+      <p><strong>ローカル通知にサーバーは関与しません。</strong>本アプリの通知（「N 年前の今日」など）は、すべて端末内でスケジュールされます。
+      当社やいかなる第三者のプッシュ通知サーバーも経由せず、ネットワーク接続も必要ありません。</p>
+    </div>
+    <p lang="ko">
+      아래 표는 본 앱과 본 웹사이트가 실제로 수집하는 정보를 유형별로 모두 나열한 것입니다. <strong>표에 없는 정보는 수집하지 않습니다.</strong>
+    </p>
+    <div lang="ko" class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>유형</th><th>구체적인 내용</th><th>수집 시점</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>익명 설치 식별자</td>
+            <td>본 앱을 처음 실행할 때 기기에서 생성되는 무작위 문자열입니다. 기기 식별자가 아니며, 이용자의 신원을 알아볼 수 있는 정보도 포함하지 않습니다. 앱을 삭제한 뒤 다시 설치하면 새 식별자가 생성됩니다.</td>
+            <td>앱 실행 시(분석 기능과 함께 끌 수 있음)</td>
+          </tr>
+          <tr>
+            <td>계정 정보</td>
+            <td>이메일 주소, Apple 또는 Google이 제공하는 사용자 식별자, 이용자가 제공하기로 선택한 표시 이름. Apple의 ‘나의 이메일 가리기’를 사용하는 경우 회사가 받는 것은 Apple이 제공하는 중계 주소이며, 이용자의 실제 이메일 주소는 알 수 없습니다.</td>
+            <td>이용자가 직접 로그인을 선택한 경우에만</td>
+          </tr>
+          <tr>
+            <td>정리 진행 상황 백업<br>(클라우드 백업, 선택 사항)</td>
+            <td>사진 <strong>지문</strong>(촬영 시각, 파일 크기, 이미지 지각 해시 등에서 도출한 단방향 해시값으로, <strong>이미지로 복원할 수 없음</strong>), 기기 시스템 보관함의 사진 식별 번호, 각종 정리 상태(정리함/삭제 예정/압축됨 등), 백업한 기기의 식별 코드, 플랫폼 및 앱 버전.</td>
+            <td>로그인하고 클라우드 백업을 켠 뒤 정기적으로 자동 수집</td>
+          </tr>
+          <tr>
+            <td>구독 및 구매 기록</td>
+            <td>상품 ID, 스토어 거래 번호, 구매 및 만료 시각, 구매 플랫폼, 이용 권한 상태. <strong>회사는 이용자의 신용카드 번호, 은행 계좌 번호, 그 밖의 어떠한 결제 인증 정보에도 접근하지 않습니다.</strong> 구독 결제는 처음부터 끝까지 Apple 또는 Google이 처리합니다.</td>
+            <td>구매하거나 구매를 복원할 때</td>
+          </tr>
+          <tr>
+            <td>이용 분석<br>(끌 수 있음)</td>
+            <td>이벤트 이름과 화면 이름, 앱 버전과 빌드 번호, 운영체제와 그 버전, 기기 모델과 메모리 용량 구간, 언어, 사용 일수 구간, 사진 보관함 규모 구간, 비정상 종료 및 오류 보고서(스택 정보 포함), IP 주소로 추정한 <strong>대략적인 국가 또는 지역</strong>.</td>
+            <td>앱 사용 중. ‘프로필 → 고급 설정과 초기화 → 이용 데이터 공유’에서 끌 수 있음</td>
+          </tr>
+          <tr>
+            <td>화면 상호작용 녹화<br>(표본 추출, 끌 수 있음)</td>
+            <td>이용자가 어느 단계에서 막히는지 파악하기 위해 일부 사용 과정을 표본으로 녹화합니다. <strong>녹화는 전면 마스킹 방식으로 이루어집니다.</strong> 모든 이미지, 모든 텍스트, 모든 네이티브 뷰는 단색 블록으로 가려지며, 녹화되는 것은 누른 위치와 조작 리듬뿐입니다. <strong>녹화본에서는 사진을 한 장도 볼 수 없으며, 어떠한 텍스트 내용도 볼 수 없습니다.</strong> 스냅샷은 초당 최대 1장입니다.</td>
+            <td>이용 분석과 함께 꺼짐</td>
+          </tr>
+          <tr>
+            <td>실물 상품 주문<br>(주문한 경우에만)</td>
+            <td>수령인 이름, 전화번호, 배송 주소, 주문 내용과 금액, 결제 수단과 결제 상태, 운송장 번호, 그리고 이용자가 해당 주문을 위해 선택한 사진. <strong>신용카드 정보는 제3자 결제대행업체가 직접 처리하며, 회사의 서버는 전체 카드 번호를 저장하지 않습니다.</strong></td>
+            <td>이용자가 주문하는 경우에만</td>
+          </tr>
+          <tr>
+            <td>고객 문의 기록</td>
+            <td>이용자가 회사에 보낸 메일의 내용과 연락처.</td>
+            <td>이용자가 직접 회사에 연락하는 경우에만</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div lang="ko" class="callout">
+      <p><strong>얼굴 데이터는 이 표에 없습니다.</strong> 회사가 이를 받은 적이 한 번도 없기 때문입니다. 얼굴 감지 결과는 이용자의 기기에만 저장되며,
+      회사나 어떠한 제3자에게도 전송되지 않습니다(<a href="#face-data">제3조</a> 참고).</p>
+    </div>
+    <div lang="ko" class="callout">
+      <p><strong>로컬 알림에는 서버가 관여하지 않습니다.</strong> 본 앱의 알림(예: ‘N년 전 오늘’)은 전적으로 이용자의 기기에서 예약되며,
+      회사나 어떠한 제3자의 푸시 서버도 거치지 않고, 네트워크도 필요하지 않습니다.</p>
     </div>
   </section>
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="why">
-    <h2><span class="num">5</span><span class="zh">蒐集目的與法律依據</span><span class="en">Purposes and legal bases</span></h2>
+    <h2><span class="num">5</span><span lang="zh-Hant">蒐集目的與法律依據</span><span lang="zh-Hans">收集目的与法律依据</span><span lang="en">Purposes and legal bases</span><span lang="ja">収集の目的と法的根拠</span><span lang="ko">수집 목적과 법적 근거</span></h2>
 
-    <div class="table-wrap zh">
+    <div lang="zh-Hant" class="table-wrap">
       <table>
         <thead>
           <tr><th>目的</th><th>使用的資料</th><th>GDPR 法律依據</th></tr>
@@ -416,7 +986,7 @@
       </table>
     </div>
 
-    <div class="table-wrap en">
+    <div lang="en" class="table-wrap">
       <table>
         <thead>
           <tr><th>Purpose</th><th>Data used</th><th>GDPR legal basis</th></tr>
@@ -433,24 +1003,84 @@
       </table>
     </div>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       我們<strong>不會</strong>將你的個人資料用於自動化決策或剖析（profiling）以產生對你有法律效果的結果，
       也<strong>不會</strong>販售你的個人資料，或將其提供給廣告網路做跨 App 追蹤。本 App 不含任何廣告。
     </p>
-    <p class="en">
+    <div lang="zh-Hans" class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>目的</th><th>使用的数据</th><th>GDPR 法律依据</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>提供账号、云端备份与跨设备恢复</td><td>账号信息、整理进度备份</td><td>履行合同</td></tr>
+          <tr><td>判断你是否拥有 Premium 权益、防止重复领取</td><td>账号信息、订阅与购买记录、匿名安装标识符</td><td>履行合同</td></tr>
+          <tr><td>处理实体商品订单与发货、开具凭证</td><td>订单信息、你选择的照片</td><td>履行合同／法定义务</td></tr>
+          <tr><td>改进产品、找出崩溃与性能问题</td><td>使用分析、界面交互录屏</td><td>同意（可在 App 内随时撤回）</td></tr>
+          <tr><td>防止欺诈、滥用与异常退款</td><td>订阅与购买记录、匿名安装标识符</td><td>正当利益</td></tr>
+          <tr><td>回复客服咨询</td><td>客服往来记录</td><td>正当利益／履行合同</td></tr>
+          <tr><td>遵守税务、会计与消费者保护法规</td><td>订单与购买记录</td><td>法定义务</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p lang="zh-Hans">
+      我们<strong>不会</strong>将你的个人信息用于自动化决策或画像（profiling）以产生对你具有法律效力的结果，
+      也<strong>不会</strong>出售你的个人信息，或将其提供给广告网络用于跨 App 追踪。本 App 不含任何广告。
+    </p>
+    <p lang="en">
       We do <strong>not</strong> use your data for automated decision-making or profiling that produces
       legal effects concerning you. We do <strong>not</strong> sell your personal data or supply it to
       advertising networks for cross-app tracking. The App contains no advertising.
+    </p>
+    <div lang="ja" class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>目的</th><th>利用するデータ</th><th>GDPR 上の法的根拠</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>アカウント、バックアップ、端末をまたいだ復元の提供</td><td>アカウント情報、整理の記録のバックアップ</td><td>契約の履行</td></tr>
+          <tr><td>Premium の利用権の有無の判定、重複取得の防止</td><td>アカウント情報、サブスクリプションと購入の記録、匿名のインストール ID</td><td>契約の履行</td></tr>
+          <tr><td>プリント商品の注文の処理と発送、証憑の発行</td><td>注文情報、注文のために選んだ写真</td><td>契約の履行／法的義務</td></tr>
+          <tr><td>製品の改善、クラッシュやパフォーマンスの問題の特定</td><td>利用状況の分析、画面操作の録画</td><td>同意（アプリ内でいつでも撤回できます）</td></tr>
+          <tr><td>詐欺、不正利用、異常な返金の防止</td><td>サブスクリプションと購入の記録、匿名のインストール ID</td><td>正当な利益</td></tr>
+          <tr><td>サポートへのお問い合わせへの回答</td><td>サポートとのやり取りの記録</td><td>正当な利益／契約の履行</td></tr>
+          <tr><td>税務、会計、消費者保護に関する法令の遵守</td><td>注文と購入の記録</td><td>法的義務</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p lang="ja">
+      当社は、ユーザーに法的効果を及ぼす自動化された意思決定やプロファイリングに個人データを使用することは<strong>ありません</strong>。
+      また、個人データを販売したり、アプリをまたいだトラッキングのために広告ネットワークへ提供したりすることも<strong>ありません</strong>。本アプリに広告は一切ありません。
+    </p>
+    <div lang="ko" class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>목적</th><th>이용하는 정보</th><th>GDPR상 법적 근거</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>계정, 클라우드 백업 및 기기 간 복원 제공</td><td>계정 정보, 정리 진행 상황 백업</td><td>계약 이행</td></tr>
+          <tr><td>Premium 이용 권한 보유 여부 확인 및 중복 수령 방지</td><td>계정 정보, 구독 및 구매 기록, 익명 설치 식별자</td><td>계약 이행</td></tr>
+          <tr><td>실물 상품 주문의 처리와 배송, 증빙 발행</td><td>주문 정보, 이용자가 선택한 사진</td><td>계약 이행/법적 의무</td></tr>
+          <tr><td>제품 개선, 비정상 종료 및 성능 문제 파악</td><td>이용 분석, 화면 상호작용 녹화</td><td>동의(앱에서 언제든 철회 가능)</td></tr>
+          <tr><td>사기, 악용 및 비정상적인 환불 방지</td><td>구독 및 구매 기록, 익명 설치 식별자</td><td>정당한 이익</td></tr>
+          <tr><td>고객 문의 응대</td><td>고객 문의 기록</td><td>정당한 이익/계약 이행</td></tr>
+          <tr><td>세무, 회계 및 소비자 보호 법규 준수</td><td>주문 및 구매 기록</td><td>법적 의무</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p lang="ko">
+      회사는 이용자의 개인정보를 이용자에게 법적 효력을 미치는 결과를 낳는 자동화된 의사결정이나 프로파일링(profiling)에 이용하지 <strong>않으며</strong>,
+      이용자의 개인정보를 판매하거나 앱 간 추적을 위해 광고 네트워크에 제공하지도 <strong>않습니다</strong>. 본 앱에는 광고가 전혀 없습니다.
     </p>
   </section>
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="share">
-    <h2><span class="num">6</span><span class="zh">我們與誰分享</span><span class="en">Who we share with</span></h2>
+    <h2><span class="num">6</span><span lang="zh-Hant">我們與誰分享</span><span lang="zh-Hans">我们与谁共享</span><span lang="en">Who we share with</span><span lang="ja">データの共有先</span><span lang="ko">정보를 공유하는 대상</span></h2>
 
-    <p class="zh">我們只在必要範圍內，將資料交給以下協助我們營運的服務提供者。他們僅能依我們的指示處理，不得另作他用。</p>
+    <p lang="zh-Hant">我們只在必要範圍內，將資料交給以下協助我們營運的服務提供者。他們僅能依我們的指示處理，不得另作他用。</p>
 
-    <div class="table-wrap zh">
+    <div lang="zh-Hant" class="table-wrap">
       <table>
         <thead>
           <tr><th>對象</th><th>做什麼</th><th>會拿到什麼</th></tr>
@@ -465,7 +1095,7 @@
       </table>
     </div>
 
-    <div class="table-wrap en">
+    <div lang="en" class="table-wrap">
       <table>
         <thead>
           <tr><th>Recipient</th><th>Role</th><th>What they receive</th></tr>
@@ -480,52 +1110,142 @@
       </table>
     </div>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       此外，若法律、法院命令或主管機關依法要求，我們可能必須揭露相關資料；
       在法律允許的範圍內，我們會事先通知你。
       若我們的業務發生合併、收購或資產移轉，你的資料可能一併移轉，
       但受讓人仍須受本政策同等程度的拘束，我們也會事先在 App 或本網站公告。
     </p>
-    <p class="en">
+    <p lang="zh-Hans">我们仅在必要范围内，将数据提供给以下协助我们运营的服务提供商。他们只能按照我们的指示处理，不得另作他用。</p>
+    <div lang="zh-Hans" class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>对象</th><th>做什么</th><th>会获得什么</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Supabase</td><td>账号、数据库与文件存储（托管于 Amazon Web Services）</td><td>账号信息、整理进度备份、订阅记录、订单信息</td></tr>
+          <tr><td>PostHog</td><td>使用分析与崩溃报告</td><td>使用分析、遮罩后的界面交互录屏</td></tr>
+          <tr><td>Apple / Google</td><td>登录验证、App 内购买与付款、地理编码</td><td>按其各自政策处理；订阅付款信息我们不经手</td></tr>
+          <tr><td>支付服务商</td><td>实体商品的信用卡及其他支付处理</td><td>付款所需信息（我们不存储完整卡号）</td></tr>
+          <tr><td>印制与物流服务商</td><td>制作与寄送实体商品</td><td>收件信息与该笔订单的照片</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p lang="zh-Hans">
+      此外，如果法律、法院命令或主管机关依法要求，我们可能必须披露相关数据；
+      在法律允许的范围内，我们会事先通知你。
+      如果我们的业务发生合并、收购或资产转让，你的数据可能随之转移，
+      但受让方仍须受到与本政策同等程度的约束，我们也会事先在 App 或本网站公告。
+    </p>
+    <p lang="en">
       We may also disclose data where required by law, court order or a competent authority; where
       legally permitted we will tell you first. If our business is merged, acquired or transferred,
       your data may transfer with it, but the recipient remains bound by protections equivalent to
       this policy, and we will give notice in the App or on this site beforehand.
     </p>
+    <p lang="ja">当社は、当社の運営を支援する以下のサービス提供者に、必要な範囲に限ってデータを提供します。これらの提供者は当社の指示に従ってのみデータを取り扱うことができ、ほかの目的に使用することは認められていません。</p>
+    <div lang="ja" class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>提供先</th><th>役割</th><th>提供されるデータ</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Supabase</td><td>アカウント管理、データベース、ファイルの保管（Amazon Web Services 上でホスティング）</td><td>アカウント情報、整理の記録のバックアップ、サブスクリプションの記録、注文情報</td></tr>
+          <tr><td>PostHog</td><td>利用状況の分析とクラッシュレポート</td><td>利用状況の分析データ、マスク処理された画面操作の録画</td></tr>
+          <tr><td>Apple / Google</td><td>サインインの認証、アプリ内課金と決済、ジオコーディング</td><td>各社のポリシーに基づいて処理されます。サブスクリプションの支払い情報を当社が取り扱うことはありません</td></tr>
+          <tr><td>決済サービス事業者</td><td>プリント商品のクレジットカード決済その他の支払い処理</td><td>支払いに必要な情報（当社はカード番号の全桁を保存しません）</td></tr>
+          <tr><td>印刷・物流事業者</td><td>プリント商品の製作と配送</td><td>配送先の情報と、その注文の写真</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p lang="ja">
+      このほか、法令、裁判所の命令、または監督官庁から法に基づく要求があった場合、当社は関連するデータを開示しなければならないことがあります。
+      その場合、法律で認められる範囲で事前にユーザーに通知します。
+      当社の事業について合併、買収または資産の譲渡が行われた場合、ユーザーのデータもあわせて移転されることがありますが、
+      譲受人も本ポリシーと同等の水準で拘束され、当社は事前に本アプリまたは本ウェブサイトでお知らせします。
+    </p>
+    <p lang="ko">회사는 필요한 범위에서만 회사의 운영을 돕는 아래 서비스 제공업체에 정보를 제공합니다. 이들은 회사의 지시에 따라서만 정보를 처리할 수 있으며, 다른 목적으로 이용할 수 없습니다.</p>
+    <div lang="ko" class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>제공 대상</th><th>역할</th><th>제공되는 정보</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Supabase</td><td>계정, 데이터베이스 및 파일 저장(Amazon Web Services에서 호스팅)</td><td>계정 정보, 정리 진행 상황 백업, 구독 기록, 주문 정보</td></tr>
+          <tr><td>PostHog</td><td>이용 분석 및 비정상 종료 보고</td><td>이용 분석, 마스킹 처리된 화면 상호작용 녹화</td></tr>
+          <tr><td>Apple / Google</td><td>로그인 인증, 앱 내 구매 및 결제, 지오코딩</td><td>각 회사의 정책에 따라 처리. 구독 결제 정보는 회사를 거치지 않음</td></tr>
+          <tr><td>결제대행업체</td><td>실물 상품의 신용카드 및 기타 결제 처리</td><td>결제에 필요한 정보(회사는 전체 카드 번호를 저장하지 않음)</td></tr>
+          <tr><td>인화 및 물류 업체</td><td>실물 상품의 제작 및 배송</td><td>수령 정보와 해당 주문의 사진</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p lang="ko">
+      또한 법령, 법원의 명령 또는 관계 기관의 적법한 요구가 있는 경우 회사는 관련 정보를 공개해야 할 수 있으며,
+      법이 허용하는 범위에서 이용자에게 미리 알립니다.
+      회사의 사업에 합병, 인수 또는 자산 양도가 있는 경우 이용자의 정보도 함께 이전될 수 있으나,
+      양수인은 계속해서 본 방침과 동등한 수준의 구속을 받으며, 회사는 이를 앱 또는 본 웹사이트에 미리 공지합니다.
+    </p>
   </section>
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="where">
-    <h2><span class="num">7</span><span class="zh">資料存放地點與跨境傳輸</span><span class="en">Where data is stored and transferred</span></h2>
+    <h2><span class="num">7</span><span lang="zh-Hant">資料存放地點與跨境傳輸</span><span lang="zh-Hans">数据存储地点与跨境传输</span><span lang="en">Where data is stored and transferred</span><span lang="ja">データの保存場所と国外への移転</span><span lang="ko">저장 위치와 국외 이전</span></h2>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       帳號、備份與訂單資料存放於 Supabase 位於<strong>新加坡</strong>的 Amazon Web Services 機房。
       使用分析資料由 PostHog 處理，存放於<strong>美國</strong>。
     </p>
-    <p class="zh">
+    <p lang="zh-Hant">
       如果你位於歐洲經濟區、英國或瑞士，你的資料可能被傳輸到這些地區以外的國家。
       這類傳輸依據歐盟執委會核准的<strong>標準契約條款（Standard Contractual Clauses）</strong>
       進行，並輔以適當的技術與組織保護措施。你可以來信索取相關傳輸機制的說明。
     </p>
+    <p lang="zh-Hans">
+      账号、备份与订单数据存储在 Supabase 位于<strong>新加坡</strong>的 Amazon Web Services 数据中心。
+      使用分析数据由 PostHog 处理，存储在<strong>美国</strong>。
+    </p>
+    <p lang="zh-Hans">
+      如果你位于欧洲经济区、英国或瑞士，你的数据可能被传输到这些地区以外的国家。
+      此类传输依据欧盟委员会批准的<strong>标准合同条款（Standard Contractual Clauses）</strong>进行，
+      并辅以适当的技术与组织保护措施。你可以来信索取相关传输机制的说明。
+    </p>
 
-    <p class="en">
+    <p lang="en">
       Account, backup and order data are stored in Supabase’s Amazon Web Services region in
       <strong>Singapore</strong>. Usage analytics are processed by PostHog and stored in the
       <strong>United States</strong>.
     </p>
-    <p class="en">
+    <p lang="en">
       If you are in the EEA, the UK or Switzerland, your data may be transferred outside those areas.
       Such transfers rely on the European Commission’s
       <strong>Standard Contractual Clauses</strong>, supported by appropriate technical and
       organisational safeguards. Write to us for details of the mechanism used.
     </p>
+    <p lang="ja">
+      アカウント、バックアップ、注文に関するデータは、Supabase が利用する<strong>シンガポール</strong>の Amazon Web Services のデータセンターに保存されます。
+      利用状況の分析データは PostHog が処理し、<strong>米国</strong>に保存されます。
+    </p>
+    <p lang="ja">
+      欧州経済領域（EEA）、英国またはスイスにお住まいの場合、ユーザーのデータがこれらの地域外の国へ移転されることがあります。
+      このような移転は、欧州委員会が承認した<strong>標準契約条項（Standard Contractual Clauses）</strong>に基づいて行われ、
+      適切な技術的・組織的保護措置によって補完されています。移転の仕組みについての説明は、メールでご請求いただけます。
+    </p>
+    <p lang="ko">
+      계정, 백업 및 주문 정보는 Supabase가 이용하는 <strong>싱가포르</strong> 소재 Amazon Web Services 데이터센터에 저장됩니다.
+      이용 분석 정보는 PostHog가 처리하며 <strong>미국</strong>에 저장됩니다.
+    </p>
+    <p lang="ko">
+      이용자가 유럽경제지역(EEA), 영국 또는 스위스에 있는 경우, 이용자의 정보가 이들 지역 밖의 국가로 이전될 수 있습니다.
+      이러한 이전은 EU 집행위원회가 승인한 <strong>표준계약조항(Standard Contractual Clauses)</strong>에 근거하여
+      이루어지며, 적절한 기술적·관리적 보호조치가 함께 적용됩니다. 해당 이전 메커니즘에 관한 설명은 메일로 요청하실 수 있습니다.
+    </p>
   </section>
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="retention">
-    <h2><span class="num">8</span><span class="zh">我們保存多久</span><span class="en">How long we keep it</span></h2>
+    <h2><span class="num">8</span><span lang="zh-Hant">我們保存多久</span><span lang="zh-Hans">我们保存多久</span><span lang="en">How long we keep it</span><span lang="ja">保存期間</span><span lang="ko">보유 기간</span></h2>
 
-    <div class="table-wrap zh">
+    <div lang="zh-Hant" class="table-wrap">
       <table>
         <thead><tr><th>資料</th><th>保存期間</th></tr></thead>
         <tbody>
@@ -540,8 +1260,23 @@
         </tbody>
       </table>
     </div>
+    <div lang="zh-Hans" class="table-wrap">
+      <table>
+        <thead><tr><th>数据</th><th>保存期限</th></tr></thead>
+        <tbody>
+          <tr><td>账号信息</td><td>账号存续期间。删除账号后 30 日内从所有正式系统中移除，备份介质上的残留副本最迟于 90 日内被覆盖。</td></tr>
+          <tr><td>整理进度备份</td><td>每位用户只保留最近的少数几份，较旧的自动清除。删除账号时一并删除。</td></tr>
+          <tr><td>订阅与购买记录</td><td>根据台湾税捐稽征与商业会计相关法令，交易凭证自账务发生年度起<strong>保存 5 年</strong>。此部分不因账号删除而移除，但会与你的账号解除关联，仅保留法定必要字段。</td></tr>
+          <tr><td>实体商品订单与收件信息</td><td>同上，保存 5 年。订单上传的<strong>照片</strong>在制作完成并确认送达后 <strong>90 日内删除</strong>（保留这段期间是为了处理重印与退换货）。</td></tr>
+          <tr><td>使用分析</td><td>最长 24 个月，之后自动删除或汇总为无法识别个人的统计数据。</td></tr>
+          <tr><td>界面交互录屏</td><td>最长 90 日。</td></tr>
+          <tr><td>客服往来记录</td><td>结案后 2 年。</td></tr>
+          <tr><td>人脸数据</td><td>我们没有保存任何人脸数据。它只存在你的设备上，保存到你重置拍簿或卸载本 App 为止（见<a href="#face-data">第 3 节</a>）。</td></tr>
+        </tbody>
+      </table>
+    </div>
 
-    <div class="table-wrap en">
+    <div lang="en" class="table-wrap">
       <table>
         <thead><tr><th>Data</th><th>Retention</th></tr></thead>
         <tbody>
@@ -556,14 +1291,44 @@
         </tbody>
       </table>
     </div>
+    <div lang="ja" class="table-wrap">
+      <table>
+        <thead><tr><th>データ</th><th>保存期間</th></tr></thead>
+        <tbody>
+          <tr><td>アカウント情報</td><td>アカウントが存続する期間。アカウントの削除後 30 日以内にすべての本番システムから消去され、バックアップ媒体上に残った複製も遅くとも 90 日以内に上書きされます。</td></tr>
+          <tr><td>整理の記録のバックアップ</td><td>ユーザーごとに直近の数件のみを保持し、それより古いものは自動的に削除されます。アカウントを削除すると、あわせて削除されます。</td></tr>
+          <tr><td>サブスクリプションと購入の記録</td><td>台湾の税の徴収と商業会計に関する法令に基づき、取引の証憑は取引が発生した会計年度から <strong>5 年間保存</strong>します。これらの記録はアカウントを削除しても消去されませんが、アカウントとの紐づけは解除され、法令上必要な項目のみが保持されます。</td></tr>
+          <tr><td>プリント商品の注文と配送先情報</td><td>同上、5 年間保存します。注文のためにアップロードされた<strong>写真</strong>は、製作が完了し配達が確認されてから <strong>90 日以内に削除</strong>されます（この期間は、再印刷や返品・交換に対応するために設けています）。</td></tr>
+          <tr><td>利用状況の分析</td><td>最長 24 か月。その後は自動的に削除されるか、個人を特定できない統計値に集計されます。</td></tr>
+          <tr><td>画面操作の録画</td><td>最長 90 日。</td></tr>
+          <tr><td>サポートとのやり取りの記録</td><td>対応の完了から 2 年間。</td></tr>
+          <tr><td>顔データ</td><td>当社は顔データを一切保存していません。顔データは端末内にのみ存在し、Pibook をリセットするか本アプリをアンインストールするまで保存されます（<a href="#face-data">第 3 節</a>を参照）。</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div lang="ko" class="table-wrap">
+      <table>
+        <thead><tr><th>정보</th><th>보유 기간</th></tr></thead>
+        <tbody>
+          <tr><td>계정 정보</td><td>계정이 유지되는 기간. 계정 삭제 후 30일 이내에 모든 운영 시스템에서 삭제되며, 백업 매체에 남은 사본은 늦어도 90일 이내에 덮어씁니다.</td></tr>
+          <tr><td>정리 진행 상황 백업</td><td>이용자별로 최근 몇 개만 보관하며, 오래된 백업은 자동으로 삭제됩니다. 계정을 삭제하면 함께 삭제됩니다.</td></tr>
+          <tr><td>구독 및 구매 기록</td><td>대만의 조세 징수 및 상업 회계 관련 법령에 따라 거래 증빙은 거래가 발생한 회계연도부터 <strong>5년간 보관</strong>합니다. 이 기록은 계정을 삭제해도 삭제되지 않지만, 이용자의 계정과의 연결을 끊고 법령상 필요한 항목만 보관합니다.</td></tr>
+          <tr><td>실물 상품 주문 및 수령 정보</td><td>위와 같이 5년간 보관합니다. 주문을 위해 업로드한 <strong>사진</strong>은 제작이 끝나고 배송 완료가 확인된 후 <strong>90일 이내에 삭제</strong>합니다(이 기간은 재제작과 반품·교환 처리를 위해 둡니다).</td></tr>
+          <tr><td>이용 분석</td><td>최대 24개월. 이후 자동으로 삭제되거나 개인을 식별할 수 없는 통계 수치로 집계됩니다.</td></tr>
+          <tr><td>화면 상호작용 녹화</td><td>최대 90일.</td></tr>
+          <tr><td>고객 문의 기록</td><td>문의 처리 종료 후 2년.</td></tr>
+          <tr><td>얼굴 데이터</td><td>회사는 얼굴 데이터를 전혀 보관하지 않습니다. 얼굴 데이터는 이용자의 기기에만 존재하며, 이용자가 Pibook을 초기화하거나 본 앱을 삭제할 때까지 보관됩니다(<a href="#face-data">제3조</a> 참고).</td></tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="rights">
-    <h2><span class="num">9</span><span class="zh">你的權利</span><span class="en">Your rights</span></h2>
+    <h2><span class="num">9</span><span lang="zh-Hant">你的權利</span><span lang="zh-Hans">你的权利</span><span lang="en">Your rights</span><span lang="ja">ユーザーの権利</span><span lang="ko">이용자의 권리</span></h2>
 
-    <p class="zh">不論你身在何處，你都可以要求我們：</p>
-    <ul class="zh">
+    <p lang="zh-Hant">不論你身在何處，你都可以要求我們：</p>
+    <ul lang="zh-Hant">
       <li><strong>查詢與閱覽</strong>我們持有的你的個人資料，並取得副本；</li>
       <li><strong>更正</strong>不正確或不完整的資料；</li>
       <li><strong>刪除</strong>你的資料（法律要求我們保存者除外，見上節）；</li>
@@ -571,20 +1336,39 @@
       <li><strong>攜出</strong>你的資料，以結構化、常用且可機器讀取的格式取得；</li>
       <li><strong>撤回同意</strong>，且不影響撤回前依同意所為處理的合法性。</li>
     </ul>
-    <p class="zh">
-      最快的方式是在 App 內操作：使用分析的開關在「我的 → 偏好設定」，
-      刪除帳號在「我的 → 帳號」。其餘請來信
+    <p lang="zh-Hant">
+      最快的方式是在 App 內操作：使用分析的開關在「個人 → 進階與重設」，
+      刪除帳號在「個人 → 帳號」。其餘請來信
       <a href="mailto:privacy@pibook.app">privacy@pibook.app</a>，
       我們會在<strong>收到後 30 日內</strong>回覆；情況複雜時最多延長 30 日，並會事先告知你。
       我們不會因為你行使權利而對你差別待遇或降低服務品質。
     </p>
-    <p class="zh">
+    <p lang="zh-Hant">
       為保護你的資料，我們可能需要先確認提出請求的人確實是你 ——
       通常是請你以帳號註冊時的同一個電子郵件地址來信。
     </p>
+    <p lang="zh-Hans">无论你身在何处，你都可以要求我们：</p>
+    <ul lang="zh-Hans">
+      <li><strong>查询与查阅</strong>我们持有的你的个人信息，并获取副本；</li>
+      <li><strong>更正</strong>不正确或不完整的信息；</li>
+      <li><strong>删除</strong>你的数据（法律要求我们保存的除外，见上一节）；</li>
+      <li><strong>限制或反对</strong>特定处理，包括随时关闭使用分析；</li>
+      <li><strong>导出</strong>你的数据，以结构化、常用且机器可读的格式获取；</li>
+      <li><strong>撤回同意</strong>，且不影响撤回前基于同意所进行的处理的合法性。</li>
+    </ul>
+    <p lang="zh-Hans">
+      最快的方式是在 App 内操作：使用分析的开关在“个人 → 进阶与重设 → 分享匿名使用数据”，
+      删除账号在“个人 → 账号”。其他请求请发邮件至
+      <a href="mailto:privacy@pibook.app">privacy@pibook.app</a>，
+      我们会在<strong>收到后 30 日内</strong>回复；情况复杂时最多延长 30 日，并会事先告知你。
+      我们不会因为你行使权利而对你差别对待或降低服务质量。
+    </p>
+    <p lang="zh-Hans">
+      为保护你的数据，我们可能需要先确认提出请求的人确实是你——通常是请你使用注册账号时所用的同一个电子邮件地址来信。
+    </p>
 
-    <p class="en">Wherever you are, you may ask us to:</p>
-    <ul class="en">
+    <p lang="en">Wherever you are, you may ask us to:</p>
+    <ul lang="en">
       <li><strong>access</strong> the personal data we hold about you and receive a copy;</li>
       <li><strong>correct</strong> data that is inaccurate or incomplete;</li>
       <li><strong>delete</strong> your data (except where law requires us to keep it — see above);</li>
@@ -592,53 +1376,126 @@
       <li><strong>port</strong> your data in a structured, commonly used, machine-readable format;</li>
       <li><strong>withdraw consent</strong>, without affecting the lawfulness of processing before withdrawal.</li>
     </ul>
-    <p class="en">
-      The fastest route is in the App: the analytics switch is in Profile → Preferences, and account
+    <p lang="en">
+      The fastest route is in the App: the analytics switch is in Profile → Advanced &amp; reset, and account
       deletion is in Profile → Account. Otherwise write to
       <a href="mailto:privacy@pibook.app">privacy@pibook.app</a> and we will respond
       <strong>within 30 days</strong>, extendable by a further 30 days for complex requests with
       prior notice to you. We will not discriminate against you or degrade your service for exercising
       these rights.
     </p>
-    <p class="en">
+    <p lang="en">
       To protect your data we may first need to verify that the request really comes from you —
       usually by asking you to write from the same email address your account uses.
+    </p>
+    <p lang="ja">ユーザーは、居住地にかかわらず、当社に対して次のことを求めることができます。</p>
+    <ul lang="ja">
+      <li>当社が保有する個人データの<strong>照会と閲覧</strong>、およびその写しの取得</li>
+      <li>不正確または不完全なデータの<strong>訂正</strong></li>
+      <li>データの<strong>削除</strong>（法律により当社に保存が義務づけられているものを除きます。前節を参照）</li>
+      <li>特定の処理の<strong>制限または異議の申立て</strong>（利用状況の分析をいつでもオフにすることを含みます）</li>
+      <li>データの<strong>持ち出し</strong>（構造化され、一般的に使用され、機械で読み取り可能な形式での受け取り）</li>
+      <li><strong>同意の撤回</strong>（撤回前に同意に基づいて行われた処理の適法性には影響しません）</li>
+    </ul>
+    <p lang="ja">
+      最も早いのはアプリ内での操作です。利用状況の分析のスイッチは「マイページ → 詳細とリセット → 利用データを共有」に、
+      アカウントの削除は「マイページ → アカウント」にあります。それ以外のご請求は
+      <a href="mailto:privacy@pibook.app">privacy@pibook.app</a> までメールでお送りください。
+      <strong>受信後 30 日以内</strong>に回答します。内容が複雑な場合は最大 30 日間延長することがあり、その場合は事前にお知らせします。
+      権利を行使したことを理由に、ユーザーを差別的に取り扱ったり、サービスの質を下げたりすることはありません。
+    </p>
+    <p lang="ja">
+      ユーザーのデータを保護するため、請求者がご本人であることを事前に確認させていただく場合があります。
+      通常は、アカウント登録時と同じメールアドレスからご連絡いただくようお願いしています。
+    </p>
+    <p lang="ko">이용자는 어디에 있든 회사에 다음을 요구할 수 있습니다.</p>
+    <ul lang="ko">
+      <li>회사가 보유한 본인 개인정보의 <strong>조회 및 열람</strong>, 그리고 사본 수령</li>
+      <li>부정확하거나 불완전한 정보의 <strong>정정</strong></li>
+      <li>본인 정보의 <strong>삭제</strong>(법령에 따라 회사가 보관해야 하는 정보는 제외, 앞의 제8조 참고)</li>
+      <li>특정 처리에 대한 <strong>제한 또는 거부</strong>(언제든지 이용 분석을 끄는 것 포함)</li>
+      <li>구조화되고 통상적으로 쓰이며 기계가 읽을 수 있는 형식으로 정보를 받는 <strong>개인정보 이동</strong></li>
+      <li><strong>동의 철회</strong>(철회 전에 동의를 근거로 이루어진 처리의 적법성에는 영향 없음)</li>
+    </ul>
+    <p lang="ko">
+      가장 빠른 방법은 앱에서 직접 하는 것입니다. 이용 분석 스위치는 ‘프로필 → 고급 설정과 초기화 → 이용 데이터 공유’에 있고,
+      계정 삭제는 ‘프로필 → 계정’에 있습니다. 그 밖의 요청은
+      <a href="mailto:privacy@pibook.app">privacy@pibook.app</a>에 메일로 보내 주시면
+      <strong>접수 후 30일 이내</strong>에 회신합니다. 사안이 복잡한 경우 최대 30일까지 연장할 수 있으며, 이 경우 미리 알려 드립니다.
+      회사는 이용자가 권리를 행사했다는 이유로 이용자를 차별하거나 서비스 품질을 낮추지 않습니다.
+    </p>
+    <p lang="ko">
+      이용자의 정보를 보호하기 위해, 회사는 요청한 사람이 실제로 이용자 본인인지 먼저 확인해야 할 수 있습니다.
+      대개는 계정을 만들 때 사용한 것과 같은 이메일 주소에서 메일을 보내 달라고 요청하는 방식입니다.
     </p>
   </section>
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="delete">
-    <h2><span class="num">10</span><span class="zh">刪除帳號與資料</span><span class="en">Deleting your account and data</span></h2>
+    <h2><span class="num">10</span><span lang="zh-Hant">刪除帳號與資料</span><span lang="zh-Hans">删除账号与数据</span><span lang="en">Deleting your account and data</span><span lang="ja">アカウントとデータの削除</span><span lang="ko">계정 및 데이터 삭제</span></h2>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       你可以隨時刪除帳號，兩種方式效力相同：
     </p>
-    <ul class="zh">
-      <li><strong>在 App 內：</strong>「我的 → 帳號 → 刪除帳號」，長按確認後立即執行。</li>
+    <ul lang="zh-Hant">
+      <li><strong>在 App 內：</strong>「個人 → 帳號 → 刪除帳號」，長按確認後立即執行。</li>
       <li><strong>在網頁上：</strong>前往<a href="/delete-account/">帳號刪除說明頁</a>提出申請。</li>
     </ul>
-    <p class="zh">
+    <p lang="zh-Hant">
       詳細的「會刪掉什麼、會留下什麼、多久完成」列在該頁上。
       <strong>刪除帳號不會刪除你手機裡的照片</strong> —— 那些從一開始就只在你的裝置上。
     </p>
+    <p lang="zh-Hans">
+      你可以随时删除账号，两种方式效力相同：
+    </p>
+    <ul lang="zh-Hans">
+      <li><strong>在 App 内：</strong>“个人 → 账号 → 删除账号”，长按确认后立即执行。</li>
+      <li><strong>在网页上：</strong>前往<a href="/delete-account/">账号删除说明页</a>提出申请。</li>
+    </ul>
+    <p lang="zh-Hans">
+      “会删除什么、会保留什么、多久完成”的详细说明都列在该页上。
+      <strong>删除账号不会删除你手机里的照片</strong>——那些照片从一开始就只在你的设备上。
+    </p>
 
-    <p class="en">You can delete your account at any time. Both routes have the same effect:</p>
-    <ul class="en">
-      <li><strong>In the App:</strong> Profile → Account → Delete Account, confirmed with a press-and-hold.</li>
+    <p lang="en">You can delete your account at any time. Both routes have the same effect:</p>
+    <ul lang="en">
+      <li><strong>In the App:</strong> Profile → Account → Delete account, confirmed with a press-and-hold.</li>
       <li><strong>On the web:</strong> submit a request from the <a href="/delete-account/">account deletion page</a>.</li>
     </ul>
-    <p class="en">
+    <p lang="en">
       Exactly what is deleted, what is retained and how long it takes is set out on that page.
       <strong>Deleting your account does not delete the photos on your phone</strong> — those were
       only ever on your device to begin with.
+    </p>
+    <p lang="ja">
+      アカウントはいつでも削除できます。方法は次の 2 つで、効力は同じです。
+    </p>
+    <ul lang="ja">
+      <li><strong>アプリ内で：</strong>「マイページ → アカウント → アカウントを削除」を選び、長押しで確定すると直ちに実行されます。</li>
+      <li><strong>ウェブで：</strong><a href="/delete-account/">アカウント削除のご案内ページ</a>から申請します。</li>
+    </ul>
+    <p lang="ja">
+      何が削除され、何が残り、完了までにどのくらいかかるかは、そのページに詳しく記載しています。
+      <strong>アカウントを削除しても、端末内の写真は削除されません。</strong>それらの写真は、最初から端末の中にしか存在していないためです。
+    </p>
+    <p lang="ko">
+      이용자는 언제든지 계정을 삭제할 수 있으며, 다음 두 가지 방법의 효력은 같습니다.
+    </p>
+    <ul lang="ko">
+      <li><strong>앱에서:</strong> ‘프로필 → 계정 → 계정 삭제’에서 길게 눌러 확인하면 즉시 처리됩니다.</li>
+      <li><strong>웹에서:</strong> <a href="/delete-account/">계정 삭제 안내 페이지</a>에서 신청할 수 있습니다.</li>
+    </ul>
+    <p lang="ko">
+      ‘무엇이 삭제되고, 무엇이 남으며, 얼마나 걸리는지’는 해당 페이지에 자세히 나와 있습니다.
+      <strong>계정을 삭제해도 휴대폰에 있는 사진은 삭제되지 않습니다.</strong> 그 사진들은 처음부터 이용자의 기기에만 있었습니다.
     </p>
   </section>
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="children">
-    <h2><span class="num">11</span><span class="zh">兒童與青少年</span><span class="en">Children</span></h2>
+    <h2><span class="num">11</span><span lang="zh-Hant">兒童與青少年</span><span lang="zh-Hans">儿童与青少年</span><span lang="en">Children</span><span lang="ja">子どもと青少年</span><span lang="ko">아동 및 청소년</span></h2>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       本 App 不以未滿 13 歲的兒童為對象，我們也不會在知情的情況下蒐集其個人資料。
       若你位於歐洲經濟區，且未滿當地法律規定的資料處理同意年齡（依成員國規定為 13 至 16 歲），
       請在法定代理人同意後再使用本 App。
@@ -646,7 +1503,15 @@
       家長或監護人若認為孩子未經同意提供了個人資料，請來信
       <a href="mailto:privacy@pibook.app">privacy@pibook.app</a>。
     </p>
-    <p class="en">
+    <p lang="zh-Hans">
+      本 App 不以未满 13 岁的儿童为对象，我们也不会在知情的情况下收集其个人信息。
+      如果你位于欧洲经济区，且未满当地法律规定的数据处理同意年龄（依各成员国规定为 13 至 16 岁），
+      请在法定代理人同意后再使用本 App。
+      如果我们发现已在未取得必要同意的情况下收集了儿童的数据，将尽快删除。
+      家长或监护人如果认为孩子未经同意提供了个人信息，请发邮件至
+      <a href="mailto:privacy@pibook.app">privacy@pibook.app</a>。
+    </p>
+    <p lang="en">
       The App is not directed at children under 13, and we do not knowingly collect their personal
       data. If you are in the EEA and below your country’s age of consent for data processing
       (13–16 depending on the member state), please use the App only with your guardian’s consent.
@@ -654,86 +1519,177 @@
       promptly. Parents and guardians who believe a child has provided personal data may write to
       <a href="mailto:privacy@pibook.app">privacy@pibook.app</a>.
     </p>
+    <p lang="ja">
+      本アプリは 13 歳未満の子どもを対象としておらず、当社がそのような子どもの個人データを知りながら収集することはありません。
+      欧州経済領域にお住まいで、現地の法律が定めるデータ処理への同意年齢（加盟国により 13 歳から 16 歳）に達していない場合は、
+      法定代理人の同意を得たうえで本アプリをご利用ください。
+      必要な同意を得ずに子どものデータを収集していたことが判明した場合は、速やかに削除します。
+      お子様が同意なく個人データを提供したと思われる保護者（親または後見人）の方は、
+      <a href="mailto:privacy@pibook.app">privacy@pibook.app</a> までご連絡ください。
+    </p>
+    <p lang="ko">
+      본 앱은 만 13세 미만 아동을 대상으로 하지 않으며, 회사는 이를 알면서 아동의 개인정보를 수집하지 않습니다.
+      이용자가 유럽경제지역(EEA)에 있고 현지 법령이 정한 개인정보 처리 동의 연령(회원국에 따라 만 13세에서 16세 사이)에 이르지 않은 경우,
+      법정대리인의 동의를 받은 후에 본 앱을 이용해 주시기 바랍니다.
+      필요한 동의 없이 아동의 정보를 수집한 사실을 알게 되면 회사는 이를 지체 없이 삭제합니다.
+      자녀가 동의 없이 개인정보를 제공했다고 생각하는 부모 또는 보호자께서는
+      <a href="mailto:privacy@pibook.app">privacy@pibook.app</a>에 메일로 알려 주시기 바랍니다.
+    </p>
   </section>
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="security">
-    <h2><span class="num">12</span><span class="zh">安全措施</span><span class="en">Security</span></h2>
+    <h2><span class="num">12</span><span lang="zh-Hant">安全措施</span><span lang="zh-Hans">安全措施</span><span lang="en">Security</span><span lang="ja">安全管理措置</span><span lang="ko">보안 조치</span></h2>
 
-    <ul class="zh">
+    <ul lang="zh-Hant">
       <li>所有網路傳輸一律使用 TLS 加密。</li>
       <li>資料庫層採用列級安全性（Row Level Security）—— 每位使用者在資料庫層級就只讀得到自己的資料，不倚賴應用程式端的檢查。</li>
       <li>登入憑證存放在裝置作業系統的安全儲存區（iOS 鑰匙圈／Android Keystore），不與一般 App 資料放在一起。</li>
       <li>後端具有最高權限的金鑰只存在於伺服器環境變數中，從不隨 App 發佈。</li>
       <li>購買憑證一律在伺服器端向 Apple 或 Google 驗證簽章後才生效，不接受用戶端自行宣稱。</li>
     </ul>
-    <p class="zh">
+    <p lang="zh-Hant">
       即便如此，沒有任何系統能保證絕對安全。若發生危及你權益的個人資料事故，
       我們將依法通知你與主管機關（於歐盟境內為知悉後 72 小時內）。
     </p>
+    <ul lang="zh-Hans">
+      <li>所有网络传输一律使用 TLS 加密。</li>
+      <li>数据库层采用行级安全（Row Level Security）——每位用户在数据库层级就只能读取自己的数据，不依赖应用程序端的检查。</li>
+      <li>登录凭证存放在设备操作系统的安全存储区（iOS 钥匙串／Android Keystore），不与一般 App 数据放在一起。</li>
+      <li>后端具有最高权限的密钥只存在于服务器环境变量中，从不随 App 发布。</li>
+      <li>购买凭证一律在服务器端向 Apple 或 Google 验证签名后才生效，不接受客户端的自行声明。</li>
+    </ul>
+    <p lang="zh-Hans">
+      即便如此，没有任何系统能保证绝对安全。如果发生危及你权益的个人信息安全事件，
+      我们将依法通知你与主管机关（在欧盟境内为知悉后 72 小时内）。
+    </p>
 
-    <ul class="en">
+    <ul lang="en">
       <li>All network traffic uses TLS.</li>
       <li>The database enforces row-level security, so each user can read only their own rows at the database layer rather than relying on application checks.</li>
       <li>Sign-in tokens are held in the operating system’s secure store (iOS Keychain / Android Keystore), separate from ordinary app data.</li>
       <li>Highly privileged backend keys exist only in server environment variables and never ship with the App.</li>
       <li>Purchase receipts are verified server-side against Apple or Google signatures before any entitlement is granted; client claims alone are never trusted.</li>
     </ul>
-    <p class="en">
+    <p lang="en">
       No system can be guaranteed absolutely secure. If a personal data breach occurs that affects your
       rights, we will notify you and the relevant supervisory authority as required by law (within
       72 hours of becoming aware, in the EU).
+    </p>
+    <ul lang="ja">
+      <li>すべてのネットワーク通信は TLS で暗号化しています。</li>
+      <li>データベースでは行レベルセキュリティ（Row Level Security）を採用しています。各ユーザーはデータベースのレベルで自分のデータしか読み取ることができず、アプリ側のチェックには依存していません。</li>
+      <li>サインインの認証情報は、端末の OS が提供する安全な保存領域（iOS キーチェーン／Android Keystore）に保管し、通常のアプリのデータとは分けて管理しています。</li>
+      <li>バックエンドで最も強い権限を持つ鍵はサーバーの環境変数にのみ存在し、本アプリとともに配布されることはありません。</li>
+      <li>購入の証憑は、必ずサーバー側で Apple または Google の署名を検証してから有効にし、クライアント側の自己申告は受け付けません。</li>
+    </ul>
+    <p lang="ja">
+      それでも、絶対に安全であると保証できるシステムは存在しません。ユーザーの権利を脅かす個人データの侵害が発生した場合、
+      当社は法令に従ってユーザーおよび監督機関に通知します（EU 域内では、事態を認識してから 72 時間以内）。
+    </p>
+    <ul lang="ko">
+      <li>모든 네트워크 전송은 TLS로 암호화합니다.</li>
+      <li>데이터베이스에는 행 수준 보안(Row Level Security)을 적용합니다. 각 이용자는 데이터베이스 수준에서부터 자신의 데이터만 읽을 수 있으며, 애플리케이션 측의 검사에 의존하지 않습니다.</li>
+      <li>로그인 인증 정보는 기기 운영체제의 보안 저장소(iOS 키체인/Android Keystore)에 보관하며, 일반 앱 데이터와 함께 두지 않습니다.</li>
+      <li>최고 권한을 가진 백엔드 키는 서버 환경 변수에만 존재하며, 앱과 함께 배포되지 않습니다.</li>
+      <li>구매 영수증은 서버에서 Apple 또는 Google의 서명을 검증한 뒤에만 효력이 생기며, 클라이언트가 스스로 보낸 구매 주장은 인정하지 않습니다.</li>
+    </ul>
+    <p lang="ko">
+      그럼에도 절대적인 안전을 보장할 수 있는 시스템은 없습니다. 이용자의 권익을 해칠 수 있는 개인정보 침해 사고가 발생하면,
+      회사는 관련 법령에 따라 이용자와 감독기관에 통지합니다(EU에서는 인지한 때부터 72시간 이내).
     </p>
   </section>
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="website">
-    <h2><span class="num">13</span><span class="zh">本網站與 Cookie</span><span class="en">This website and cookies</span></h2>
+    <h2><span class="num">13</span><span lang="zh-Hant">本網站與 Cookie</span><span lang="zh-Hans">本网站与 Cookie</span><span lang="en">This website and cookies</span><span lang="ja">本ウェブサイトと Cookie</span><span lang="ko">본 웹사이트와 쿠키</span></h2>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       本網站是靜態網頁，<strong>不使用任何追蹤 Cookie，也沒有分析或廣告程式碼</strong>。
       我們只會在你的瀏覽器本機儲存一項偏好：你選擇的顯示語言。
       這項資料不會離開你的瀏覽器，也不會被我們讀取。
       網站字型由 Google Fonts 提供，載入字型時你的瀏覽器會向 Google 發出請求，
       該請求適用 Google 的隱私權政策。
     </p>
-    <p class="en">
+    <p lang="zh-Hans">
+      本网站是静态网页，<strong>不使用任何追踪 Cookie，也没有分析或广告代码</strong>。
+      我们只会在你的浏览器本地存储一项偏好：你选择的显示语言。
+      这项数据不会离开你的浏览器，也不会被我们读取。
+      网站字体由 Google Fonts 提供，加载字体时你的浏览器会向 Google 发出请求，
+      该请求适用 Google 的隐私权政策。
+    </p>
+    <p lang="en">
       This site is static and <strong>uses no tracking cookies, analytics or advertising code</strong>.
       The only thing stored locally in your browser is the display language you chose; it never leaves
       your browser and we cannot read it. Web fonts are served by Google Fonts, so loading them makes a
       request to Google, subject to Google’s privacy policy.
     </p>
+    <p lang="ja">
+      本ウェブサイトは静的なウェブページで構成されており、<strong>トラッキング Cookie を一切使用せず、分析や広告のためのコードも含んでいません</strong>。
+      当社がブラウザ内に保存するのは、選択された表示言語という 1 項目の設定だけです。
+      この情報がブラウザの外に出ることはなく、当社が読み取ることもありません。
+      ウェブサイトのフォントは Google Fonts から提供されており、フォントを読み込む際にブラウザから Google へリクエストが送信されます。
+      このリクエストには Google のプライバシーポリシーが適用されます。
+    </p>
+    <p lang="ko">
+      본 웹사이트는 정적 웹페이지이며, <strong>추적 쿠키를 전혀 사용하지 않고 분석 코드나 광고 코드도 없습니다</strong>.
+      회사가 이용자의 브라우저에 로컬로 저장하는 설정은 단 한 가지, 이용자가 선택한 표시 언어뿐입니다.
+      이 정보는 브라우저 밖으로 나가지 않으며, 회사가 읽지도 않습니다.
+      웹사이트의 글꼴은 Google Fonts에서 제공하며, 글꼴을 불러올 때 이용자의 브라우저가 Google에 요청을 보냅니다.
+      이 요청에는 Google의 개인정보 처리방침이 적용됩니다.
+    </p>
   </section>
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="changes">
-    <h2><span class="num">14</span><span class="zh">政策變更</span><span class="en">Changes to this policy</span></h2>
+    <h2><span class="num">14</span><span lang="zh-Hant">政策變更</span><span lang="zh-Hans">政策变更</span><span lang="en">Changes to this policy</span><span lang="ja">本ポリシーの変更</span><span lang="ko">처리방침의 변경</span></h2>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       我們可能因功能調整或法規變動而更新本政策。頁面頂端一律標示最新的生效日期與版本。
       若變更<strong>重大影響你的權利</strong>（例如新增蒐集項目、變更處理目的），
       我們會在生效前至少 <strong>30 日</strong>於 App 內明顯處通知你；
       涉及需經同意的處理，會另行徵得你的同意。
       我們會保留歷史版本，你可以來信索取。
     </p>
-    <p class="en">
+    <p lang="zh-Hans">
+      我们可能因功能调整或法规变动而更新本政策。页面顶部始终标示最新的生效日期与版本。
+      如果变更<strong>对你的权利有重大影响</strong>（例如新增收集项目、变更处理目的），
+      我们会在生效前至少 <strong>30 日</strong>在 App 内的显著位置通知你；
+      涉及需经同意的处理，会另行征得你的同意。
+      我们会保留历史版本，你可以来信索取。
+    </p>
+    <p lang="en">
       We may update this policy as features or laws change. The current effective date and version are
       always shown at the top. Where a change <strong>materially affects your rights</strong> — new
       categories of collection, or a new purpose — we will give prominent in-app notice at least
       <strong>30 days</strong> before it takes effect, and will seek fresh consent where consent is the
       basis. Previous versions are archived and available on request.
     </p>
+    <p lang="ja">
+      当社は、機能の変更や法令の改正に伴い、本ポリシーを更新することがあります。ページの冒頭には、常に最新の施行日とバージョンを記載しています。
+      変更が<strong>ユーザーの権利に重大な影響を及ぼす</strong>場合（収集する項目の追加、利用目的の変更など）は、
+      施行の少なくとも <strong>30 日</strong>前に、アプリ内の目立つ場所でお知らせします。
+      同意が必要な処理に関わる場合は、改めてユーザーの同意を得ます。
+      過去のバージョンは保管しており、メールでご請求いただければお渡しします。
+    </p>
+    <p lang="ko">
+      회사는 기능 변경이나 법령 개정에 따라 본 방침을 수정할 수 있습니다. 페이지 상단에는 항상 최신 시행일과 버전을 표시합니다.
+      변경 사항이 <strong>이용자의 권리에 중대한 영향을 미치는 경우</strong>(예: 수집 항목 추가, 처리 목적 변경),
+      회사는 시행 최소 <strong>30일</strong> 전에 앱 내 잘 보이는 곳에 이를 알립니다.
+      동의가 필요한 처리와 관련된 변경인 경우에는 이용자의 동의를 별도로 받습니다.
+      회사는 이전 버전을 보관하며, 이용자는 메일로 이를 요청할 수 있습니다.
+    </p>
   </section>
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="regional">
-    <h2><span class="num">15</span><span class="zh">各地區補充條款</span><span class="en">Regional supplements</span></h2>
+    <h2><span class="num">15</span><span lang="zh-Hant">各地區補充條款</span><span lang="zh-Hans">各地区补充条款</span><span lang="en">Regional supplements</span><span lang="ja">地域別の補足条項</span><span lang="ko">지역별 추가 조항</span></h2>
 
-    <h3 class="zh">台灣：個人資料保護法告知事項</h3>
-    <p class="zh">
+    <h3 lang="zh-Hant">台灣：個人資料保護法告知事項</h3>
+    <p lang="zh-Hant">
       依個人資料保護法第 8 條，特此告知：
     </p>
-    <ul class="zh">
+    <ul lang="zh-Hant">
       <li><strong>蒐集機構：</strong>八西歐科技有限公司</li>
       <li><strong>蒐集目的：</strong>資訊與通訊服務（代號 135）、消費者、客戶管理與服務（090）、網路購物及其他電子商務服務（148）、契約或類似契約之關係（069）、調查、統計與研究分析（157）。</li>
       <li><strong>個人資料類別：</strong>識別類（C001 辨識個人者、C003 政府資料中之辨識者不適用）、特徵類（不適用）、社會情況（C038 職業不適用）、財務細節（C081 帳戶或契約），實際範圍以本政策第 4 節所列為準。</li>
@@ -744,20 +1700,44 @@
       <li><strong>不提供的影響：</strong>你可以選擇不提供個人資料。若不登入，仍可使用本 App 的核心整理功能，但無法使用雲端備份、跨裝置權益還原與實體商品訂購。</li>
     </ul>
 
-    <h3 class="zh">歐洲經濟區、英國</h3>
-    <p class="zh">
+    <h3 lang="zh-Hant">歐洲經濟區、英國</h3>
+    <p lang="zh-Hant">
       你有權向所在地的個人資料保護主管機關提出申訴。
       我們目前未於歐盟境內設有機構；若日後依 GDPR 第 27 條須指定歐盟代表，將於本頁公告。
     </p>
 
-    <h3 class="zh">美國加州</h3>
-    <p class="zh">
+    <h3 lang="zh-Hant">美國加州</h3>
+    <p lang="zh-Hant">
       我們<strong>不曾、也不會「販售」或「分享」</strong>加州消費者隱私法（CCPA／CPRA）定義下的個人資訊。
       加州居民享有知情、刪除、更正與不受差別待遇的權利，行使方式與本政策第 9 節相同。
     </p>
+    <h3 lang="zh-Hans">台湾：《个人资料保护法》告知事项</h3>
+    <p lang="zh-Hans">
+      依据《个人资料保护法》第 8 条，特此告知：
+    </p>
+    <ul lang="zh-Hans">
+      <li><strong>收集机构：</strong>八西欧科技有限公司</li>
+      <li><strong>收集目的：</strong>资讯与通讯服务（代号 135）、消费者、客户管理与服务（090）、网络购物及其他电子商务服务（148）、契约或类似契约之关系（069）、调查、统计与研究分析（157）。</li>
+      <li><strong>个人信息类别：</strong>识别类（C001 辨识个人者、C003 政府资料中之辨识者不适用）、特征类（不适用）、社会情况（C038 职业不适用）、财务细节（C081 账户或契约），实际范围以本政策第 4 节所列为准。</li>
+      <li><strong>利用期间：</strong>如本政策第 8 节所述。</li>
+      <li><strong>利用地区：</strong>台湾、新加坡、美国，以及本政策第 6 节所列服务提供商所在地。</li>
+      <li><strong>利用对象与方式：</strong>本政策第 5、6 节所述的目的与对象，以自动化机器或其他非自动化方式利用。</li>
+      <li><strong>你的权利：</strong>依据同法第 3 条，你可以向我们查询、请求查阅或制给复制本、请求补充或更正、请求停止收集、处理或利用、请求删除。行使方式见本政策第 9 节。</li>
+      <li><strong>不提供的影响：</strong>你可以选择不提供个人信息。如果不登录，仍可使用本 App 的核心整理功能，但无法使用云端备份、跨设备权益恢复与实体商品订购。</li>
+    </ul>
+    <h3 lang="zh-Hans">欧洲经济区、英国</h3>
+    <p lang="zh-Hans">
+      你有权向所在地的个人数据保护监管机构提出投诉。
+      我们目前未在欧盟境内设立机构；如果日后依据 GDPR 第 27 条须指定欧盟代表，将在本页公告。
+    </p>
+    <h3 lang="zh-Hans">美国加州</h3>
+    <p lang="zh-Hans">
+      我们<strong>从未、也不会“出售”或“共享”</strong>《加州消费者隐私法》（CCPA／CPRA）所定义的个人信息。
+      加州居民享有知情、删除、更正与不受差别对待的权利，行使方式与本政策第 9 节相同。
+    </p>
 
-    <h3 class="en">Taiwan — PDPA notice</h3>
-    <p class="en">
+    <h3 lang="en">Taiwan — PDPA notice</h3>
+    <p lang="en">
       This section is the notice required by Article 8 of Taiwan’s Personal Data Protection Act:
       the collecting entity is 8CO Technology Co., Ltd.; the purposes are
       information and communication services (code 135), customer management and service (090),
@@ -768,41 +1748,113 @@
       cross-device entitlement restore or physical product orders.
     </p>
 
-    <h3 class="en">EEA and United Kingdom</h3>
-    <p class="en">
+    <h3 lang="en">EEA and United Kingdom</h3>
+    <p lang="en">
       You have the right to lodge a complaint with your local supervisory authority. We currently have
       no establishment in the EU; should an Article 27 representative become required, it will be
       published on this page.
     </p>
 
-    <h3 class="en">California</h3>
-    <p class="en">
+    <h3 lang="en">California</h3>
+    <p lang="en">
       We have never “sold” or “shared” personal information as those terms are defined by the CCPA and
       CPRA, and we will not. California residents have rights to know, delete, correct and not be
       discriminated against; exercise them as described in section 9.
+    </p>
+    <h3 lang="ja">台湾：個人資料保護法に基づく告知事項</h3>
+    <p lang="ja">
+      台湾の個人資料保護法第 8 条に基づき、次のとおりお知らせします。
+    </p>
+    <ul lang="ja">
+      <li><strong>収集者：</strong>8CO Technology Co., Ltd.（八西歐科技有限公司）</li>
+      <li><strong>収集の目的：</strong>情報通信サービス（コード 135）、消費者・顧客の管理とサービス（090）、オンラインショッピングその他の電子商取引サービス（148）、契約または契約に類する関係（069）、調査・統計・研究分析（157）。</li>
+      <li><strong>個人データの種類：</strong>識別類（C001 個人を識別するもの。C003 政府資料中の識別情報は該当しません）、特徴類（該当しません）、社会的状況（C038 職業は該当しません）、財務の詳細（C081 口座または契約）。実際の範囲は、本ポリシー第 4 節の記載に従います。</li>
+      <li><strong>利用期間：</strong>本ポリシー第 8 節に記載のとおりです。</li>
+      <li><strong>利用地域：</strong>台湾、シンガポール、米国、および本ポリシー第 6 節に記載するサービス提供者の所在地。</li>
+      <li><strong>利用対象と利用方法：</strong>本ポリシー第 5 節および第 6 節に記載する目的と提供先について、自動化された機器その他の自動化されていない方法により利用します。</li>
+      <li><strong>ユーザーの権利：</strong>同法第 3 条に基づき、ユーザーは当社に対し、照会、閲覧の請求または複製物の交付の請求、補充または訂正の請求、収集・処理・利用の停止の請求、削除の請求を行うことができます。行使の方法は本ポリシー第 9 節をご覧ください。</li>
+      <li><strong>提供しない場合の影響：</strong>個人データを提供しないことも選べます。サインインしなくても本アプリの中核となる整理機能は利用できますが、バックアップ、端末をまたいだ利用権の復元、プリント商品の注文は利用できません。</li>
+    </ul>
+    <h3 lang="ja">欧州経済領域・英国</h3>
+    <p lang="ja">
+      ユーザーは、居住地の個人データ保護監督機関に苦情を申し立てる権利を有します。
+      当社は現在、EU 域内に拠点を置いていません。今後、GDPR 第 27 条に基づいて EU 域内の代理人を指定する必要が生じた場合は、本ページで公表します。
+    </p>
+    <h3 lang="ja">米国カリフォルニア州</h3>
+    <p lang="ja">
+      当社は、カリフォルニア州消費者プライバシー法（CCPA／CPRA）に定義される個人情報を<strong>「販売」または「共有」したことはなく、今後も行いません</strong>。
+      カリフォルニア州の居住者は、知る権利、削除を求める権利、訂正を求める権利、差別的な取扱いを受けない権利を有し、その行使方法は本ポリシー第 9 節と同じです。
+    </p>
+    <h3 lang="ko">대만: 개인정보보호법에 따른 고지 사항</h3>
+    <p lang="ko">
+      대만 개인정보보호법 제8조에 따라 다음과 같이 고지합니다.
+    </p>
+    <ul lang="ko">
+      <li><strong>수집 기관:</strong> 8CO Technology Co., Ltd.(八西歐科技有限公司)</li>
+      <li><strong>수집 목적:</strong> 정보 및 통신 서비스(코드 135), 소비자·고객 관리 및 서비스(090), 인터넷 쇼핑 및 기타 전자상거래 서비스(148), 계약 또는 이와 유사한 계약 관계(069), 조사·통계 및 연구 분석(157).</li>
+      <li><strong>개인정보 항목:</strong> 식별 정보(C001 개인을 식별하는 정보. 단, C003 정부 자료상의 식별 정보는 해당 없음), 특징 정보(해당 없음), 사회적 상황(C038 직업은 해당 없음), 재무 세부 정보(C081 계좌 또는 계약). 실제 범위는 본 방침 제4조에 기재된 내용을 기준으로 합니다.</li>
+      <li><strong>이용 기간:</strong> 본 방침 제8조에 기재된 바와 같습니다.</li>
+      <li><strong>이용 지역:</strong> 대만, 싱가포르, 미국 및 본 방침 제6조에 기재된 서비스 제공업체의 소재지.</li>
+      <li><strong>이용 대상 및 방법:</strong> 본 방침 제5조와 제6조에 기재된 목적과 대상에 대하여, 자동화된 기계 또는 그 밖의 비자동화 방식으로 이용합니다.</li>
+      <li><strong>이용자의 권리:</strong> 같은 법 제3조에 따라 이용자는 회사에 자신의 개인정보를 조회할 수 있으며, 열람 또는 사본 발급, 보충 또는 정정, 수집·처리·이용의 중지, 삭제를 청구할 수 있습니다. 행사 방법은 본 방침 제9조를 참고하시기 바랍니다.</li>
+      <li><strong>제공하지 않을 경우의 영향:</strong> 이용자는 개인정보를 제공하지 않기로 선택할 수 있습니다. 로그인하지 않아도 본 앱의 핵심 정리 기능은 이용할 수 있지만, 클라우드 백업, 기기 간 이용 권한 복원 및 실물 상품 주문은 이용할 수 없습니다.</li>
+    </ul>
+    <h3 lang="ko">유럽경제지역(EEA), 영국</h3>
+    <p lang="ko">
+      이용자는 거주지의 개인정보 보호 감독기관에 민원을 제기할 권리가 있습니다.
+      회사는 현재 EU 역내에 사업장을 두고 있지 않으며, 향후 GDPR 제27조에 따라 EU 대리인을 지정해야 하는 경우 이 페이지에 공지합니다.
+    </p>
+    <h3 lang="ko">미국 캘리포니아주</h3>
+    <p lang="ko">
+      회사는 캘리포니아 소비자 개인정보 보호법(CCPA/CPRA)에서 정의하는 개인정보를 <strong>‘판매’하거나 ‘공유’한 적이 없으며, 앞으로도 하지 않습니다</strong>.
+      캘리포니아 거주자는 알 권리, 삭제권, 정정권 및 차별받지 않을 권리를 가지며, 그 행사 방법은 본 방침 제9조와 같습니다.
     </p>
   </section>
 
   <!-- ─────────────────────────────────────────────────────────── -->
   <section id="contact">
-    <h2><span class="num">16</span><span class="zh">聯絡我們</span><span class="en">Contact us</span></h2>
+    <h2><span class="num">16</span><span lang="zh-Hant">聯絡我們</span><span lang="zh-Hans">联系我们</span><span lang="en">Contact us</span><span lang="ja">お問い合わせ</span><span lang="ko">문의처</span></h2>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       隱私權相關事宜：<a href="mailto:privacy@pibook.app">privacy@pibook.app</a><br>
       一般支援：<a href="mailto:support@pibook.app">support@pibook.app</a><br>
       公司登記地址可於經濟部「商工登記公示資料查詢服務」（<a href="https://findbiz.nat.gov.tw/" target="_blank" rel="noopener noreferrer">findbiz.nat.gov.tw</a>）以統一編號 60773047 查詢。
     </p>
-    <p class="zh">
+    <p lang="zh-Hant">
       我們會在收到來信後 <strong>7 個工作日內</strong>初步回覆，並於 30 日內完成處理。
     </p>
+    <p lang="zh-Hans">
+      隐私相关事宜：<a href="mailto:privacy@pibook.app">privacy@pibook.app</a><br>
+      一般支持：<a href="mailto:support@pibook.app">support@pibook.app</a><br>
+      公司登记地址可在台湾经济部“商工登记公示资料查询服务”（<a href="https://findbiz.nat.gov.tw/" target="_blank" rel="noopener noreferrer">findbiz.nat.gov.tw</a>）以统一编号 60773047 查询。
+    </p>
+    <p lang="zh-Hans">
+      我们会在收到来信后 <strong>7 个工作日内</strong>初步回复，并在 30 日内完成处理。
+    </p>
 
-    <p class="en">
+    <p lang="en">
       Privacy matters: <a href="mailto:privacy@pibook.app">privacy@pibook.app</a><br>
       General support: <a href="mailto:support@pibook.app">support@pibook.app</a><br>
       Our registered address is on public record and can be looked up by Unified Business No. 60773047 at Taiwan’s Ministry of Economic Affairs business registry (<a href="https://findbiz.nat.gov.tw/" target="_blank" rel="noopener noreferrer">findbiz.nat.gov.tw</a>).
     </p>
-    <p class="en">
+    <p lang="en">
       We acknowledge messages within <strong>7 business days</strong> and complete handling within 30 days.
+    </p>
+    <p lang="ja">
+      プライバシーに関するお問い合わせ：<a href="mailto:privacy@pibook.app">privacy@pibook.app</a><br>
+      一般的なサポート：<a href="mailto:support@pibook.app">support@pibook.app</a><br>
+      当社の登記住所は、台湾経済部の「商工登記公示資料検索サービス」（<a href="https://findbiz.nat.gov.tw/" target="_blank" rel="noopener noreferrer">findbiz.nat.gov.tw</a>）で、統一編号 60773047 により検索できます。
+    </p>
+    <p lang="ja">
+      お問い合わせを受け取ってから <strong>7 営業日以内</strong>に一次回答し、30 日以内に対応を完了します。
+    </p>
+    <p lang="ko">
+      개인정보 관련 문의: <a href="mailto:privacy@pibook.app">privacy@pibook.app</a><br>
+      일반 지원: <a href="mailto:support@pibook.app">support@pibook.app</a><br>
+      회사의 등기 주소는 대만 경제부의 ‘상공업 등기 공시 자료 조회 서비스’(<a href="https://findbiz.nat.gov.tw/" target="_blank" rel="noopener noreferrer">findbiz.nat.gov.tw</a>)에서 사업자 통일번호 60773047로 조회할 수 있습니다.
+    </p>
+    <p lang="ko">
+      회사는 메일을 받은 후 <strong>영업일 기준 7일 이내</strong>에 1차로 회신하며, 30일 이내에 처리를 완료합니다.
     </p>
   </section>
 
@@ -812,22 +1864,40 @@
 <footer class="site-footer">
   <div class="inner">
     <nav>
-      <a href="/"><span class="zh">首頁</span><span class="en">Home</span></a>
-      <a href="/privacy/"><span class="zh">隱私權政策</span><span class="en">Privacy Policy</span></a>
-      <a href="/terms/"><span class="zh">服務條款</span><span class="en">Terms of Use</span></a>
-      <a href="/support/"><span class="zh">支援</span><span class="en">Support</span></a>
-      <a href="/delete-account/"><span class="zh">刪除帳號</span><span class="en">Delete Account</span></a>
+      <a href="/"><span lang="zh-Hant">首頁</span><span lang="zh-Hans">首页</span><span lang="en">Home</span><span lang="ja">ホーム</span><span lang="ko">홈</span></a>
+      <a href="/privacy/"><span lang="zh-Hant">隱私權政策</span><span lang="zh-Hans">隐私权政策</span><span lang="en">Privacy Policy</span><span lang="ja">プライバシーポリシー</span><span lang="ko">개인정보 처리방침</span></a>
+      <a href="/terms/"><span lang="zh-Hant">服務條款</span><span lang="zh-Hans">服务条款</span><span lang="en">Terms of Use</span><span lang="ja">利用規約</span><span lang="ko">이용약관</span></a>
+      <a href="/support/"><span lang="zh-Hant">支援</span><span lang="zh-Hans">支持</span><span lang="en">Support</span><span lang="ja">サポート</span><span lang="ko">지원</span></a>
+      <a href="/delete-account/"><span lang="zh-Hant">刪除帳號</span><span lang="zh-Hans">删除账号</span><span lang="en">Delete Account</span><span lang="ja">アカウント削除</span><span lang="ko">계정 삭제</span></a>
     </nav>
     <div class="legal">
-      <span class="zh">
+      <span lang="zh-Hant">
         八西歐科技有限公司<br>
         統一編號 60773047<br>
         support@pibook.app<br>
         © 2026 Pibook. 保留一切權利。
       </span>
-      <span class="en">
+      <span lang="zh-Hans">
+        八西欧科技有限公司<br>
+        统一编号 60773047<br>
+        support@pibook.app<br>
+        © 2026 Pibook. 保留所有权利。
+      </span>
+      <span lang="en">
         8CO Technology Co., Ltd.<br>
         Tax ID 60773047<br>
+        support@pibook.app<br>
+        © 2026 Pibook. All rights reserved.
+      </span>
+      <span lang="ja">
+        8CO Technology Co., Ltd.<br>
+        統一編号 60773047<br>
+        support@pibook.app<br>
+        © 2026 Pibook. All rights reserved.
+      </span>
+      <span lang="ko">
+        8CO Technology Co., Ltd.<br>
+        사업자 통일번호 60773047<br>
         support@pibook.app<br>
         © 2026 Pibook. All rights reserved.
       </span>
@@ -836,6 +1906,6 @@
 </footer>
 <!-- @/partial:footer -->
 
-<script src="/assets/lang.js"></script>
+<script src="/assets/lang.js?v=20260925"></script>
 </body>
 </html>

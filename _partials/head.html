@@ -1,0 +1,99 @@
+<!-- 全站共用 <head> 片段：唯一的一份，改完跑 `python build.py`。
+     在第一次繪製之前決定語言，所以不會先閃一次繁中再換。
+     順序：網址的 ?lang= → 這個瀏覽器上次手動選的 → 裝置的語言清單 → 英文。
+     字型跟著語言走，規則與 App 的 PibookScript 相同：日文有自己的明朝與黑體
+     （繁中字型畫出來的漢字是中文字形，日本人一眼就看得出來），韓文刻意只用黑體，
+     英文與繁中共用 TC（拉丁字形相同）。只載入正在用的那一套。 -->
+<script>
+(function (d, w) {
+  var LANGS = ['zh-Hant', 'zh-Hans', 'en', 'ja', 'ko'];
+  var KEY = 'pibook-lang';
+  var FONTS = {
+    'zh-Hant': 'family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700',
+    'zh-Hans': 'family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@500;700',
+    'ja': 'family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;700',
+    'ko': 'family=Noto+Sans+KR:wght@400;500;700'
+  };
+
+  function norm(tag) { return String(tag || '').toLowerCase().replace(/_/g, '-'); }
+
+  /* 中文分繁簡：先看文字（Hant／Hans），再看地區 —— 台灣、香港、澳門與粵語是繁體，
+     中國、新加坡、馬來西亞是簡體。只寫「zh」答不出來，回 null。 */
+  function chinese(t) {
+    if (/-hans(-|$)/.test(t)) return 'zh-Hans';
+    if (/-hant(-|$)/.test(t) || /^yue(-|$)/.test(t) || /-(tw|hk|mo)(-|$)/.test(t)) return 'zh-Hant';
+    if (/-(cn|sg|my)(-|$)/.test(t)) return 'zh-Hans';
+    return null;
+  }
+
+  /* 一個語言標籤 → 我們有的語言；沒有就回 null，讓清單裡的下一個接手。 */
+  function match(tag, rest) {
+    var t = norm(tag);
+    if (!t) return null;
+    var base = t.split('-')[0];
+    if (base === 'zh' || base === 'yue') {
+      var v = chinese(t);
+      if (v) return v;
+      // 只寫「zh」：看清單後面有沒有更明確的中文，沒有就當簡體。
+      for (var j = 0; rest && j < rest.length; j++) {
+        var r = chinese(norm(rest[j]));
+        if (r) return r;
+      }
+      return 'zh-Hans';
+    }
+    if (base === 'en') return 'en';
+    if (base === 'ja') return 'ja';
+    if (base === 'ko') return 'ko';
+    return null;
+  }
+
+  function pick() {
+    var q = /[?&]lang=([^&#]+)/.exec(w.location.search);
+    var fromUrl = null;
+    try { fromUrl = q && match(decodeURIComponent(q[1])); } catch (e) { /* 網址參數壞掉就忽略 */ }
+    if (fromUrl) return fromUrl;
+    try {
+      var saved = w.localStorage.getItem(KEY);
+      if (LANGS.indexOf(saved) >= 0) return saved;
+    } catch (e) { /* 隱私模式或被封鎖：往下用裝置語言 */ }
+    var list = (w.navigator.languages && w.navigator.languages.length)
+      ? w.navigator.languages : [w.navigator.language || w.navigator.userLanguage];
+    for (var i = 0; i < list.length; i++) {
+      var m = match(list[i], list.slice(i + 1));
+      if (m) return m;
+    }
+    return 'en';
+  }
+
+  function loadFont(lang) {
+    var set = lang === 'en' ? 'zh-Hant' : lang;
+    if (d.getElementById('pb-font-' + set)) return;
+    var link = d.createElement('link');
+    link.rel = 'stylesheet';
+    link.id = 'pb-font-' + set;
+    link.href = 'https://fonts.googleapis.com/css2?' + FONTS[set] + '&display=swap';
+    d.head.appendChild(link);
+  }
+
+  function title(lang) {
+    var el = d.getElementById('page-titles');
+    if (!el) return;
+    try {
+      var map = JSON.parse(el.textContent);
+      if (map[lang]) d.title = map[lang];
+    } catch (e) { /* 標題維持原樣 */ }
+  }
+
+  function apply(lang) {
+    var root = d.documentElement;
+    root.setAttribute('lang', lang);
+    root.setAttribute('data-lang', lang);
+    loadFont(lang);
+    title(lang);
+  }
+
+  w.PibookLang = { langs: LANGS, key: KEY, match: match, apply: apply, current: pick() };
+  apply(w.PibookLang.current);
+})(document, window);
+</script>
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap"></noscript>

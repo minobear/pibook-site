@@ -1,7 +1,8 @@
 /* ═══════════════════════════════════════════════════════════════════════
    拍簿官網 — 首頁版面 v3
-   結構：Promise（英雄）→ Picture（痛點）→ Proof（實機截圖/影片）→ Push（商店）
-   依賴 style.css（全站基調）與 phone.css（機框 + .scr--img 真截圖螢幕）。
+   結構：Promise（英雄）→ 三句話 → Proof（每段一張商店截圖）→ 隱私 → 印製預告
+   依賴 style.css（全站基調）。截圖來自主 repo 的 store_assets/screenshots/<語言>/，
+   裁掉上方的標題區（這一段自己就有標題），五種語言各一張，只顯示目前語言那一張。
    ═══════════════════════════════════════════════════════════════════════ */
 
 /* ── 英雄區 ── */
@@ -72,6 +73,9 @@
   display: block;
   font-size: clamp(34px, 4.8vw, 52px);
 }
+/* 英文的兩句比中日韓長，會斷成「一整行＋孤零零一個字」—— 讓瀏覽器把兩行排勻。 */
+.hero2-copy h1 .l1,
+.hero2-copy h1 .l2 { text-wrap: balance; }
 .hero2-copy h1 .l2 {
   display: block;
   margin-top: 12px;
@@ -113,21 +117,25 @@
 .hero2-stage {
   position: relative;
   align-self: end;
-  --hero-ps: .84;
 }
-.hero2-stage .phone-fit { --ps: var(--hero-ps); height: calc(891px * var(--ps) * .8); }
-.hero2-stage .spark { position: absolute; z-index: 3; }
+/* 英雄區的截圖站在區塊的地面線上、下緣被區塊切掉 —— 手機本來就在圖裡被裁到一半，
+   讓它看起來是從地面長出來，而不是一張浮在半空的卡片。 */
+.hero2-stage .shot-card--hero {
+  --shot-w: 360px;
+  height: calc(var(--shot-w) * 2004 / 1290 * .86);
+  border-bottom: 0;
+  border-radius: 30px 30px 0 0;
+}
 /* 吉祥物坐在英雄區的地面線上（.hero2-stage 的底就是區塊底）。
-   舊版 bottom:-6px 加上 .hero2 的 overflow:hidden，腳底會被切掉。
    手機圖故意出題外、吉祥物不行——它是完整的形體。 */
 .hero2-mascot {
   position: absolute;
   z-index: 4;
-  /* 往左退到只剩肩膀搭在手機邊上 —— 再往右就會蓋掉「今天 33」那張卡，
-     而那個數字正是這張圖要講的事。 */
-  left: -108px;
+  /* 只讓肩膀搭在截圖的左下角 —— 再往右就會蓋掉「今天拍的還沒整理」那張卡，
+     而那正是這張圖要講的事。 */
+  left: -104px;
   bottom: 0;
-  width: min(164px, 19vw);
+  width: min(156px, 18vw);
   filter: drop-shadow(0 14px 26px rgba(42,55,68,.24));
 }
 
@@ -172,24 +180,6 @@
   display: block;
 }
 
-.mark-closeup {
-  margin: 34px 0 0;
-  text-align: center;
-}
-.mark-closeup img {
-  display: block;
-  width: 100%;
-  max-width: 720px;
-  margin: 0 auto;
-  border-radius: 18px;
-  border: 1px solid var(--line);
-  box-shadow: 0 2px 6px rgba(42,55,68,.08), 0 24px 48px -28px rgba(42,55,68,.45);
-}
-.mark-closeup figcaption {
-  margin-top: 12px;
-  font-size: 13.5px;
-  color: var(--ink-fade);
-}
 
 /* 內文連結：跟著區塊的文字色，不要用瀏覽器預設的蓝。 */
 .promise2 p a,
@@ -430,9 +420,14 @@
   position: absolute; inset: 40px 0 -44px;
   pointer-events: none;
 }
-.feat--blush::before  { background: radial-gradient(ellipse 62% 66% at 84% 40%, rgba(232,128,110,.09), transparent 70%); }
-.feat--blue::before   { background: radial-gradient(ellipse 62% 66% at 14% 40%, rgba(91,122,146,.10), transparent 70%); }
-.feat--emerald::before{ background: radial-gradient(ellipse 62% 66% at 84% 40%, rgba(109,168,144,.11), transparent 70%); }
+.feat--blush   { --tint: rgba(232,128,110,.09); }
+.feat--blue    { --tint: rgba(91,122,146,.10); }
+.feat--emerald { --tint: rgba(109,168,144,.11); }
+/* 色暈落在截圖那一側：一般段落圖在右，翻面的段落圖在左。 */
+.feat--blush::before, .feat--blue::before, .feat--emerald::before {
+  background: radial-gradient(ellipse 62% 66% at var(--tint-x, 84%) 40%, var(--tint), transparent 70%);
+}
+.feat--flip { --tint-x: 16%; }
 
 .feat-grid {
   position: relative;
@@ -473,45 +468,30 @@
 }
 .feat-copy p b { color: var(--ink); font-weight: 700; }
 
-.feat-stage { position: relative; --feat-ps: .7; }
-.feat-stage .phone-fit { --ps: var(--feat-ps); }
-.feat-stage .spark { position: absolute; z-index: 4; }
+.feat-stage { position: relative; }
 
-.feat-mascot {
-  position: absolute;
-  z-index: 5;
-  right: -30px;
-  top: -44px;
-  width: min(120px, 15vw);
-  transform: rotate(-6deg);
-  filter: drop-shadow(0 12px 22px rgba(42,55,68,.22));
-}
-
-/* 相似照片段：UI 特寫卡＋浮出膠囊 */
-.feat-stage--panel {
-  display: flex; flex-direction: column; align-items: center;
-  width: min(420px, 92vw);
-}
-.feat-panel {
-  width: 100%;
-  border-radius: 24px;
+/* ── 商店截圖卡 ──
+   每一張都有五種語言的版本疊在同一個框裡（只顯示目前語言那一張）。
+   寬高比由 <img width height> 決定，圖還沒到之前框就佔好位置，版面不會跳。 */
+.shot-card {
+  --shot-w: 340px;
+  position: relative;
+  width: var(--shot-w);
+  margin: 0;
   overflow: hidden;
-  background: var(--surface);
+  border-radius: 28px;
   border: 1px solid var(--line);
+  background: #F3EFE8;                 /* 截圖本身的紙色：圖到之前先是同一個顏色 */
   box-shadow: 0 2px 5px rgba(42,55,68,.08), 0 30px 60px -26px rgba(42,55,68,.4);
 }
-.feat-panel img { display: block; width: 100%; }
-.feat-chip--green { color: var(--green, #3F7A63); }
-.feat-chip {
-  position: relative; z-index: 5;
-  margin-top: -22px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 11px 20px;
-  font-size: 15px; font-weight: 700;
-  display: inline-flex; align-items: center; gap: 8px;
-  box-shadow: 0 2px 4px rgba(42,55,68,.08), 0 18px 38px -14px rgba(42,55,68,.35);
+.shot-card img { display: block; width: 100%; height: auto; }
+.shot-card--dark {
+  background: #1C2B3B;
+  border-color: rgba(255,255,255,.08);
+  box-shadow: 0 30px 60px -26px rgba(0,0,0,.7);
+}
+@media (prefers-color-scheme: dark) {
+  .shot-card { border-color: rgba(255,255,255,.08); box-shadow: 0 30px 60px -26px rgba(0,0,0,.7); }
 }
 
 /* 回憶段：整段收進深色圓角面板（App 沉浸底），實錄影片在其中播放 */
@@ -536,12 +516,6 @@
 .feat--dark p { color: rgba(244,241,234,.78); }
 .feat--dark p b { color: #F4F1EA; }
 
-.scr--img video.shot {
-  width: 100%; height: 100%;
-  object-fit: cover; object-position: top;
-  display: block;
-  background: #0E1218;
-}
 
 /* ── 隱私承諾 ── */
 
@@ -591,9 +565,8 @@
   line-height: 1.9;
 }
 
-.promise2-mascot {
-  width: min(210px, 26vw);
-  filter: drop-shadow(0 16px 30px rgba(42,55,68,.22));
+.promise2 .shot-card--privacy {
+  --shot-w: 300px;
   justify-self: center;
 }
 
@@ -639,33 +612,33 @@
 /* ── 響應式 ── */
 
 @media (max-width: 1060px) {
-  .hero2-stage { --hero-ps: .72; }
-  .feat-stage { --feat-ps: .62; }
+  .hero2-stage .shot-card--hero { --shot-w: 320px; }
+  .feat-stage .shot-card { --shot-w: 310px; }
 }
 
 @media (max-width: 880px) {
   .hero2-grid { grid-template-columns: 1fr; gap: 8px; }
   .hero2-copy { padding-bottom: 8px; }
-  .hero2-stage { justify-self: center; --hero-ps: .64; margin-top: 16px; }
-  .hero2-mascot { left: -26px; width: 124px; }
+  .hero2-stage { justify-self: center; margin-top: 20px; }
+  .hero2-stage .shot-card--hero { --shot-w: min(320px, 80vw); }
+  .hero2-mascot { left: -40px; width: 100px; }
 
   .feat { padding-top: 64px; }
   .feat-grid, .feat--flip .feat-grid { grid-template-columns: 1fr; gap: 26px; }
   .feat--flip .feat-copy { order: 1; }
   .feat--flip .feat-stage { order: 2; }
-  .feat-stage { justify-self: center; --feat-ps: .6; }
-  .feat-mascot { right: -14px; top: -38px; width: 98px; }
+  .feat-stage { justify-self: center; }
+  .feat-stage .shot-card { --shot-w: min(320px, 84vw); }
+  .feat--flip { --tint-x: 84%; }
   .feat--dark .feat-shell { padding: 40px 26px; border-radius: 26px; }
 
   .promise2-grid { grid-template-columns: 1fr; }
-  .promise2-mascot { width: 170px; }
+  .promise2 .shot-card--privacy { --shot-w: min(300px, 80vw); }
 
   .printtease-inner { flex-direction: column; text-align: center; padding: 26px 22px; }
 }
 
 @media (max-width: 430px) {
-  .hero2-stage { --hero-ps: .54; }
-  .feat-stage { --feat-ps: .52; }
   .hero2-lockup img { width: 52px; height: 52px; border-radius: 13px; }
   .hero2-lockup .name { font-size: 22px; }
 }

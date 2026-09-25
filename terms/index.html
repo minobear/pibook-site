@@ -1,19 +1,114 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-Hant" data-lang="zh-Hant">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>服務條款 — 拍簿 Pibook</title>
+<script type="application/json" id="page-titles">{"zh-Hant": "服務條款 — 拍簿 Pibook", "zh-Hans": "服务条款 — 拍簿 Pibook", "en": "Terms of Use — Pibook", "ja": "利用規約 — Pibook", "ko": "이용약관 — Pibook"}</script>
+<!-- @partial:head -->
+<script>
+(function (d, w) {
+  var LANGS = ['zh-Hant', 'zh-Hans', 'en', 'ja', 'ko'];
+  var KEY = 'pibook-lang';
+  var FONTS = {
+    'zh-Hant': 'family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700',
+    'zh-Hans': 'family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@500;700',
+    'ja': 'family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;700',
+    'ko': 'family=Noto+Sans+KR:wght@400;500;700'
+  };
+
+  function norm(tag) { return String(tag || '').toLowerCase().replace(/_/g, '-'); }
+
+  /* 中文分繁簡：先看文字（Hant／Hans），再看地區 —— 台灣、香港、澳門與粵語是繁體，
+     中國、新加坡、馬來西亞是簡體。只寫「zh」答不出來，回 null。 */
+  function chinese(t) {
+    if (/-hans(-|$)/.test(t)) return 'zh-Hans';
+    if (/-hant(-|$)/.test(t) || /^yue(-|$)/.test(t) || /-(tw|hk|mo)(-|$)/.test(t)) return 'zh-Hant';
+    if (/-(cn|sg|my)(-|$)/.test(t)) return 'zh-Hans';
+    return null;
+  }
+
+  /* 一個語言標籤 → 我們有的語言；沒有就回 null，讓清單裡的下一個接手。 */
+  function match(tag, rest) {
+    var t = norm(tag);
+    if (!t) return null;
+    var base = t.split('-')[0];
+    if (base === 'zh' || base === 'yue') {
+      var v = chinese(t);
+      if (v) return v;
+      // 只寫「zh」：看清單後面有沒有更明確的中文，沒有就當簡體。
+      for (var j = 0; rest && j < rest.length; j++) {
+        var r = chinese(norm(rest[j]));
+        if (r) return r;
+      }
+      return 'zh-Hans';
+    }
+    if (base === 'en') return 'en';
+    if (base === 'ja') return 'ja';
+    if (base === 'ko') return 'ko';
+    return null;
+  }
+
+  function pick() {
+    var q = /[?&]lang=([^&#]+)/.exec(w.location.search);
+    var fromUrl = null;
+    try { fromUrl = q && match(decodeURIComponent(q[1])); } catch (e) { /* 網址參數壞掉就忽略 */ }
+    if (fromUrl) return fromUrl;
+    try {
+      var saved = w.localStorage.getItem(KEY);
+      if (LANGS.indexOf(saved) >= 0) return saved;
+    } catch (e) { /* 隱私模式或被封鎖：往下用裝置語言 */ }
+    var list = (w.navigator.languages && w.navigator.languages.length)
+      ? w.navigator.languages : [w.navigator.language || w.navigator.userLanguage];
+    for (var i = 0; i < list.length; i++) {
+      var m = match(list[i], list.slice(i + 1));
+      if (m) return m;
+    }
+    return 'en';
+  }
+
+  function loadFont(lang) {
+    var set = lang === 'en' ? 'zh-Hant' : lang;
+    if (d.getElementById('pb-font-' + set)) return;
+    var link = d.createElement('link');
+    link.rel = 'stylesheet';
+    link.id = 'pb-font-' + set;
+    link.href = 'https://fonts.googleapis.com/css2?' + FONTS[set] + '&display=swap';
+    d.head.appendChild(link);
+  }
+
+  function title(lang) {
+    var el = d.getElementById('page-titles');
+    if (!el) return;
+    try {
+      var map = JSON.parse(el.textContent);
+      if (map[lang]) d.title = map[lang];
+    } catch (e) { /* 標題維持原樣 */ }
+  }
+
+  function apply(lang) {
+    var root = d.documentElement;
+    root.setAttribute('lang', lang);
+    root.setAttribute('data-lang', lang);
+    loadFont(lang);
+    title(lang);
+  }
+
+  w.PibookLang = { langs: LANGS, key: KEY, match: match, apply: apply, current: pick() };
+  apply(w.PibookLang.current);
+})(document, window);
+</script>
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap"></noscript>
+<!-- @/partial:head -->
 <meta name="description" content="拍簿的服務條款與使用者授權合約（EULA）：訂閱、退款、實體商品、責任範圍與準據法。">
 <meta name="theme-color" content="#FBF7F0" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#171E25" media="(prefers-color-scheme: dark)">
 <link rel="canonical" href="https://pibook.app/terms/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap">
-<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/assets/style.css?v=20260925">
 </head>
-<body data-lang="zh">
+<body>
 
 <!-- @partial:header -->
 <header class="site-header">
@@ -21,14 +116,33 @@
     <a class="brand" href="/">
       <img class="brand-logo" src="/assets/app_icon.png" alt="" aria-hidden="true">
       <span class="brand-words">
-        <span class="mark zh">拍簿</span>
-        <span class="mark en">Pibook</span>
-        <span class="latin zh">PIBOOK</span>
+        <span lang="zh-Hant" class="mark">拍簿</span>
+        <span lang="zh-Hans" class="mark">拍簿</span>
+        <span lang="en" class="mark">Pibook</span>
+        <span lang="ja" class="mark">Pibook</span>
+        <span lang="ko" class="mark">Pibook</span>
+        <span lang="zh-Hant" class="latin">PIBOOK</span>
+        <span lang="zh-Hans" class="latin">PIBOOK</span>
       </span>
     </a>
-    <div class="lang-toggle">
-      <button type="button" data-lang="zh" aria-pressed="true">繁體中文</button>
-      <button type="button" data-lang="en" aria-pressed="false">English</button>
+    <div class="lang-switch">
+      <button type="button" class="lang-button" id="lang-button"
+              aria-haspopup="menu" aria-expanded="false" aria-controls="lang-menu">
+        <svg class="lang-globe" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="M3.4 12h17.2"/><path d="M12 3.4c2.3 2.4 3.5 5.3 3.5 8.6s-1.2 6.2-3.5 8.6c-2.3-2.4-3.5-5.3-3.5-8.6s1.2-6.2 3.5-8.6z"/></svg>
+        <span lang="zh-Hant">繁體中文</span>
+        <span lang="zh-Hans">简体中文</span>
+        <span lang="en">English</span>
+        <span lang="ja">日本語</span>
+        <span lang="ko">한국어</span>
+        <svg class="lang-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.6 6 7.6 9 4.6"/></svg>
+      </button>
+      <ul class="lang-menu" id="lang-menu" role="menu" aria-labelledby="lang-button" hidden>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="zh-Hant"><span lang="zh-Hant">繁體中文</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="zh-Hans"><span lang="zh-Hans">简体中文</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="en"><span lang="en">English</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="ja"><span lang="ja">日本語</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="ko"><span lang="ko">한국어</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+      </ul>
     </div>
   </div>
 </header>
@@ -37,41 +151,77 @@
 <main class="doc">
 
   <div class="doc-head">
-    <h1 class="zh">服務條款與使用者授權合約</h1>
-    <h1 class="en">Terms of Use and End User Licence Agreement</h1>
+    <h1 lang="zh-Hant">服務條款與使用者授權合約</h1>
+    <h1 lang="zh-Hans">服务条款与用户许可协议</h1>
+    <h1 lang="en">Terms of Use and End User Licence Agreement</h1>
+    <h1 lang="ja">利用規約およびエンドユーザー使用許諾契約</h1>
+    <h1 lang="ko">이용약관 및 최종 사용자 사용권 계약</h1>
     <div class="doc-meta">
-      <span class="zh">生效日期：2026 年 8 月 28 日</span>
-      <span class="en">Effective: 28 August 2026</span>
-      <span class="zh">最後更新：2026 年 8 月 28 日</span>
-      <span class="en">Last updated: 28 August 2026</span>
-      <span class="zh">版本 1.0</span>
-      <span class="en">Version 1.0</span>
+      <span lang="zh-Hant">生效日期：2026 年 8 月 28 日</span>
+      <span lang="en">Effective: 28 August 2026</span>
+      <span lang="zh-Hant">最後更新：2026 年 9 月 25 日</span>
+      <span lang="en">Last updated: 25 September 2026</span>
+      <span lang="zh-Hant">版本 1.0</span>
+      <span lang="zh-Hans">生效日期：2026 年 8 月 28 日</span>
+      <span lang="zh-Hans">最后更新：2026 年 9 月 25 日</span>
+      <span lang="zh-Hans">版本 1.0</span>
+      <span lang="en">Version 1.0</span>
+      <span lang="ja">施行日：2026年8月28日</span>
+      <span lang="ja">最終更新日：2026年9月25日</span>
+      <span lang="ja">バージョン 1.0</span>
+      <span lang="ko">시행일: 2026년 8월 28일</span>
+      <span lang="ko">최종 수정일: 2026년 9월 25일</span>
+      <span lang="ko">버전 1.0</span>
     </div>
   </div>
 
   <div class="summary">
-    <h2 class="zh">重點先看</h2>
-    <h2 class="en">THE SHORT VERSION</h2>
-    <ul class="zh">
+    <h2 lang="zh-Hant">重點先看</h2>
+    <h2 lang="en">THE SHORT VERSION</h2>
+    <ul lang="zh-Hant">
       <li><strong>訂閱會自動續訂</strong>，除非你在當期結束前至少 24 小時取消。取消要到 Apple 或 Google 的訂閱設定裡操作。</li>
       <li><strong>退款由商店處理。</strong>App 內購買的款項我們收不到也退不了，必須向 Apple 或 Google 申請。</li>
       <li><strong>你的照片永遠是你的。</strong>我們不取得任何所有權，也不會拿去訓練模型或做其他用途。</li>
       <li><strong>客製化印製商品沒有七天鑑賞期</strong>（依法屬於合理例外），但瑕疵或錯印我們負責到底。</li>
       <li><strong>這份合約是你和我們之間的約定，與 Apple 或 Google 無關</strong>，但他們有權據以主張。</li>
     </ul>
-    <ul class="en">
+    <h2 lang="zh-Hans">重点先看</h2>
+    <ul lang="zh-Hans">
+      <li><strong>订阅会自动续订</strong>，除非你在当期结束前至少 24 小时取消。取消需要在 Apple 或 Google 的订阅设置中操作。</li>
+      <li><strong>退款由商店处理。</strong>App 内购买的款项我们收不到也退不了，必须向 Apple 或 Google 申请。</li>
+      <li><strong>你的照片永远是你的。</strong>我们不取得任何所有权，也不会拿去训练模型或做其他用途。</li>
+      <li><strong>定制印制商品不适用七天无理由退货</strong>（依法属于合理例外），但瑕疵或印错我们负责到底。</li>
+      <li><strong>本协议是你和我们之间的约定，与 Apple 或 Google 无关</strong>，但他们有权据此主张权利。</li>
+    </ul>
+    <ul lang="en">
       <li><strong>Subscriptions renew automatically</strong> unless cancelled at least 24 hours before the current period ends. Cancellation happens in your Apple or Google subscription settings.</li>
       <li><strong>Refunds are handled by the store.</strong> We never receive in-app payments and cannot refund them; requests go to Apple or Google.</li>
       <li><strong>Your photos remain yours.</strong> We take no ownership and never use them to train models or for any other purpose.</li>
       <li><strong>Custom printed products have no cooling-off period</strong> (a lawful exception under Taiwanese law), but we stand behind defects and misprints without limit.</li>
       <li><strong>This agreement is between you and us, not Apple or Google</strong> — though Apple may enforce it as a third-party beneficiary.</li>
     </ul>
+    <h2 lang="ja">まず押さえておきたい要点</h2>
+    <ul lang="ja">
+      <li><strong>サブスクリプションは自動更新されます。</strong>現在の期間が終了する 24 時間前までに解約しない限り、次の期間へ更新されます。解約は Apple または Google のサブスクリプション設定で行います。</li>
+      <li><strong>返金はストアが対応します。</strong>アプリ内課金の代金は当社に入らないため、当社が返金することはできません。返金は Apple または Google に申請してください。</li>
+      <li><strong>写真はずっとユーザーのものです。</strong>当社が所有権を取得することはなく、モデルの学習やその他の目的に使用することもありません。</li>
+      <li><strong>オーダーメイドのプリント商品には、7 日間の無条件解約（クーリングオフ）が適用されません</strong>（法律上認められた合理的な例外です）。ただし、不良品や誤印刷については当社が最後まで責任を持って対応します。</li>
+      <li><strong>本規約はユーザーと当社との間の取り決めであり、Apple や Google とは関係ありません。</strong>ただし、両社は本規約に基づいて権利を主張することができます。</li>
+    </ul>
+    <h2 lang="ko">핵심 요약</h2>
+    <ul lang="ko">
+      <li><strong>구독은 자동으로 갱신됩니다.</strong> 현재 구독 기간이 끝나기 최소 24시간 전까지 해지하지 않으면 자동 갱신되며, 해지는 Apple 또는 Google의 구독 설정에서 해야 합니다.</li>
+      <li><strong>환불은 스토어에서 처리합니다.</strong> 앱 내 구매 대금은 회사가 받지 않으므로 회사가 환불할 수 없으며, Apple 또는 Google에 신청해야 합니다.</li>
+      <li><strong>이용자의 사진은 언제나 이용자의 것입니다.</strong> 회사는 사진에 대한 어떠한 소유권도 취득하지 않으며, 사진을 모델 학습이나 그 밖의 용도에 쓰지 않습니다.</li>
+      <li><strong>맞춤 제작 인화 상품에는 7일 청약철회 기간이 적용되지 않습니다.</strong> 이는 법이 인정하는 합리적 예외입니다. 다만 하자나 인쇄 오류는 회사가 끝까지 책임집니다.</li>
+      <li><strong>본 약관은 이용자와 회사 사이의 약정이며 Apple 또는 Google과는 무관합니다.</strong> 다만 이들은 본 약관에 근거하여 권리를 행사할 수 있습니다.</li>
+    </ul>
   </div>
 
   <div class="toc">
-    <h2 class="zh">目錄</h2>
-    <h2 class="en">CONTENTS</h2>
-    <ol class="zh">
+    <h2 lang="zh-Hant">目錄</h2>
+    <h2 lang="en">CONTENTS</h2>
+    <ol lang="zh-Hant">
       <li><a href="#accept">合約的成立</a></li>
       <li><a href="#service">服務內容</a></li>
       <li><a href="#licence">授權範圍</a></li>
@@ -92,7 +242,29 @@
       <li><a href="#misc">其他約定</a></li>
       <li><a href="#contact">聯絡我們</a></li>
     </ol>
-    <ol class="en">
+    <h2 lang="zh-Hans">目录</h2>
+    <ol lang="zh-Hans">
+      <li><a href="#accept">协议的成立</a></li>
+      <li><a href="#service">服务内容</a></li>
+      <li><a href="#licence">许可范围</a></li>
+      <li><a href="#account">账号</a></li>
+      <li><a href="#content">你的照片与内容</a></li>
+      <li><a href="#premium">Premium 订阅与购买</a></li>
+      <li><a href="#earned">赚取 Premium</a></li>
+      <li><a href="#refund">退款</a></li>
+      <li><a href="#goods">实体商品</a></li>
+      <li><a href="#conduct">使用规范</a></li>
+      <li><a href="#ip">知识产权</a></li>
+      <li><a href="#availability">服务变更、中止与终止</a></li>
+      <li><a href="#disclaimer">免责声明</a></li>
+      <li><a href="#liability">责任限制</a></li>
+      <li><a href="#indemnity">补偿</a></li>
+      <li><a href="#apple">Apple 与 Google 相关条款</a></li>
+      <li><a href="#law">适用法律与争议解决</a></li>
+      <li><a href="#misc">其他约定</a></li>
+      <li><a href="#contact">联系我们</a></li>
+    </ol>
+    <ol lang="en">
       <li><a href="#accept">Acceptance</a></li>
       <li><a href="#service">The service</a></li>
       <li><a href="#licence">Licence</a></li>
@@ -113,53 +285,134 @@
       <li><a href="#misc">General</a></li>
       <li><a href="#contact">Contact</a></li>
     </ol>
+    <h2 lang="ja">目次</h2>
+    <ol lang="ja">
+      <li><a href="#accept">契約の成立</a></li>
+      <li><a href="#service">サービスの内容</a></li>
+      <li><a href="#licence">使用許諾の範囲</a></li>
+      <li><a href="#account">アカウント</a></li>
+      <li><a href="#content">ユーザーの写真とコンテンツ</a></li>
+      <li><a href="#premium">Premium のサブスクリプションと購入</a></li>
+      <li><a href="#earned">Premium の獲得</a></li>
+      <li><a href="#refund">返金</a></li>
+      <li><a href="#goods">プリント商品</a></li>
+      <li><a href="#conduct">禁止事項</a></li>
+      <li><a href="#ip">知的財産権</a></li>
+      <li><a href="#availability">サービスの変更・停止・終了</a></li>
+      <li><a href="#disclaimer">免責事項</a></li>
+      <li><a href="#liability">責任の制限</a></li>
+      <li><a href="#indemnity">補償</a></li>
+      <li><a href="#apple">Apple および Google に関する条項</a></li>
+      <li><a href="#law">準拠法と紛争解決</a></li>
+      <li><a href="#misc">その他の定め</a></li>
+      <li><a href="#contact">お問い合わせ</a></li>
+    </ol>
+    <h2 lang="ko">목차</h2>
+    <ol lang="ko">
+      <li><a href="#accept">계약의 성립</a></li>
+      <li><a href="#service">서비스 내용</a></li>
+      <li><a href="#licence">사용권의 범위</a></li>
+      <li><a href="#account">계정</a></li>
+      <li><a href="#content">이용자의 사진과 콘텐츠</a></li>
+      <li><a href="#premium">Premium 구독 및 구매</a></li>
+      <li><a href="#earned">Premium 받기</a></li>
+      <li><a href="#refund">환불</a></li>
+      <li><a href="#goods">실물 상품</a></li>
+      <li><a href="#conduct">이용 규칙</a></li>
+      <li><a href="#ip">지식재산권</a></li>
+      <li><a href="#availability">서비스의 변경, 중지 및 종료</a></li>
+      <li><a href="#disclaimer">면책 고지</a></li>
+      <li><a href="#liability">책임의 제한</a></li>
+      <li><a href="#indemnity">보상</a></li>
+      <li><a href="#apple">Apple 및 Google 관련 조항</a></li>
+      <li><a href="#law">준거법 및 분쟁 해결</a></li>
+      <li><a href="#misc">기타 조항</a></li>
+      <li><a href="#contact">문의처</a></li>
+    </ol>
   </div>
 
   <!-- 1 ─────────────────────────────────────────────────────── -->
   <section id="accept">
-    <h2><span class="num">1</span><span class="zh">合約的成立</span><span class="en">Acceptance</span></h2>
+    <h2><span class="num">1</span><span lang="zh-Hant">合約的成立</span><span lang="zh-Hans">协议的成立</span><span lang="en">Acceptance</span><span lang="ja">契約の成立</span><span lang="ko">계약의 성립</span></h2>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       本服務條款（下稱「本條款」）是你與
       八西歐科技有限公司
       （統一編號 60773047，下稱「我們」）之間，
       就拍簿 Pibook 應用程式、本網站及相關服務（合稱「本服務」）所訂立的合約。
     </p>
-    <p class="zh">
+    <p lang="zh-Hant">
       你下載、安裝或使用本服務，即表示你已閱讀、瞭解並同意本條款。
       如果你不同意，請不要使用本服務。
     </p>
-    <p class="zh">
+    <p lang="zh-Hant">
       如果你未滿 18 歲，請在法定代理人閱讀並同意本條款後再使用本服務。
       如果你代表法人或組織使用本服務，你保證已獲得充分授權。
     </p>
+    <p lang="zh-Hans">
+      本服务条款（以下简称“本条款”）是你与八西欧科技有限公司（统一编号 60773047，以下简称“我们”）之间，
+      就拍簿 Pibook 应用程序、本网站及相关服务（合称“本服务”）所订立的协议。
+    </p>
+    <p lang="zh-Hans">
+      你下载、安装或使用本服务，即表示你已阅读、理解并同意本条款。
+      如果你不同意，请不要使用本服务。
+    </p>
+    <p lang="zh-Hans">
+      如果你未满 18 岁，请在法定代理人阅读并同意本条款后再使用本服务。
+      如果你代表法人或组织使用本服务，你保证已获得充分授权。
+    </p>
 
-    <p class="en">
+    <p lang="en">
       These Terms of Use (the “Terms”) form an agreement between you and
       8CO Technology Co., Ltd.
       (Taiwan Unified Business No. 60773047, “we”, “us”) covering the
       Pibook application, this website and related services (together, the “Service”).
     </p>
-    <p class="en">
+    <p lang="en">
       By downloading, installing or using the Service you confirm that you have read, understood and
       accept these Terms. If you do not accept them, please do not use the Service.
     </p>
-    <p class="en">
+    <p lang="en">
       If you are under 18, use the Service only after your legal guardian has read and accepted these
       Terms. If you use the Service on behalf of an organisation, you warrant that you are authorised
       to do so.
+    </p>
+    <p lang="ja">
+      本利用規約（以下「本規約」といいます）は、Pibook アプリケーション、本ウェブサイトおよび関連サービス（以下総称して「本サービス」といいます）に関して、
+      ユーザーと 8CO Technology Co., Ltd.（八西歐科技有限公司、台湾統一編号 60773047。以下「当社」といいます）との間で締結される契約です。
+    </p>
+    <p lang="ja">
+      本サービスをダウンロード、インストールまたは利用することにより、ユーザーは本規約を読み、理解し、これに同意したことになります。
+      同意いただけない場合は、本サービスを利用しないでください。
+    </p>
+    <p lang="ja">
+      ユーザーが 18 歳未満の場合は、法定代理人が本規約を読み、これに同意したうえで本サービスを利用してください。
+      ユーザーが法人その他の団体を代表して本サービスを利用する場合、ユーザーは、そのための十分な権限を得ていることを保証するものとします。
+    </p>
+    <p lang="ko">
+      본 이용약관(이하 “본 약관”)은 이용자와
+      8CO Technology Co., Ltd.(八西歐科技有限公司, 대만 사업자 통일번호 60773047, 이하 “회사”)가
+      Pibook 애플리케이션, 본 웹사이트 및 관련 서비스(이하 통칭하여 “본 서비스”)에 관하여 체결하는 계약입니다.
+    </p>
+    <p lang="ko">
+      이용자가 본 서비스를 다운로드, 설치 또는 이용하는 것은 본 약관을 읽고 이해했으며 이에 동의함을 의미합니다.
+      동의하지 않는 경우 본 서비스를 이용하지 마시기 바랍니다.
+    </p>
+    <p lang="ko">
+      만 18세 미만인 경우 법정대리인이 본 약관을 읽고 동의한 후에 본 서비스를 이용해 주시기 바랍니다.
+      법인이나 단체를 대표하여 본 서비스를 이용하는 경우, 이용자는 이에 필요한 충분한 권한을 부여받았음을 보증합니다.
     </p>
   </section>
 
   <!-- 2 ─────────────────────────────────────────────────────── -->
   <section id="service">
-    <h2><span class="num">2</span><span class="zh">服務內容</span><span class="en">The service</span></h2>
+    <h2><span class="num">2</span><span lang="zh-Hant">服務內容</span><span lang="zh-Hans">服务内容</span><span lang="en">The service</span><span lang="ja">サービスの内容</span><span lang="ko">서비스 내용</span></h2>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       拍簿是一款照片整理工具，協助你檢視、分組、篩選、壓縮與清理裝置上的照片與影片。
       本服務可能包含：
     </p>
-    <ul class="zh">
+    <ul lang="zh-Hant">
       <li>裝置端的相似照分群、品質評分與智慧分類；</li>
       <li>照片與影片壓縮；</li>
       <li>本機排程的回顧提醒；</li>
@@ -168,15 +421,34 @@
       <li>選用的實體印製商品訂購。</li>
     </ul>
 
-    <div class="callout warn zh">
+    <div lang="zh-Hant" class="callout warn">
       <p><strong>關於刪除照片，請務必理解這一點。</strong>
       本服務會依你的操作，呼叫作業系統的相簿介面刪除照片。
       刪除的執行與確認由 iOS 或 Android 系統負責，照片會依系統規則進入「最近刪除」並於一段期間後永久消失。
       <strong>我們沒有你的照片副本，也無法為你救回任何已刪除的照片。</strong>
       請在整理前自行確認你有可靠的備份（例如 iCloud 照片或 Google 相簿）。</p>
     </div>
+    <p lang="zh-Hans">
+      拍簿是一款照片整理工具，帮助你查看、分组、筛选、压缩与清理设备上的照片与视频。
+      本服务可能包含：
+    </p>
+    <ul lang="zh-Hans">
+      <li>设备端的相似照片分组、质量评分与智能分类；</li>
+      <li>照片与视频压缩；</li>
+      <li>在设备本地安排的回顾提醒；</li>
+      <li>可选的账号与云端整理进度备份；</li>
+      <li>可选的 Premium 订阅与买断；</li>
+      <li>可选的实体印制商品订购。</li>
+    </ul>
+    <div lang="zh-Hans" class="callout warn">
+      <p><strong>关于删除照片，请务必理解这一点。</strong>
+      本服务会根据你的操作，调用操作系统的相册接口删除照片。
+      删除的执行与确认由 iOS 或 Android 系统负责，照片会按照系统规则进入“最近删除”，并在一段时间后永久消失。
+      <strong>我们没有你的照片副本，也无法为你找回任何已删除的照片。</strong>
+      请在整理前自行确认你有可靠的备份（例如 iCloud 照片或 Google 相册）。</p>
+    </div>
 
-    <p class="en">
+    <p lang="en">
       Pibook is a photo-organising tool that helps you review, group, filter, compress and clear the
       photos and videos on your device. The Service may include on-device similar-photo grouping,
       quality scoring and smart categorisation; photo and video compression; locally scheduled
@@ -184,7 +456,7 @@
       subscriptions and one-time purchases; and optional ordering of printed products.
     </p>
 
-    <div class="callout warn en">
+    <div lang="en" class="callout warn">
       <p><strong>Please understand this about deletion.</strong> Acting on your instructions, the
       Service asks your operating system to delete photos. The deletion and its confirmation are
       performed by iOS or Android; photos go to the system’s “Recently Deleted” area and disappear
@@ -193,104 +465,240 @@
       Please make sure you have a reliable backup (such as iCloud Photos or Google Photos) before you
       start.</p>
     </div>
+    <p lang="ja">
+      Pibook は、端末内の写真や動画の確認、グループ分け、絞り込み、圧縮、片づけを手助けする写真整理ツールです。
+      本サービスには、次のものが含まれる場合があります。
+    </p>
+    <ul lang="ja">
+      <li>端末上での似ている写真のグループ分け、品質評価、スマート分類</li>
+      <li>写真と動画の圧縮</li>
+      <li>端末内でスケジュールされる、思い出を振り返るお知らせ</li>
+      <li>任意で利用できるアカウントと、整理の記録のクラウドへのバックアップ</li>
+      <li>任意で利用できる Premium のサブスクリプションと買い切り</li>
+      <li>任意で利用できるプリント商品の注文</li>
+    </ul>
+    <div lang="ja" class="callout warn">
+      <p><strong>写真の削除について、必ずご理解いただきたいことがあります。</strong>
+      本サービスは、ユーザーの操作に基づき、OS の写真ライブラリの機能を呼び出して写真を削除します。
+      削除の実行と確認は iOS または Android のシステムが行い、写真はシステムの規則に従って「最近削除した項目」に移り、一定期間が経過すると完全に消去されます。
+      <strong>当社は写真のコピーを保有しておらず、削除された写真を復元することはできません。</strong>
+      整理を始める前に、信頼できるバックアップ（iCloud 写真や Google フォトなど）があることをご自身で必ず確認してください。</p>
+    </div>
+    <p lang="ko">
+      Pibook은 사진 정리 도구로, 이용자가 기기에 있는 사진과 동영상을 검토하고, 그룹으로 묶고, 선별하고, 압축하고, 깨끗이 정리할 수 있도록 돕습니다.
+      본 서비스에는 다음이 포함될 수 있습니다.
+    </p>
+    <ul lang="ko">
+      <li>기기 내 비슷한 사진 그룹화, 품질 평가 및 스마트 분류</li>
+      <li>사진 및 동영상 압축</li>
+      <li>기기에서 예약되는 추억 알림</li>
+      <li>선택 사항인 계정 및 정리 진행 상황 클라우드 백업</li>
+      <li>선택 사항인 Premium 구독 및 일회성 구매</li>
+      <li>선택 사항인 실물 인화 상품 주문</li>
+    </ul>
+    <div lang="ko" class="callout warn">
+      <p><strong>사진 삭제와 관련하여 다음 사항을 반드시 이해해 주시기 바랍니다.</strong>
+      본 서비스는 이용자의 조작에 따라 운영체제의 사진 보관함 인터페이스를 호출하여 사진을 삭제합니다.
+      삭제의 실행과 확인은 iOS 또는 Android 시스템이 담당하며, 사진은 시스템 규칙에 따라 ‘최근 삭제된 항목’으로 이동한 뒤 일정 기간이 지나면 영구적으로 사라집니다.
+      <strong>회사는 이용자의 사진 사본을 가지고 있지 않으며, 삭제된 사진을 복구해 드릴 수 없습니다.</strong>
+      정리를 시작하기 전에 신뢰할 수 있는 백업(예: iCloud 사진 또는 Google 포토)이 있는지 직접 확인하시기 바랍니다.</p>
+    </div>
   </section>
 
   <!-- 3 ─────────────────────────────────────────────────────── -->
   <section id="licence">
-    <h2><span class="num">3</span><span class="zh">授權範圍</span><span class="en">Licence</span></h2>
+    <h2><span class="num">3</span><span lang="zh-Hant">授權範圍</span><span lang="zh-Hans">许可范围</span><span lang="en">Licence</span><span lang="ja">使用許諾の範囲</span><span lang="ko">사용권의 범위</span></h2>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       在你遵守本條款的前提下，我們授予你一項<strong>個人、非專屬、不可轉讓、不可轉授權、可撤回</strong>的授權，
       供你在你所擁有或控制的裝置上安裝並使用本 App，作個人非商業用途。
       經由 Apple App Store 取得者，本授權範圍另受 Apple 媒體服務條款中「使用規範」一節之拘束。
     </p>
-    <p class="zh">你不得，也不得允許他人：</p>
-    <ul class="zh">
+    <p lang="zh-Hant">你不得，也不得允許他人：</p>
+    <ul lang="zh-Hant">
       <li>複製、散布、出租、出借、轉售、再授權本 App 或其任何部分；</li>
       <li>對本 App 進行還原工程、反編譯或反組譯（法律明文允許者除外）；</li>
       <li>移除或變更任何權利標示；</li>
       <li>以自動化方式大量存取本服務，或試圖規避任何額度限制、驗證或計費機制；</li>
       <li>利用本服務建立與其競爭之產品或服務。</li>
     </ul>
+    <p lang="zh-Hans">
+      在你遵守本条款的前提下，我们授予你一项<strong>个人的、非独占的、不可转让的、不可再许可的、可撤销的</strong>许可，
+      供你在你所拥有或控制的设备上安装并使用本 App，用于个人非商业用途。
+      通过 Apple App Store 获取本 App 的，本许可的范围另受 Apple 媒体服务条款和条件中“使用规则”一节的约束。
+    </p>
+    <p lang="zh-Hans">你不得，也不得允许他人：</p>
+    <ul lang="zh-Hans">
+      <li>复制、分发、出租、出借、转售、再许可本 App 或其任何部分；</li>
+      <li>对本 App 进行逆向工程、反编译或反汇编（法律明确允许的除外）；</li>
+      <li>移除或更改任何权利标识；</li>
+      <li>以自动化方式大量访问本服务，或试图规避任何额度限制、验证或计费机制；</li>
+      <li>利用本服务建立与其相竞争的产品或服务。</li>
+    </ul>
 
-    <p class="en">
+    <p lang="en">
       Subject to your compliance with these Terms, we grant you a <strong>personal,
       non-exclusive, non-transferable, non-sublicensable, revocable</strong> licence to install and use
       the App on devices you own or control, for personal, non-commercial purposes. Where the App is
       obtained through the Apple App Store, this licence is further governed by the Usage Rules in
       Apple’s Media Services Terms and Conditions.
     </p>
-    <p class="en">You may not, and may not permit others to: copy, distribute, rent, lend, resell or
+    <p lang="en">You may not, and may not permit others to: copy, distribute, rent, lend, resell or
       sublicense the App or any part of it; reverse engineer, decompile or disassemble it except as
       expressly permitted by law; remove or alter any proprietary notice; access the Service by
       automated means at scale, or attempt to circumvent any quota, verification or billing mechanism;
       or use the Service to build a competing product.</p>
+    <p lang="ja">
+      ユーザーが本規約を遵守することを条件として、当社はユーザーに対し、自らが所有または管理する端末に本アプリをインストールし、
+      個人的かつ非商業的な目的で使用するための、<strong>個人的、非独占的、譲渡不能、再許諾不能かつ撤回可能な</strong>使用許諾を付与します。
+      Apple App Store から入手した場合、本使用許諾の範囲は、さらに Apple メディアサービス利用規約の「使用ルール」の定めに従うものとします。
+    </p>
+    <p lang="ja">ユーザーは、次の行為を行ってはならず、また他者に行わせてはなりません。</p>
+    <ul lang="ja">
+      <li>本アプリまたはその一部を複製、頒布、賃貸、貸与、転売または再許諾すること</li>
+      <li>本アプリをリバースエンジニアリング、逆コンパイルまたは逆アセンブルすること（法律で明示的に認められている場合を除きます）</li>
+      <li>権利表示を削除または変更すること</li>
+      <li>自動化された手段により本サービスに大量にアクセスすること、または利用上限、認証もしくは課金の仕組みを回避しようとすること</li>
+      <li>本サービスを利用して、本サービスと競合する製品またはサービスを開発すること</li>
+    </ul>
+    <p lang="ko">
+      이용자가 본 약관을 준수하는 것을 조건으로, 회사는 이용자가 소유하거나 관리하는 기기에 본 앱을 설치하여 개인적·비상업적 용도로 이용할 수 있는
+      <strong>개인적·비독점적·양도 불가·재허락 불가·철회 가능한</strong> 사용권을 이용자에게 부여합니다.
+      Apple App Store를 통해 본 앱을 취득한 경우, 이 사용권의 범위에는 Apple 미디어 서비스 이용 약관 중 ‘사용 규칙’ 조항도 적용됩니다.
+    </p>
+    <p lang="ko">이용자는 다음 행위를 해서는 안 되며, 타인이 이를 하도록 허용해서도 안 됩니다.</p>
+    <ul lang="ko">
+      <li>본 앱 또는 그 일부를 복제, 배포, 대여, 대출, 재판매 또는 재허락하는 행위</li>
+      <li>본 앱을 리버스 엔지니어링, 디컴파일 또는 디스어셈블하는 행위(법률이 명시적으로 허용하는 경우는 제외)</li>
+      <li>권리 표시를 제거하거나 변경하는 행위</li>
+      <li>자동화된 방식으로 본 서비스에 대량으로 접근하거나, 사용량 한도, 인증 또는 과금 체계를 우회하려고 시도하는 행위</li>
+      <li>본 서비스를 이용하여 이와 경쟁하는 제품이나 서비스를 만드는 행위</li>
+    </ul>
   </section>
 
   <!-- 4 ─────────────────────────────────────────────────────── -->
   <section id="account">
-    <h2><span class="num">4</span><span class="zh">帳號</span><span class="en">Accounts</span></h2>
+    <h2><span class="num">4</span><span lang="zh-Hant">帳號</span><span lang="zh-Hans">账号</span><span lang="en">Accounts</span><span lang="ja">アカウント</span><span lang="ko">계정</span></h2>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       本 App 的核心整理功能<strong>不需要帳號</strong>。
       建立帳號是為了雲端備份整理進度、在多台裝置間取回訂閱權益，以及訂購實體商品。
     </p>
-    <p class="zh">
+    <p lang="zh-Hant">
       你可以使用「以 Apple 登入」或「以 Google 登入」建立帳號。
       你應維持帳號資訊正確，並負責保管你用來登入的第三方帳號。
       因你未妥善保管而導致的未經授權使用，除可歸責於我們者外，由你負責。
       發現帳號遭盜用時，請立即通知我們。
     </p>
-    <p class="zh">
+    <p lang="zh-Hant">
       你可以隨時在 App 內或透過<a href="/delete-account/">網頁</a>刪除帳號。
     </p>
+    <p lang="zh-Hans">
+      本 App 的核心整理功能<strong>不需要账号</strong>。
+      创建账号是为了在云端备份整理进度、在多台设备之间找回订阅权益，以及订购实体商品。
+    </p>
+    <p lang="zh-Hans">
+      你可以使用“以 Apple 登录”或“以 Google 登录”创建账号。
+      你应确保账号信息正确，并负责保管你用来登录的第三方账号。
+      因你未妥善保管而导致的未经授权使用，除可归责于我们的情形外，由你负责。
+      发现账号被盗用时，请立即通知我们。
+    </p>
+    <p lang="zh-Hans">
+      你可以随时在 App 内或通过<a href="/delete-account/">网页</a>删除账号。
+    </p>
 
-    <p class="en">
+    <p lang="en">
       The App’s core organising features work <strong>without an account</strong>. An account exists to
       back up your organising progress, restore entitlements across devices and order physical products.
     </p>
-    <p class="en">
+    <p lang="en">
       You can create an account with Sign in with Apple or Sign in with Google. You are responsible for
       keeping your account information accurate and for safeguarding the third-party account you sign in
       with. Unauthorised use resulting from your failure to safeguard it is your responsibility, except
       where we are at fault. Tell us immediately if you believe your account has been compromised.
     </p>
-    <p class="en">
+    <p lang="en">
       You may delete your account at any time, in the App or via the
       <a href="/delete-account/">web</a>.
+    </p>
+    <p lang="ja">
+      本アプリの中核となる整理機能は、<strong>アカウントがなくても</strong>利用できます。
+      アカウントは、整理の記録をクラウドにバックアップするため、複数の端末でサブスクリプションの利用権を取り戻すため、そしてプリント商品を注文するためのものです。
+    </p>
+    <p lang="ja">
+      アカウントは「Apple でサインイン」または「Google でサインイン」で作成できます。
+      ユーザーはアカウント情報を正確に保ち、サインインに使用する第三者のアカウントを適切に管理する責任を負います。
+      管理が不十分であったことにより生じた不正利用については、当社の責めに帰すべき事由がある場合を除き、ユーザーが責任を負います。
+      アカウントが不正に使用されていることに気づいた場合は、直ちに当社にご連絡ください。
+    </p>
+    <p lang="ja">
+      アカウントは、本アプリ内または<a href="/delete-account/">ウェブ</a>からいつでも削除できます。
+    </p>
+    <p lang="ko">
+      본 앱의 핵심 정리 기능에는 <strong>계정이 필요하지 않습니다</strong>.
+      계정은 정리 진행 상황의 클라우드 백업, 여러 기기에서의 구독 이용 권한 복원, 실물 상품 주문을 위해 만드는 것입니다.
+    </p>
+    <p lang="ko">
+      이용자는 ‘Apple로 로그인’ 또는 ‘Google로 로그인’으로 계정을 만들 수 있습니다.
+      이용자는 계정 정보를 정확하게 유지해야 하며, 로그인에 사용하는 제3자 계정을 안전하게 관리할 책임이 있습니다.
+      이용자가 이를 제대로 관리하지 않아 발생한 무단 사용에 대해서는 회사에 귀책사유가 있는 경우를 제외하고 이용자가 책임을 집니다.
+      계정이 도용된 사실을 알게 되면 즉시 회사에 알려 주시기 바랍니다.
+    </p>
+    <p lang="ko">
+      이용자는 언제든지 앱에서 또는 <a href="/delete-account/">웹페이지</a>를 통해 계정을 삭제할 수 있습니다.
     </p>
   </section>
 
   <!-- 5 ─────────────────────────────────────────────────────── -->
   <section id="content">
-    <h2><span class="num">5</span><span class="zh">你的照片與內容</span><span class="en">Your photos and content</span></h2>
+    <h2><span class="num">5</span><span lang="zh-Hant">你的照片與內容</span><span lang="zh-Hans">你的照片与内容</span><span lang="en">Your photos and content</span><span lang="ja">ユーザーの写真とコンテンツ</span><span lang="ko">이용자의 사진과 콘텐츠</span></h2>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       <strong>你的照片、影片及其他內容始終屬於你。</strong>
       我們不因本條款取得任何所有權。
     </p>
-    <p class="zh">
+    <p lang="zh-Hant">
       本 App 的影像處理全部在你的裝置上進行，內容不會傳送給我們。
       <strong>唯一的例外是你下訂實體印製商品時</strong>：
       為了製作與寄送你所訂購的商品，你就該筆訂單所選擇的照片，
       授予我們及我們的印製與物流夥伴一項<strong>有限、非專屬、免權利金</strong>的授權，
       用以重製、調整尺寸與色彩、印製並運送。此授權：
     </p>
-    <ul class="zh">
+    <ul lang="zh-Hant">
       <li><strong>僅限於履行該筆訂單</strong>，不得用於任何行銷、展示或其他目的；</li>
       <li>於訂單完成並經過必要的重印保留期後<strong>自動終止</strong>；</li>
       <li><strong>絕不包含</strong>用於訓練任何機器學習或人工智慧模型。</li>
     </ul>
-    <p class="zh">
+    <p lang="zh-Hant">
       你保證你對所上傳的照片擁有必要的權利，且該等內容不侵害他人的著作權、肖像權、隱私權或其他權利，
       亦不違反法令。
     </p>
+    <p lang="zh-Hans">
+      <strong>你的照片、视频及其他内容始终属于你。</strong>
+      我们不因本条款取得任何所有权。
+    </p>
+    <p lang="zh-Hans">
+      本 App 的图像处理全部在你的设备上进行，内容不会传送给我们。
+      <strong>唯一的例外是你下单订购实体印制商品时</strong>：
+      为了制作与寄送你所订购的商品，你就该笔订单所选择的照片，
+      授予我们及我们的印制与物流合作伙伴一项<strong>有限的、非独占的、免版税的</strong>许可，
+      用于复制、调整尺寸与色彩、印制并运送。此许可：
+    </p>
+    <ul lang="zh-Hans">
+      <li><strong>仅限于履行该笔订单</strong>，不得用于任何营销、展示或其他目的；</li>
+      <li>在订单完成并经过必要的重印保留期后<strong>自动终止</strong>；</li>
+      <li><strong>绝不包括</strong>用于训练任何机器学习或人工智能模型。</li>
+    </ul>
+    <p lang="zh-Hans">
+      你保证你对所上传的照片拥有必要的权利，且该等内容不侵犯他人的著作权、肖像权、隐私权或其他权利，
+      亦不违反法律法规。
+    </p>
 
-    <p class="en">
+    <p lang="en">
       <strong>Your photos, videos and other content remain yours.</strong> These Terms give us no
       ownership of them.
     </p>
-    <p class="en">
+    <p lang="en">
       All image processing happens on your device and your content is not sent to us. <strong>The one
       exception is when you order a printed product</strong>: to manufacture and ship what you ordered,
       you grant us and our print and logistics partners a <strong>limited, non-exclusive,
@@ -300,71 +708,145 @@
       once the order is complete and the reprint window has passed, and <strong>never</strong> extends
       to training any machine-learning or artificial-intelligence model.
     </p>
-    <p class="en">
+    <p lang="en">
       You warrant that you hold the necessary rights in the photos you upload and that they infringe
       no one’s copyright, likeness, privacy or other rights and break no law.
+    </p>
+    <p lang="ja">
+      <strong>ユーザーの写真、動画その他のコンテンツは、常にユーザーのものです。</strong>
+      当社が本規約によってその所有権を取得することはありません。
+    </p>
+    <p lang="ja">
+      本アプリの画像処理はすべて端末上で行われ、コンテンツが当社に送信されることはありません。
+      <strong>唯一の例外は、プリント商品を注文する場合です</strong>。
+      ご注文の商品を製作し配送するため、ユーザーは、その注文のために選択した写真について、
+      当社ならびに当社の印刷および物流のパートナーに対し、複製、サイズと色の調整、印刷および配送を行うための<strong>限定的、非独占的かつ無償の</strong>使用許諾を付与するものとします。この使用許諾は、次のとおりとします。
+    </p>
+    <ul lang="ja">
+      <li><strong>その注文の履行に限って</strong>適用され、マーケティング、展示その他いかなる目的にも使用することはできません。</li>
+      <li>注文が完了し、必要な再印刷のための保管期間が経過した時点で<strong>自動的に終了します</strong>。</li>
+      <li>機械学習モデルや人工知能モデルの学習への使用は<strong>一切含みません</strong>。</li>
+    </ul>
+    <p lang="ja">
+      ユーザーは、アップロードする写真について必要な権利を有しており、そのコンテンツが他者の著作権、肖像権、プライバシー権その他の権利を侵害せず、
+      法令にも違反しないことを保証するものとします。
+    </p>
+    <p lang="ko">
+      <strong>이용자의 사진, 동영상 및 그 밖의 콘텐츠는 언제나 이용자의 소유입니다.</strong>
+      회사는 본 약관으로 인해 어떠한 소유권도 취득하지 않습니다.
+    </p>
+    <p lang="ko">
+      본 앱의 이미지 처리는 모두 이용자의 기기에서 이루어지며, 콘텐츠는 회사로 전송되지 않습니다.
+      <strong>유일한 예외는 이용자가 실물 인화 상품을 주문하는 경우입니다.</strong>
+      이용자는 주문한 상품의 제작과 배송을 위해, 해당 주문을 위해 선택한 사진을 복제하고, 크기와 색상을 조정하고, 인쇄하여 배송할 수 있는
+      <strong>제한적이고 비독점적이며 로열티가 없는</strong> 사용권을 회사와 회사의 인화 및 물류 협력사에 부여합니다.
+      이 사용권에는 다음이 적용됩니다.
+    </p>
+    <ul lang="ko">
+      <li><strong>해당 주문의 이행에만 한정되며</strong>, 마케팅, 전시 또는 그 밖의 어떠한 목적으로도 이용할 수 없습니다.</li>
+      <li>주문이 완료되고 필요한 재제작 대비 보관 기간이 지나면 <strong>자동으로 종료됩니다</strong>.</li>
+      <li>머신러닝 또는 인공지능 모델의 학습 용도는 <strong>어떠한 경우에도 포함되지 않습니다</strong>.</li>
+    </ul>
+    <p lang="ko">
+      이용자는 업로드하는 사진에 대해 필요한 권리를 보유하고 있으며, 해당 콘텐츠가 타인의 저작권, 초상권, 프라이버시권 또는 그 밖의 권리를 침해하지 않고
+      법령을 위반하지도 않음을 보증합니다.
     </p>
   </section>
 
   <!-- 6 ─────────────────────────────────────────────────────── -->
   <section id="premium">
-    <h2><span class="num">6</span><span class="zh">Premium 訂閱與購買</span><span class="en">Premium subscriptions and purchases</span></h2>
+    <h2><span class="num">6</span><span lang="zh-Hant">Premium 訂閱與購買</span><span lang="zh-Hans">Premium 订阅与购买</span><span lang="en">Premium subscriptions and purchases</span><span lang="ja">Premium のサブスクリプションと購入</span><span lang="ko">Premium 구독 및 구매</span></h2>
 
-    <h3 class="zh">方案</h3>
-    <p class="zh">
+    <h3 lang="zh-Hant">方案</h3>
+    <p lang="zh-Hant">
       Premium 提供月訂閱、年訂閱與終身買斷三種方案。
       <strong>各方案的名稱、期間與價格，一律以你購買當下 App 內顯示的內容為準</strong>
       —— 那是 Apple 或 Google 依你所在地區與幣別即時提供的數字。
       本頁不列出價格，以免與商店實際顯示不一致。
     </p>
 
-    <h3 class="zh">自動續訂</h3>
-    <p class="zh">
+    <h3 lang="zh-Hant">自動續訂</h3>
+    <p lang="zh-Hant">
       月訂閱與年訂閱為<strong>自動續訂</strong>商品。
       除非你在當期結束前至少 <strong>24 小時</strong>取消，否則系統會在期滿時自動續訂，
       並向你的 Apple ID 或 Google 帳號收取次期費用。
     </p>
-    <p class="zh">
+    <p lang="zh-Hant">
       取消訂閱請至：
     </p>
-    <ul class="zh">
+    <ul lang="zh-Hant">
       <li><strong>iPhone／iPad：</strong>設定 → 你的姓名 → 訂閱項目</li>
       <li><strong>Android：</strong>Google Play → 個人資料 → 付款與訂閱 → 訂閱項目</li>
     </ul>
-    <p class="zh">
+    <p lang="zh-Hant">
       <strong>在 App 內刪除帳號並不會取消你的訂閱。</strong>
       訂閱是與 Apple 或 Google 的計費關係，必須在上述位置操作。
       取消後，你的 Premium 權益仍會持續到已付費期間結束為止。
     </p>
 
-    <h3 class="zh">終身買斷</h3>
-    <p class="zh">
+    <h3 lang="zh-Hant">終身買斷</h3>
+    <p lang="zh-Hant">
       終身方案為一次性購買的非消耗性項目，不會自動續訂。
       「終身」指本服務持續營運的期間；若本服務終止，處理方式見第 12 節。
     </p>
 
-    <h3 class="zh">價格調整</h3>
-    <p class="zh">
+    <h3 lang="zh-Hant">價格調整</h3>
+    <p lang="zh-Hant">
       我們可能調整訂閱價格。價格調整<strong>不影響已經開始的當期</strong>，
       並將依 Apple 與 Google 的規定於生效前通知你；
       依平台規則需要你明示同意者，未同意前不會以新價格收費。
     </p>
+    <h3 lang="zh-Hans">方案</h3>
+    <p lang="zh-Hans">
+      Premium 提供月订阅、年订阅与终身买断三种方案。
+      <strong>各方案的名称、期限与价格，一律以你购买时 App 内显示的内容为准</strong>——那是 Apple 或 Google 根据你所在的地区与币种实时提供的数字。
+      本页不列出价格，以免与商店实际显示的内容不一致。
+    </p>
+    <h3 lang="zh-Hans">自动续订</h3>
+    <p lang="zh-Hans">
+      月订阅与年订阅为<strong>自动续订</strong>商品。
+      除非你在当期结束前至少 <strong>24 小时</strong>取消，否则系统会在期满时自动续订，
+      并向你的 Apple ID 或 Google 账号收取下一期费用。
+    </p>
+    <p lang="zh-Hans">
+      取消订阅请前往：
+    </p>
+    <ul lang="zh-Hans">
+      <li><strong>iPhone／iPad：</strong>设置 → 你的姓名 → 订阅</li>
+      <li><strong>Android：</strong>Google Play → 个人资料 → 付款和订阅 → 订阅</li>
+    </ul>
+    <p lang="zh-Hans">
+      <strong>在 App 内删除账号并不会取消你的订阅。</strong>
+      订阅是你与 Apple 或 Google 之间的计费关系，必须在上述位置操作。
+      取消后，你的 Premium 权益仍会持续到已付费期间结束为止。
+    </p>
+    <h3 lang="zh-Hans">终身买断</h3>
+    <p lang="zh-Hans">
+      终身方案为一次性购买的非消耗型项目，不会自动续订。
+      “终身”指本服务持续运营的期间；如果本服务终止，处理方式见第 12 节。
+    </p>
+    <h3 lang="zh-Hans">价格调整</h3>
+    <p lang="zh-Hans">
+      我们可能调整订阅价格。价格调整<strong>不影响已经开始的当期</strong>，
+      并将按照 Apple 与 Google 的规定在生效前通知你；
+      根据平台规则需要你明确同意的，在你同意之前不会按新价格收费。
+    </p>
 
-    <h3 class="en">Plans</h3>
-    <p class="en">
+    <h3 lang="en">Plans</h3>
+    <p lang="en">
       Premium is offered as a monthly subscription, an annual subscription and a lifetime purchase.
       <strong>The name, duration and price of each plan are those shown in the App at the moment you
       purchase</strong> — figures supplied live by Apple or Google for your region and currency. We do
       not list prices on this page, to avoid any discrepancy with the store.
     </p>
 
-    <h3 class="en">Automatic renewal</h3>
-    <p class="en">
+    <h3 lang="en">Automatic renewal</h3>
+    <p lang="en">
       The monthly and annual plans are <strong>auto-renewing</strong>. Unless cancelled at least
       <strong>24 hours</strong> before the end of the current period, they renew automatically and your
       Apple ID or Google account is charged for the next period.
     </p>
-    <p class="en">
+    <p lang="en">
       To cancel: on iPhone or iPad, Settings → your name → Subscriptions; on Android, Google Play →
       Profile → Payments &amp; subscriptions → Subscriptions.
       <strong>Deleting your account in the App does not cancel your subscription</strong> — billing is
@@ -372,37 +854,120 @@
       until the period you have already paid for ends.
     </p>
 
-    <h3 class="en">Lifetime purchase</h3>
-    <p class="en">
+    <h3 lang="en">Lifetime purchase</h3>
+    <p lang="en">
       The lifetime plan is a one-time non-consumable purchase and does not renew. “Lifetime” means for
       as long as the Service operates; if the Service is discontinued, section 12 applies.
     </p>
 
-    <h3 class="en">Price changes</h3>
-    <p class="en">
+    <h3 lang="en">Price changes</h3>
+    <p lang="en">
       We may change subscription prices. Changes <strong>never affect a period already under way</strong>
       and will be notified before they take effect as required by Apple and Google. Where the platform
       requires your explicit consent, you will not be charged the new price until you give it.
+    </p>
+    <h3 lang="ja">プラン</h3>
+    <p lang="ja">
+      Premium には、月額プラン、年額プラン、永久プラン（買い切り）の 3 種類があります。
+      <strong>各プランの名称、期間、価格は、すべて購入時に本アプリ内に表示される内容に従います。</strong>
+      これは、Apple または Google がお住まいの地域と通貨に応じてリアルタイムに提供する金額です。
+      ストアに実際に表示される内容との食い違いを避けるため、このページには価格を記載していません。
+    </p>
+    <h3 lang="ja">自動更新</h3>
+    <p lang="ja">
+      月額プランと年額プランは<strong>自動更新</strong>型の商品です。
+      現在の期間が終了する少なくとも <strong>24 時間</strong>前までに解約しない限り、期間満了時に自動的に更新され、
+      ユーザーの Apple ID または Google アカウントに次の期間の料金が請求されます。
+    </p>
+    <p lang="ja">
+      解約は次の場所から行ってください。
+    </p>
+    <ul lang="ja">
+      <li><strong>iPhone／iPad：</strong>設定 → 自分の名前 → サブスクリプション</li>
+      <li><strong>Android：</strong>Google Play → プロフィール → お支払いと定期購入 → 定期購入</li>
+    </ul>
+    <p lang="ja">
+      <strong>本アプリ内でアカウントを削除しても、サブスクリプションは解約されません。</strong>
+      サブスクリプションは Apple または Google との課金関係であるため、上記の場所で手続きする必要があります。
+      解約後も、支払い済みの期間が終了するまで Premium の利用権は継続します。
+    </p>
+    <h3 lang="ja">永久プラン（買い切り）</h3>
+    <p lang="ja">
+      永久プランは、1 回限りの購入による非消耗型のアイテムで、自動更新はされません。
+      「永久」とは、本サービスが運営を継続している期間をいいます。本サービスが終了する場合の取り扱いは第 12 節をご覧ください。
+    </p>
+    <h3 lang="ja">価格の改定</h3>
+    <p lang="ja">
+      当社はサブスクリプションの価格を改定することがあります。価格の改定は<strong>すでに始まっている現在の期間には影響せず</strong>、
+      Apple および Google の規定に従って、効力が生じる前にユーザーに通知します。
+      プラットフォームの規則によりユーザーの明示的な同意が必要な場合は、同意が得られるまで新しい価格で請求することはありません。
+    </p>
+    <h3 lang="ko">요금제</h3>
+    <p lang="ko">
+      Premium은 월간 구독, 연간 구독, 평생 이용권의 세 가지 요금제로 제공됩니다.
+      <strong>각 요금제의 이름, 기간 및 가격은 이용자가 구매하는 시점에 앱에 표시되는 내용을 기준으로 합니다.</strong>
+      이는 Apple 또는 Google이 이용자의 지역과 통화에 맞추어 실시간으로 제공하는 금액입니다.
+      스토어에 실제로 표시되는 금액과 달라지는 일이 없도록 본 페이지에는 가격을 기재하지 않습니다.
+    </p>
+    <h3 lang="ko">자동 갱신</h3>
+    <p lang="ko">
+      월간 구독과 연간 구독은 <strong>자동 갱신</strong> 상품입니다.
+      현재 구독 기간이 끝나기 최소 <strong>24시간</strong> 전까지 해지하지 않으면 기간 만료 시 자동으로 갱신되며,
+      이용자의 Apple ID 또는 Google 계정으로 다음 기간의 요금이 청구됩니다.
+    </p>
+    <p lang="ko">
+      구독 해지는 다음 경로에서 할 수 있습니다.
+    </p>
+    <ul lang="ko">
+      <li><strong>iPhone/iPad:</strong> 설정 → 사용자 이름 → 구독</li>
+      <li><strong>Android:</strong> Google Play → 프로필 → 결제 및 구독 → 구독</li>
+    </ul>
+    <p lang="ko">
+      <strong>앱에서 계정을 삭제해도 구독은 해지되지 않습니다.</strong>
+      구독은 Apple 또는 Google과의 결제 관계이므로 반드시 위의 경로에서 해지해야 합니다.
+      해지한 후에도 이미 결제한 기간이 끝날 때까지 Premium 이용 권한은 유지됩니다.
+    </p>
+    <h3 lang="ko">평생 이용권</h3>
+    <p lang="ko">
+      평생 이용권은 한 번 구매하는 비소모성 항목이며, 자동 갱신되지 않습니다.
+      ‘평생’이란 본 서비스가 계속 운영되는 기간을 말하며, 본 서비스가 종료되는 경우의 처리는 제12조를 따릅니다.
+    </p>
+    <h3 lang="ko">가격 변경</h3>
+    <p lang="ko">
+      회사는 구독 가격을 변경할 수 있습니다. 가격 변경은 <strong>이미 시작된 구독 기간에는 영향을 주지 않으며</strong>,
+      Apple과 Google의 규정에 따라 시행 전에 이용자에게 알립니다.
+      플랫폼 규정상 이용자의 명시적 동의가 필요한 경우, 이용자가 동의하기 전에는 새 가격으로 요금을 청구하지 않습니다.
     </p>
   </section>
 
   <!-- 7 ─────────────────────────────────────────────────────── -->
   <section id="earned">
-    <h2><span class="num">7</span><span class="zh">賺取 Premium</span><span class="en">Earned Premium</span></h2>
+    <h2><span class="num">7</span><span lang="zh-Hant">賺取 Premium</span><span lang="zh-Hans">赚取 Premium</span><span lang="en">Earned Premium</span><span lang="ja">Premium の獲得</span><span lang="ko">Premium 받기</span></h2>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       本 App 提供不必付費也能取得 Premium 天數的機制（例如完成特定整理里程碑）。
       關於這項機制：
     </p>
-    <ul class="zh">
+    <ul lang="zh-Hant">
       <li>賺得的天數<strong>沒有金錢價值</strong>，不能兌換現金、轉讓或退款；</li>
       <li>我們可能設定每人可累積的<strong>上限</strong>，並得隨時調整取得條件或上限；</li>
       <li>以自動化工具、重複安裝、多開帳號或其他不正當方式取得者，我們得撤銷已發放的天數；</li>
       <li>付費方案與賺得天數同時存在時，以對你較有利者為準；</li>
       <li>我們得隨時終止此機制，但<strong>已經賺得且尚未使用的天數會讓你用完</strong>。</li>
     </ul>
+    <p lang="zh-Hans">
+      本 App 提供无需付费也能获得 Premium 天数的机制（例如完成特定的整理里程碑）。
+      关于这项机制：
+    </p>
+    <ul lang="zh-Hans">
+      <li>赚得的天数<strong>没有金钱价值</strong>，不能兑换现金、转让或退款；</li>
+      <li>我们可能设定每人可累积天数的<strong>上限</strong>，并可随时调整获得条件或上限；</li>
+      <li>以自动化工具、重复安装、多开账号或其他不正当方式获得的，我们可以撤销已发放的天数；</li>
+      <li>付费方案与赚得天数同时存在时，以对你更有利者为准；</li>
+      <li>我们可以随时终止此机制，但<strong>已经赚得且尚未使用的天数会让你用完</strong>。</li>
+    </ul>
 
-    <p class="en">
+    <p lang="en">
       The App offers ways to obtain Premium days without paying, such as completing organising
       milestones. Earned days <strong>have no monetary value</strong> and cannot be exchanged for cash,
       transferred or refunded. We may cap how many days a person can accumulate and may adjust the
@@ -411,39 +976,80 @@
       overlap, whichever is more favourable to you applies. We may end the scheme at any time, but
       <strong>days you have already earned and not yet used will be honoured until they run out</strong>.
     </p>
+    <p lang="ja">
+      本アプリには、料金を支払わなくても Premium の日数を獲得できる仕組み（整理で特定の節目を達成するなど）があります。
+      この仕組みについては、次のとおりとします。
+    </p>
+    <ul lang="ja">
+      <li>獲得した日数には<strong>金銭的価値はなく</strong>、現金との交換、譲渡、返金はできません。</li>
+      <li>当社は、1 人あたりが累積できる日数に<strong>上限</strong>を設けることがあり、獲得条件や上限をいつでも変更できるものとします。</li>
+      <li>自動化ツール、再インストールの繰り返し、複数アカウントの作成その他の不正な方法により日数を獲得した場合、当社は付与済みの日数を取り消すことができます。</li>
+      <li>有料プランと獲得した日数が重なる場合は、ユーザーにとって有利な方を適用します。</li>
+      <li>当社はこの仕組みをいつでも終了できるものとします。ただし、<strong>すでに獲得し、まだ使用していない日数は、使い切るまで利用できます</strong>。</li>
+    </ul>
+    <p lang="ko">
+      본 앱은 요금을 내지 않고도 Premium 이용 일수를 받을 수 있는 제도(예: 특정 정리 목표 달성)를 제공합니다.
+      이 제도에는 다음 사항이 적용됩니다.
+    </p>
+    <ul lang="ko">
+      <li>받은 일수는 <strong>금전적 가치가 없으며</strong>, 현금으로 교환하거나 양도하거나 환불받을 수 없습니다.</li>
+      <li>회사는 1인당 누적할 수 있는 일수의 <strong>상한</strong>을 정할 수 있으며, 받는 조건이나 상한을 언제든지 조정할 수 있습니다.</li>
+      <li>자동화 도구, 반복 설치, 다중 계정 또는 그 밖의 부정한 방법으로 받은 경우, 회사는 이미 지급한 일수를 취소할 수 있습니다.</li>
+      <li>유료 요금제와 받은 일수가 동시에 있는 경우, 이용자에게 더 유리한 쪽을 기준으로 합니다.</li>
+      <li>회사는 언제든지 이 제도를 종료할 수 있으나, <strong>이미 받고 아직 사용하지 않은 일수는 모두 사용할 수 있도록 합니다</strong>.</li>
+    </ul>
   </section>
 
   <!-- 8 ─────────────────────────────────────────────────────── -->
   <section id="refund">
-    <h2><span class="num">8</span><span class="zh">退款</span><span class="en">Refunds</span></h2>
+    <h2><span class="num">8</span><span lang="zh-Hant">退款</span><span lang="zh-Hans">退款</span><span lang="en">Refunds</span><span lang="ja">返金</span><span lang="ko">환불</span></h2>
 
-    <div class="callout zh">
+    <div lang="zh-Hant" class="callout">
       <p><strong>App 內購買的款項不經過我們。</strong>
       Apple 與 Google 是這些交易的銷售者，款項直接由他們收取。
       因此我們<strong>無法</strong>直接為你退款，也看不到你的付款方式。</p>
     </div>
 
-    <p class="zh">申請退款請向購買的商店提出：</p>
-    <ul class="zh">
+    <p lang="zh-Hant">申請退款請向購買的商店提出：</p>
+    <ul lang="zh-Hant">
       <li><strong>Apple：</strong>前往 <a href="https://reportaproblem.apple.com" target="_blank" rel="noopener noreferrer">reportaproblem.apple.com</a></li>
       <li><strong>Google：</strong>於 Google Play 的訂單記錄中申請退款</li>
     </ul>
-    <p class="zh">
+    <p lang="zh-Hant">
       是否退款由該商店依其政策決定。
       若你認為是本服務的缺陷造成，歡迎先來信
       <a href="mailto:support@pibook.app">support@pibook.app</a>，
       我們會協助你向商店說明，並在我們能力範圍內提供補償（例如延長權益期間）。
     </p>
-    <p class="zh">
+    <p lang="zh-Hant">
       實體商品的退換貨不適用本節，請見<a href="#goods">第 9 節</a>。
     </p>
+    <div lang="zh-Hans" class="callout">
+      <p><strong>App 内购买的款项不经过我们。</strong>
+      Apple 与 Google 是这些交易的销售方，款项直接由他们收取。
+      因此我们<strong>无法</strong>直接为你退款，也看不到你的支付方式。</p>
+    </div>
+    <p lang="zh-Hans">申请退款请向你购买时使用的商店提出：</p>
+    <ul lang="zh-Hans">
+      <li><strong>Apple：</strong>前往 <a href="https://reportaproblem.apple.com" target="_blank" rel="noopener noreferrer">reportaproblem.apple.com</a></li>
+      <li><strong>Google：</strong>在 Google Play 的订单记录中申请退款</li>
+    </ul>
+    <p lang="zh-Hans">
+      是否退款由该商店根据其政策决定。
+      如果你认为问题是本服务的缺陷造成的，欢迎先发邮件至
+      <a href="mailto:support@pibook.app">support@pibook.app</a>，
+      我们会协助你向商店说明，并在我们能力范围内提供补偿（例如延长权益期限）。
+    </p>
+    <p lang="zh-Hans">
+      实体商品的退换货不适用本节，请见<a href="#goods">第 9 节</a>。
+    </p>
 
-    <div class="callout en">
+    <div lang="en" class="callout">
       <p><strong>In-app payments do not pass through us.</strong> Apple and Google are the sellers of
       record and collect the money directly. We therefore <strong>cannot</strong> issue refunds and
       cannot see your payment method.</p>
     </div>
-    <p class="en">
+    <p lang="en">
       Request refunds from the store you bought from: Apple at
       <a href="https://reportaproblem.apple.com" target="_blank" rel="noopener noreferrer">reportaproblem.apple.com</a>,
       or Google through your Google Play order history. The decision is theirs under their policies.
@@ -451,31 +1057,69 @@
       <a href="mailto:support@pibook.app">support@pibook.app</a> first — we will help you explain it to
       the store and will compensate where we can, for example by extending your entitlement.
     </p>
-    <p class="en">Physical goods are covered by <a href="#goods">section 9</a>, not this section.</p>
+    <p lang="en">Physical goods are covered by <a href="#goods">section 9</a>, not this section.</p>
+    <div lang="ja" class="callout">
+      <p><strong>アプリ内課金の代金は当社を経由しません。</strong>
+      これらの取引の販売者は Apple と Google であり、代金は両社が直接受け取ります。
+      そのため、当社が直接返金することは<strong>できず</strong>、支払い方法を知ることもできません。</p>
+    </div>
+    <p lang="ja">返金は、購入したストアに申請してください。</p>
+    <ul lang="ja">
+      <li><strong>Apple：</strong><a href="https://reportaproblem.apple.com" target="_blank" rel="noopener noreferrer">reportaproblem.apple.com</a> にアクセスして申請します</li>
+      <li><strong>Google：</strong>Google Play の注文履歴から返金を申請します</li>
+    </ul>
+    <p lang="ja">
+      返金するかどうかは、各ストアがそれぞれのポリシーに基づいて判断します。
+      本サービスの不具合が原因だと思われる場合は、まず
+      <a href="mailto:support@pibook.app">support@pibook.app</a> までご連絡ください。
+      ストアへの説明をお手伝いするとともに、当社にできる範囲で補償（利用権の期間の延長など）を行います。
+    </p>
+    <p lang="ja">
+      プリント商品の返品・交換には本節は適用されません。<a href="#goods">第 9 節</a>をご覧ください。
+    </p>
+    <div lang="ko" class="callout">
+      <p><strong>앱 내 구매 대금은 회사를 거치지 않습니다.</strong>
+      이러한 거래의 판매자는 Apple과 Google이며, 대금도 이들이 직접 받습니다.
+      따라서 회사는 이용자에게 직접 환불할 수 <strong>없으며</strong>, 이용자의 결제 수단도 알 수 없습니다.</p>
+    </div>
+    <p lang="ko">환불은 구매한 스토어에 신청해 주시기 바랍니다.</p>
+    <ul lang="ko">
+      <li><strong>Apple:</strong> <a href="https://reportaproblem.apple.com" target="_blank" rel="noopener noreferrer">reportaproblem.apple.com</a>에서 신청</li>
+      <li><strong>Google:</strong> Google Play의 주문 내역에서 환불 신청</li>
+    </ul>
+    <p lang="ko">
+      환불 여부는 해당 스토어가 자체 정책에 따라 결정합니다.
+      본 서비스의 결함으로 인한 문제라고 생각되는 경우 먼저
+      <a href="mailto:support@pibook.app">support@pibook.app</a>에 메일을 보내 주시기 바랍니다.
+      회사는 이용자가 스토어에 사정을 설명할 수 있도록 돕고, 회사가 할 수 있는 범위에서 보상(예: 이용 권한 기간 연장)을 제공합니다.
+    </p>
+    <p lang="ko">
+      실물 상품의 반품·교환에는 본 조가 적용되지 않으며, <a href="#goods">제9조</a>를 따릅니다.
+    </p>
   </section>
 
   <!-- 9 ─────────────────────────────────────────────────────── -->
   <section id="goods">
-    <h2><span class="num">9</span><span class="zh">實體商品</span><span class="en">Physical products</span></h2>
+    <h2><span class="num">9</span><span lang="zh-Hant">實體商品</span><span lang="zh-Hans">实体商品</span><span lang="en">Physical products</span><span lang="ja">プリント商品</span><span lang="ko">실물 상품</span></h2>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       本節僅適用於你在 App 內訂購<strong>實體印製商品</strong>（例如相片書、明信片）的情形。
       依 Apple 與 Google 的規定，實體商品不得使用 App 內購買，
       因此這類交易由我們直接與你成立，並透過第三方金流收款。
     </p>
 
-    <h3 class="zh">訂單成立</h3>
-    <p class="zh">
+    <h3 lang="zh-Hant">訂單成立</h3>
+    <p lang="zh-Hant">
       你送出訂單為要約；我們寄出訂單確認通知時，買賣契約成立。
       若商品缺貨、價格顯有錯誤或無法製作，我們得拒絕訂單並全額退款。
     </p>
 
-    <h3 class="zh">價格、運費與稅賦</h3>
-    <p class="zh">
+    <h3 lang="zh-Hant">價格、運費與稅賦</h3>
+    <p lang="zh-Hant">
       價格以結帳頁面顯示者為準，並依法標示是否含稅。運費與可能的關稅另計並於結帳時揭露。
     </p>
 
-    <div class="callout warn zh">
+    <div lang="zh-Hant" class="callout warn">
       <p><strong>客製化商品沒有七天鑑賞期，請在下單前確認。</strong><br>
       依《消費者保護法》第 19 條及《通訊交易解除權合理例外情事適用準則》第 2 條第 3 款，
       <strong>依消費者要求所為之客製化給付</strong>屬於七日解除權的合理例外。
@@ -484,53 +1128,98 @@
       我們會在你按下付款之前再次明確提示這一點。</p>
     </div>
 
-    <h3 class="zh">瑕疵、錯印與運送毀損</h3>
-    <p class="zh">
+    <h3 lang="zh-Hant">瑕疵、錯印與運送毀損</h3>
+    <p lang="zh-Hant">
       沒有鑑賞期<strong>不代表你沒有保障</strong>。若商品有下列情形，
       請於收到後 <strong>14 日</strong>內附照片來信
       <a href="mailto:support@pibook.app">support@pibook.app</a>，
       我們將免費重製或全額退款，運費由我們負擔：
     </p>
-    <ul class="zh">
+    <ul lang="zh-Hant">
       <li>印製瑕疵（色偏、缺頁、裁切錯誤、裝訂不良）；</li>
       <li>與你的訂單內容不符；</li>
       <li>運送過程中毀損；</li>
       <li>逾期未送達且非因你提供的地址有誤。</li>
     </ul>
-    <p class="zh">
+    <p lang="zh-Hant">
       因你上傳的照片解析度不足所致的畫質問題，我們會在下單前提示；
       仍選擇下單者，該情形不視為瑕疵，但我們仍樂意協助評估。
       本條不影響你依民法瑕疵擔保與消費者保護法所享有的其他權利。
     </p>
 
-    <h3 class="zh">送達時間</h3>
-    <p class="zh">
+    <h3 lang="zh-Hant">送達時間</h3>
+    <p lang="zh-Hant">
       預計製作與送達時間於結帳時顯示，屬預估值。
       因不可抗力、物流異常或商品資訊有誤所生的延誤，我們將盡速通知你並提供取消全額退款的選項。
     </p>
+    <p lang="zh-Hans">
+      本节仅适用于你在 App 内订购<strong>实体印制商品</strong>（例如照片书、明信片）的情形。
+      根据 Apple 与 Google 的规定，实体商品不得使用 App 内购买，
+      因此这类交易由我们直接与你成立，并通过第三方支付服务商收款。
+    </p>
+    <h3 lang="zh-Hans">订单成立</h3>
+    <p lang="zh-Hans">
+      你提交订单即为要约；我们发出订单确认通知时，买卖合同成立。
+      如果商品缺货、价格明显有误或无法制作，我们可以拒绝订单并全额退款。
+    </p>
+    <h3 lang="zh-Hans">价格、运费与税费</h3>
+    <p lang="zh-Hans">
+      价格以结账页面显示的为准，并依法标明是否含税。运费与可能产生的关税另计，并在结账时列明。
+    </p>
+    <div lang="zh-Hans" class="callout warn">
+      <p><strong>定制商品不适用七天无理由退货，请在下单前确认。</strong><br>
+      根据台湾《消费者保护法》第 19 条及《通讯交易解除权合理例外情事适用准则》第 2 条第 3 款，
+      <strong>依消费者要求所为之客制化给付</strong>属于七日解除权的合理例外。
+      照片书、明信片等使用你自己的照片印制的商品，都是为你单独制作、无法转售的，
+      因此<strong>不适用</strong>七日内无条件解约退货。
+      我们会在你点击付款之前再次明确提示这一点。</p>
+    </div>
+    <h3 lang="zh-Hans">瑕疵、印错与运输损坏</h3>
+    <p lang="zh-Hans">
+      不适用七天无理由退货，<strong>并不代表你没有保障</strong>。如果商品有下列情形，
+      请在收到后 <strong>14 日</strong>内附上照片发邮件至
+      <a href="mailto:support@pibook.app">support@pibook.app</a>，
+      我们将免费重新制作或全额退款，运费由我们承担：
+    </p>
+    <ul lang="zh-Hans">
+      <li>印制瑕疵（偏色、缺页、裁切错误、装订不良）；</li>
+      <li>与你的订单内容不符；</li>
+      <li>运输过程中损坏；</li>
+      <li>逾期未送达，且并非因你提供的地址有误所致。</li>
+    </ul>
+    <p lang="zh-Hans">
+      因你上传的照片分辨率不足而导致的画质问题，我们会在下单前提示；
+      仍选择下单的，该情形不视为瑕疵，但我们仍乐意协助评估。
+      本条不影响你依据《民法》瑕疵担保规定与《消费者保护法》所享有的其他权利。
+    </p>
+    <h3 lang="zh-Hans">送达时间</h3>
+    <p lang="zh-Hans">
+      预计制作与送达时间在结账时显示，属于预估值。
+      因不可抗力、物流异常或商品信息有误造成的延误，我们将尽快通知你，并提供取消订单并全额退款的选项。
+    </p>
 
-    <h3 class="en">Scope</h3>
-    <p class="en">
+    <h3 lang="en">Scope</h3>
+    <p lang="en">
       This section applies only when you order <strong>physical printed products</strong> such as photo
       books or postcards inside the App. Apple and Google both prohibit physical goods from being sold
       through in-app purchase, so these transactions are made directly with us and collected through a
       third-party payment provider.
     </p>
 
-    <h3 class="en">Formation of contract</h3>
-    <p class="en">
+    <h3 lang="en">Formation of contract</h3>
+    <p lang="en">
       Submitting an order is an offer; the contract is formed when we send you an order confirmation.
       We may decline an order and refund you in full if an item is unavailable, the price is manifestly
       wrong, or the item cannot be produced.
     </p>
 
-    <h3 class="en">Prices, shipping and tax</h3>
-    <p class="en">
+    <h3 lang="en">Prices, shipping and tax</h3>
+    <p lang="en">
       Prices are those shown at checkout, with tax status stated as required by law. Shipping and any
       customs duties are additional and disclosed at checkout.
     </p>
 
-    <div class="callout warn en">
+    <div lang="en" class="callout warn">
       <p><strong>Custom products carry no cooling-off period — please check before ordering.</strong><br>
       Under Article 19 of Taiwan’s Consumer Protection Act and Article 2(3) of the Regulations on
       Reasonable Exceptions to the Right of Withdrawal in Distance Sales, <strong>goods customised to
@@ -540,8 +1229,8 @@
       remind you of this clearly again before you pay.</p>
     </div>
 
-    <h3 class="en">Defects, misprints and shipping damage</h3>
-    <p class="en">
+    <h3 lang="en">Defects, misprints and shipping damage</h3>
+    <p lang="en">
       No cooling-off period <strong>does not mean no protection</strong>. If your item has a printing
       defect (colour shift, missing pages, mis-trimming, poor binding), does not match your order,
       arrives damaged, or fails to arrive on time for reasons other than an address you supplied
@@ -549,27 +1238,117 @@
       within <strong>14 days</strong> of receipt. We will reprint free of charge or refund you in full,
       and we pay the shipping.
     </p>
-    <p class="en">
+    <p lang="en">
       Quality problems caused by low resolution in the photos you uploaded are flagged before you
       order; where you proceed anyway, that is not treated as a defect, though we are still happy to
       assess it. This section does not limit any other right you have under the Civil Code’s warranty
       provisions or consumer protection law.
     </p>
 
-    <h3 class="en">Delivery times</h3>
-    <p class="en">
+    <h3 lang="en">Delivery times</h3>
+    <p lang="en">
       Production and delivery estimates are shown at checkout and are estimates. Where force majeure,
       logistics failures or incorrect product information cause a delay, we will notify you promptly
       and offer cancellation with a full refund.
+    </p>
+    <p lang="ja">
+      本節は、ユーザーが本アプリ内で<strong>プリント商品</strong>（フォトブック、ポストカードなど）を注文する場合にのみ適用されます。
+      Apple と Google の規定により、物理的な商品にはアプリ内課金を利用できないため、
+      これらの取引は当社とユーザーとの間で直接成立し、代金は第三者の決済サービスを通じてお支払いいただきます。
+    </p>
+    <h3 lang="ja">注文の成立</h3>
+    <p lang="ja">
+      ユーザーによる注文の送信は申込みにあたり、当社が注文確認の通知を送信した時点で売買契約が成立します。
+      商品の在庫切れ、価格の明らかな誤り、または製作ができない場合には、当社は注文をお断りし、全額を返金することができます。
+    </p>
+    <h3 lang="ja">価格・送料・税金</h3>
+    <p lang="ja">
+      価格は決済画面に表示される金額に従い、法令に従って税込みかどうかを表示します。送料および発生しうる関税は別途必要となり、決済時に表示します。
+    </p>
+    <div lang="ja" class="callout warn">
+      <p><strong>オーダーメイドの商品には 7 日間の無条件解約（クーリングオフ）が適用されません。ご注文の前に必ずご確認ください。</strong><br>
+      台湾の「消費者保護法」第 19 条および「通訊交易解除権合理例外情事適用準則」（通信取引における解除権の合理的例外事由に関する準則）第 2 条第 3 号により、
+      <strong>消費者の求めに応じて行うオーダーメイドの給付</strong>は、7 日間の解除権の合理的な例外とされています。
+      フォトブックやポストカードなど、ユーザー自身の写真を印刷した商品は、個別に製作されるものであり、転売することもできないため、
+      7 日以内の無条件での契約解除・返品は<strong>適用されません</strong>。
+      この点は、お支払いの操作を行う前にもう一度はっきりとお知らせします。</p>
+    </div>
+    <h3 lang="ja">不良品・誤印刷・配送中の破損</h3>
+    <p lang="ja">
+      無条件解約の期間がないことは、<strong>保護がないことを意味するものではありません</strong>。商品が次のいずれかに当てはまる場合は、
+      受け取りから <strong>14 日</strong>以内に、写真を添えて
+      <a href="mailto:support@pibook.app">support@pibook.app</a> までご連絡ください。
+      無償で作り直すか全額を返金し、送料は当社が負担します。
+    </p>
+    <ul lang="ja">
+      <li>印刷に不良がある（色ずれ、ページの欠落、裁断の誤り、製本の不良）</li>
+      <li>注文内容と異なる</li>
+      <li>配送中に破損した</li>
+      <li>期限を過ぎても届かず、その原因がユーザーの提供した住所の誤りではない</li>
+    </ul>
+    <p lang="ja">
+      アップロードされた写真の解像度不足による画質の問題については、注文前にお知らせします。
+      それでも注文された場合、その問題は不良とはみなされませんが、状況の確認には引き続き喜んで協力します。
+      この定めは、台湾の民法に基づく瑕疵担保責任や消費者保護法によってユーザーが有するその他の権利に影響するものではありません。
+    </p>
+    <h3 lang="ja">お届けまでの期間</h3>
+    <p lang="ja">
+      製作と配送の予定期間は決済時に表示されますが、あくまで見込みです。
+      不可抗力、物流の異常、商品情報の誤りによって遅延が生じた場合は、速やかにお知らせし、注文を取り消して全額の返金を受けられる選択肢を提供します。
+    </p>
+    <p lang="ko">
+      본 조는 이용자가 앱에서 <strong>실물 인화 상품</strong>(예: 포토북, 엽서)을 주문하는 경우에만 적용됩니다.
+      Apple과 Google의 규정상 실물 상품에는 앱 내 구매를 사용할 수 없으므로,
+      이러한 거래는 회사와 이용자 사이에 직접 성립하며 대금은 제3자 결제대행업체를 통해 받습니다.
+    </p>
+    <h3 lang="ko">주문의 성립</h3>
+    <p lang="ko">
+      이용자가 주문을 제출하는 것은 청약에 해당하며, 회사가 주문 확인 알림을 보내는 때에 매매계약이 성립합니다.
+      상품이 품절되었거나 가격이 명백히 잘못 표시되었거나 제작이 불가능한 경우, 회사는 주문을 거절하고 전액 환불할 수 있습니다.
+    </p>
+    <h3 lang="ko">가격, 배송비 및 세금</h3>
+    <p lang="ko">
+      가격은 결제 화면에 표시된 금액을 기준으로 하며, 세금 포함 여부는 법령에 따라 표시합니다. 배송비와 부과될 수 있는 관세는 별도이며 결제 시 안내합니다.
+    </p>
+    <div lang="ko" class="callout warn">
+      <p><strong>맞춤 제작 상품에는 7일 청약철회 기간이 없으므로, 주문 전에 꼭 확인해 주시기 바랍니다.</strong><br>
+      대만 소비자보호법(消費者保護法) 제19조 및 통신판매 청약철회권의 합리적 예외사유 적용준칙(通訊交易解除權合理例外情事適用準則) 제2조 제3호에 따라,
+      <strong>소비자의 요구에 따라 맞춤 제작하는 급부</strong>는 7일 청약철회권의 합리적 예외에 해당합니다.
+      포토북, 엽서 등 이용자 본인의 사진으로 인쇄하는 상품은 모두 이용자 한 사람을 위해 개별 제작되어 재판매할 수 없으므로,
+      7일 이내의 조건 없는 청약철회 및 반품이 <strong>적용되지 않습니다</strong>.
+      회사는 이용자가 결제 버튼을 누르기 전에 이 점을 다시 한번 명확하게 안내합니다.</p>
+    </div>
+    <h3 lang="ko">하자, 인쇄 오류 및 배송 중 파손</h3>
+    <p lang="ko">
+      청약철회 기간이 없다고 해서 <strong>보호를 받지 못하는 것은 아닙니다</strong>. 상품에 다음과 같은 문제가 있는 경우
+      수령 후 <strong>14일</strong> 이내에 사진을 첨부하여
+      <a href="mailto:support@pibook.app">support@pibook.app</a>에 메일을 보내 주시면,
+      회사가 무료로 재제작하거나 전액 환불하며 배송비도 회사가 부담합니다.
+    </p>
+    <ul lang="ko">
+      <li>인쇄 하자(색상 차이, 페이지 누락, 재단 오류, 제본 불량)</li>
+      <li>이용자의 주문 내용과 다른 경우</li>
+      <li>배송 중 파손된 경우</li>
+      <li>이용자가 제공한 주소의 오류가 아닌 사유로 기한 내에 도착하지 않은 경우</li>
+    </ul>
+    <p lang="ko">
+      이용자가 업로드한 사진의 해상도가 부족하여 생기는 화질 문제는 주문 전에 안내합니다.
+      안내를 받고도 주문한 경우 이는 하자로 보지 않으나, 회사는 기꺼이 함께 검토합니다.
+      본 조는 이용자가 대만 민법상 하자담보책임 규정 및 소비자보호법에 따라 가지는 그 밖의 권리에 영향을 주지 않습니다.
+    </p>
+    <h3 lang="ko">배송 기간</h3>
+    <p lang="ko">
+      예상 제작 및 배송 기간은 결제 시 표시되며, 이는 추정치입니다.
+      불가항력, 물류 장애 또는 상품 정보 오류로 인해 지연되는 경우, 회사는 신속하게 이용자에게 알리고 주문 취소 및 전액 환불을 선택할 수 있도록 합니다.
     </p>
   </section>
 
   <!-- 10 ────────────────────────────────────────────────────── -->
   <section id="conduct">
-    <h2><span class="num">10</span><span class="zh">使用規範</span><span class="en">Acceptable use</span></h2>
+    <h2><span class="num">10</span><span lang="zh-Hant">使用規範</span><span lang="zh-Hans">使用规范</span><span lang="en">Acceptable use</span><span lang="ja">禁止事項</span><span lang="ko">이용 규칙</span></h2>
 
-    <p class="zh">使用本服務時，你不得：</p>
-    <ul class="zh">
+    <p lang="zh-Hant">使用本服務時，你不得：</p>
+    <ul lang="zh-Hant">
       <li>上傳或印製侵害他人著作權、商標、肖像權或隱私權的內容；</li>
       <li>上傳或印製兒童性剝削素材、暴力血腥、仇恨言論或其他違法內容；</li>
       <li>未經他人同意，將可辨識該人的影像用於商業用途；</li>
@@ -577,185 +1356,393 @@
       <li>規避額度限制、購買驗證、賺取上限或其他技術措施；</li>
       <li>將本服務用於任何違反所在地法令的目的。</li>
     </ul>
-    <p class="zh">
+    <p lang="zh-Hant">
       我們可能在合理必要範圍內，對明顯違反本節的訂單或帳號採取暫停或終止措施，
       並在法律允許且不妨礙調查的情況下告知你原因與申訴管道。
     </p>
+    <p lang="zh-Hans">使用本服务时，你不得：</p>
+    <ul lang="zh-Hans">
+      <li>上传或印制侵犯他人著作权、商标、肖像权或隐私权的内容；</li>
+      <li>上传或印制儿童性剥削材料、暴力血腥、仇恨言论或其他违法内容；</li>
+      <li>未经他人同意，将可识别该人的图像用于商业用途；</li>
+      <li>干扰、破坏本服务，或试图未经授权访问我们的系统；</li>
+      <li>规避额度限制、购买验证、赚取上限或其他技术措施；</li>
+      <li>将本服务用于任何违反所在地法律法规的目的。</li>
+    </ul>
+    <p lang="zh-Hans">
+      我们可能在合理必要的范围内，对明显违反本节的订单或账号采取暂停或终止措施，
+      并在法律允许且不妨碍调查的情况下告知你原因与申诉渠道。
+    </p>
 
-    <p class="en">You must not use the Service to upload or print material that infringes copyright,
+    <p lang="en">You must not use the Service to upload or print material that infringes copyright,
       trademarks, likeness or privacy rights; child sexual abuse material, graphic violence, hate
       speech or other unlawful content; or images identifying another person for commercial use without
       their consent. You must not interfere with the Service or attempt unauthorised access to our
       systems, circumvent quotas, purchase verification, earning caps or other technical measures, or
       use the Service for any purpose unlawful where you are.</p>
-    <p class="en">
+    <p lang="en">
       We may suspend or terminate orders or accounts that clearly breach this section, to the extent
       reasonably necessary, and — where the law permits and it does not prejudice an investigation —
       will tell you why and how to appeal.
+    </p>
+    <p lang="ja">本サービスの利用にあたり、ユーザーは次の行為をしてはなりません。</p>
+    <ul lang="ja">
+      <li>他者の著作権、商標権、肖像権またはプライバシー権を侵害するコンテンツをアップロードまたは印刷すること</li>
+      <li>児童の性的搾取に関するコンテンツ、暴力的・残虐なコンテンツ、ヘイトスピーチその他の違法なコンテンツをアップロードまたは印刷すること</li>
+      <li>他者の同意なく、その人物を識別できる画像を商業目的で使用すること</li>
+      <li>本サービスを妨害もしくは破壊し、または当社のシステムへの不正アクセスを試みること</li>
+      <li>利用上限、購入の検証、獲得日数の上限その他の技術的な措置を回避すること</li>
+      <li>所在地の法令に違反する目的で本サービスを利用すること</li>
+    </ul>
+    <p lang="ja">
+      本節に明らかに違反する注文またはアカウントについて、当社は合理的に必要な範囲で一時停止または終了の措置をとることがあります。
+      その場合、法律で認められ、かつ調査の妨げとならない限り、理由と異議申立ての方法をお知らせします。
+    </p>
+    <p lang="ko">본 서비스를 이용할 때 이용자는 다음 행위를 해서는 안 됩니다.</p>
+    <ul lang="ko">
+      <li>타인의 저작권, 상표권, 초상권 또는 프라이버시권을 침해하는 콘텐츠를 업로드하거나 인쇄하는 행위</li>
+      <li>아동 성착취물, 폭력적이거나 잔혹한 콘텐츠, 혐오 표현 또는 그 밖의 불법 콘텐츠를 업로드하거나 인쇄하는 행위</li>
+      <li>타인의 동의 없이 그 사람을 식별할 수 있는 이미지를 상업적으로 이용하는 행위</li>
+      <li>본 서비스를 방해하거나 훼손하는 행위, 또는 회사의 시스템에 무단으로 접근하려고 시도하는 행위</li>
+      <li>사용량 한도, 구매 검증, Premium 받기 상한 또는 그 밖의 기술적 조치를 우회하는 행위</li>
+      <li>이용자가 있는 지역의 법령을 위반하는 목적으로 본 서비스를 이용하는 행위</li>
+    </ul>
+    <p lang="ko">
+      회사는 본 조를 명백히 위반한 주문이나 계정에 대하여 합리적으로 필요한 범위에서 이용 정지 또는 해지 조치를 취할 수 있으며,
+      법이 허용하고 조사에 지장이 없는 경우 그 사유와 이의 제기 방법을 이용자에게 알립니다.
     </p>
   </section>
 
   <!-- 11 ────────────────────────────────────────────────────── -->
   <section id="ip">
-    <h2><span class="num">11</span><span class="zh">智慧財產權</span><span class="en">Intellectual property</span></h2>
+    <h2><span class="num">11</span><span lang="zh-Hant">智慧財產權</span><span lang="zh-Hans">知识产权</span><span lang="en">Intellectual property</span><span lang="ja">知的財産権</span><span lang="ko">지식재산권</span></h2>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       本服務及其所有元素 —— 包括程式碼、介面設計、插畫、吉祥物、音效、商標與文案 ——
       的著作權與其他智慧財產權，除另有標示外，均屬我們或授權我們使用者所有。
       「拍簿」與「Pibook」為我們的商標。本條款未明示授予的權利，均予保留。
     </p>
-    <p class="zh">
+    <p lang="zh-Hant">
       本 App 使用了若干開放原始碼元件，其授權條款可於 App 的「授權」頁面查閱，
       並優先適用於各該元件。
     </p>
+    <p lang="zh-Hans">
+      本服务及其所有元素——包括代码、界面设计、插画、吉祥物、音效、商标与文案——的著作权与其他知识产权，
+      除另有标示外，均归我们或授权我们使用的权利人所有。
+      “拍簿”与“Pibook”为我们的商标。本条款未明确授予的权利，均予保留。
+    </p>
+    <p lang="zh-Hans">
+      本 App 使用了若干开源组件，其许可条款可在 App 的“许可”页面查阅，
+      并对相应组件优先适用。
+    </p>
 
-    <p class="en">
+    <p lang="en">
       The Service and all of its elements — code, interface design, illustrations, mascot, sound
       effects, trademarks and copy — are owned by us or our licensors except where otherwise marked.
       “拍簿” and “Pibook” are our trademarks. All rights not expressly granted are reserved.
     </p>
-    <p class="en">
+    <p lang="en">
       The App includes open-source components whose licences are listed on the App’s licences screen
       and which prevail for those components.
+    </p>
+    <p lang="ja">
+      本サービスおよびそのすべての構成要素（プログラムコード、インターフェースのデザイン、イラスト、マスコット、効果音、商標、文章を含みます）に関する
+      著作権その他の知的財産権は、別途表示がある場合を除き、当社または当社に使用を許諾した者に帰属します。
+      「拍簿」および「Pibook」は当社の商標です。本規約で明示的に許諾されていない権利は、すべて留保されます。
+    </p>
+    <p lang="ja">
+      本アプリはいくつかのオープンソースのコンポーネントを使用しており、そのライセンス条項は本アプリの「ライセンス」画面で確認できます。
+      各コンポーネントについては、それぞれのライセンス条項が優先して適用されます。
+    </p>
+    <p lang="ko">
+      본 서비스와 그 모든 구성 요소(프로그램 코드, 인터페이스 디자인, 일러스트, 마스코트, 효과음, 상표 및 문구 포함)에 대한
+      저작권 및 그 밖의 지식재산권은 별도로 표시된 경우를 제외하고 모두 회사 또는 회사에 이용을 허락한 권리자에게 있습니다.
+      ‘拍簿’와 ‘Pibook’은 회사의 상표입니다. 본 약관에서 명시적으로 부여하지 않은 모든 권리는 회사에 유보됩니다.
+    </p>
+    <p lang="ko">
+      본 앱에는 여러 오픈소스 구성 요소가 포함되어 있으며, 그 라이선스 조건은 앱의 ‘라이선스’ 화면에서 확인할 수 있고
+      해당 구성 요소에 대해서는 그 조건이 우선 적용됩니다.
     </p>
   </section>
 
   <!-- 12 ────────────────────────────────────────────────────── -->
   <section id="availability">
-    <h2><span class="num">12</span><span class="zh">服務變更、中止與終止</span><span class="en">Changes, suspension and termination</span></h2>
+    <h2><span class="num">12</span><span lang="zh-Hant">服務變更、中止與終止</span><span lang="zh-Hans">服务变更、中止与终止</span><span lang="en">Changes, suspension and termination</span><span lang="ja">サービスの変更・停止・終了</span><span lang="ko">서비스의 변경, 중지 및 종료</span></h2>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       我們可能新增、修改或移除功能。若某項變更<strong>實質減損你已付費取得的權益</strong>，
       我們會事先於 App 內通知，並在合理範圍內提供替代方案或按比例補償。
     </p>
-    <p class="zh">
+    <p lang="zh-Hant">
       若我們決定終止本服務，將<strong>至少提前 60 日</strong>公告，並：
     </p>
-    <ul class="zh">
+    <ul lang="zh-Hant">
       <li>停止新的訂閱與續訂收費；</li>
       <li>讓現有訂閱使用到已付費期間結束；</li>
       <li>對終身買斷者，依購買時間與服務實際存續期間，提供合理的按比例補償或協助向商店申請退款；</li>
       <li>提供匯出你雲端備份資料的方式。</li>
     </ul>
-    <p class="zh">
+    <p lang="zh-Hant">
       你可以隨時停止使用本服務並刪除帳號。
       我們得於你重大違反本條款且經通知後仍未改正時終止你的帳號；
       情節重大或涉及違法內容者，得立即終止。
     </p>
+    <p lang="zh-Hans">
+      我们可能新增、修改或移除功能。如果某项变更<strong>实质性减损你已付费获得的权益</strong>，
+      我们会事先在 App 内通知，并在合理范围内提供替代方案或按比例补偿。
+    </p>
+    <p lang="zh-Hans">
+      如果我们决定终止本服务，将<strong>至少提前 60 日</strong>公告，并且：
+    </p>
+    <ul lang="zh-Hans">
+      <li>停止新的订阅与续订收费；</li>
+      <li>让现有订阅使用到已付费期间结束；</li>
+      <li>对终身买断的用户，根据购买时间与服务实际存续期间，提供合理的按比例补偿，或协助其向商店申请退款；</li>
+      <li>提供导出你云端备份数据的方式。</li>
+    </ul>
+    <p lang="zh-Hans">
+      你可以随时停止使用本服务并删除账号。
+      如果你重大违反本条款，且经通知后仍未改正，我们可以终止你的账号；
+      情节严重或涉及违法内容的，我们可以立即终止。
+    </p>
 
-    <p class="en">
+    <p lang="en">
       We may add, change or remove features. Where a change <strong>materially reduces something you
       have paid for</strong>, we will give in-app notice beforehand and, so far as reasonable, offer an
       alternative or proportionate compensation.
     </p>
-    <p class="en">
+    <p lang="en">
       If we decide to discontinue the Service we will give <strong>at least 60 days’ notice</strong> and
       will: stop new subscriptions and renewal charges; let existing subscriptions run to the end of the
       period already paid for; offer lifetime purchasers reasonable pro-rata compensation or help
       requesting a store refund, based on when they bought and how long the Service actually ran; and
       provide a way to export your cloud backup data.
     </p>
-    <p class="en">
+    <p lang="en">
       You may stop using the Service and delete your account at any time. We may terminate your account
       if you materially breach these Terms and fail to remedy it after notice; where the breach is
       serious or involves unlawful content, we may terminate immediately.
+    </p>
+    <p lang="ja">
+      当社は、機能を追加、変更または削除することがあります。ある変更により<strong>ユーザーが対価を支払って得た利用権が実質的に損なわれる</strong>場合は、
+      事前に本アプリ内でお知らせし、合理的な範囲で代替手段または按分による補償を提供します。
+    </p>
+    <p lang="ja">
+      当社が本サービスを終了することを決定した場合は、<strong>少なくとも 60 日前までに</strong>告知し、次の対応を行います。
+    </p>
+    <ul lang="ja">
+      <li>新規のサブスクリプションと更新の請求を停止します。</li>
+      <li>既存のサブスクリプションは、支払い済みの期間が終了するまで利用できるようにします。</li>
+      <li>永久プラン（買い切り）を購入したユーザーには、購入時期と本サービスが実際に存続した期間に応じて、合理的な按分による補償を提供するか、ストアへの返金申請を支援します。</li>
+      <li>クラウド上のバックアップデータをエクスポートする方法を提供します。</li>
+    </ul>
+    <p lang="ja">
+      ユーザーは、いつでも本サービスの利用をやめ、アカウントを削除することができます。
+      ユーザーが本規約に重大な違反をし、通知を受けた後も是正しない場合、当社はそのアカウントを終了することができます。
+      違反の程度が重大である場合、または違法なコンテンツが関わる場合は、直ちに終了することができます。
+    </p>
+    <p lang="ko">
+      회사는 기능을 추가, 변경 또는 삭제할 수 있습니다. 변경으로 인해 <strong>이용자가 유료로 취득한 권익이 실질적으로 줄어드는 경우</strong>,
+      회사는 앱에서 미리 알리고 합리적인 범위에서 대체 수단 또는 비례 보상을 제공합니다.
+    </p>
+    <p lang="ko">
+      회사가 본 서비스를 종료하기로 결정하는 경우, <strong>최소 60일 전에</strong> 공지하고 다음과 같이 조치합니다.
+    </p>
+    <ul lang="ko">
+      <li>신규 구독과 갱신 요금 청구를 중단합니다.</li>
+      <li>기존 구독은 이미 결제한 기간이 끝날 때까지 이용할 수 있도록 합니다.</li>
+      <li>평생 이용권 구매자에게는 구매 시점과 본 서비스의 실제 존속 기간에 따라 합리적인 비례 보상을 제공하거나, 스토어에 환불을 신청할 수 있도록 지원합니다.</li>
+      <li>이용자의 클라우드 백업 데이터를 내보낼 수 있는 방법을 제공합니다.</li>
+    </ul>
+    <p lang="ko">
+      이용자는 언제든지 본 서비스 이용을 중단하고 계정을 삭제할 수 있습니다.
+      이용자가 본 약관을 중대하게 위반하고 통지를 받은 후에도 시정하지 않는 경우 회사는 이용자의 계정을 해지할 수 있으며,
+      위반의 정도가 심각하거나 불법 콘텐츠와 관련된 경우에는 즉시 해지할 수 있습니다.
     </p>
   </section>
 
   <!-- 13 ────────────────────────────────────────────────────── -->
   <section id="disclaimer">
-    <h2><span class="num">13</span><span class="zh">免責聲明</span><span class="en">Disclaimers</span></h2>
+    <h2><span class="num">13</span><span lang="zh-Hant">免責聲明</span><span lang="zh-Hans">免责声明</span><span lang="en">Disclaimers</span><span lang="ja">免責事項</span><span lang="ko">면책 고지</span></h2>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       在法律允許的最大範圍內，本服務係「依現狀」及「現有可得」提供。
       我們不保證本服務不會中斷、無錯誤，或其分析結果（例如相似判定、品質評分、建議刪除的照片）
       必然符合你的期待 —— <strong>這些是輔助判斷的工具，最終的取捨決定永遠在你</strong>。
     </p>
-    <p class="zh">
+    <p lang="zh-Hant">
       我們特別聲明：<strong>本服務不是備份工具。</strong>
       請勿以本服務取代 iCloud 照片、Google 相簿或其他備份方案。
     </p>
-    <div class="callout zh">
+    <div lang="zh-Hant" class="callout">
       <p>本節不排除或限制依法不得排除或限制的責任，包括因故意或重大過失所致的責任、
       人身傷害責任，以及消費者依《消費者保護法》所享有、不得以契約排除的權利。
       若你是台灣的消費者，本條款中任何對你顯失公平的約定，於該不公平之範圍內不生效力。</p>
     </div>
+    <p lang="zh-Hans">
+      在法律允许的最大范围内，本服务按“现状”及“可获得”的状态提供。
+      我们不保证本服务不会中断、没有错误，或其分析结果（例如相似判定、质量评分、建议删除的照片）必然符合你的期待——<strong>这些是辅助判断的工具，最终的取舍决定永远在你</strong>。
+    </p>
+    <p lang="zh-Hans">
+      我们特别声明：<strong>本服务不是备份工具。</strong>
+      请勿以本服务代替 iCloud 照片、Google 相册或其他备份方案。
+    </p>
+    <div lang="zh-Hans" class="callout">
+      <p>本节不排除或限制依法不得排除或限制的责任，包括因故意或重大过失所致的责任、
+      人身伤害责任，以及消费者依据《消费者保护法》所享有、不得以合同排除的权利。
+      如果你是台湾的消费者，本条款中任何对你显失公平的约定，在该不公平的范围内不发生效力。</p>
+    </div>
 
-    <p class="en">
+    <p lang="en">
       To the maximum extent permitted by law, the Service is provided “as is” and “as available”. We do
       not warrant that it will be uninterrupted or error-free, or that its analysis — similarity
       grouping, quality scores, deletion suggestions — will match your expectations.
       <strong>These are aids to judgement; the final decision is always yours.</strong>
     </p>
-    <p class="en">
+    <p lang="en">
       We state explicitly: <strong>the Service is not a backup tool.</strong> Do not use it in place of
       iCloud Photos, Google Photos or any other backup solution.
     </p>
-    <div class="callout en">
+    <div lang="en" class="callout">
       <p>Nothing here excludes or limits liability that cannot lawfully be excluded, including
       liability for wilful misconduct or gross negligence, liability for personal injury, and rights a
       consumer has under Taiwan’s Consumer Protection Act that may not be excluded by contract. If you
       are a consumer in Taiwan, any provision of these Terms that is manifestly unfair to you is
       ineffective to the extent of that unfairness.</p>
     </div>
+    <p lang="ja">
+      法律で認められる最大限の範囲で、本サービスは「現状有姿」かつ「提供可能な範囲」で提供されます。
+      当社は、本サービスが中断しないこと、エラーがないこと、またはその分析結果（似ている写真の判定、品質評価、削除を提案する写真など）が
+      必ずユーザーの期待に沿うことを保証しません。<strong>これらは判断を補助するためのツールであり、最終的に何を残し何を手放すかを決めるのは常にユーザー自身です。</strong>
+    </p>
+    <p lang="ja">
+      当社は、特に次のことを明言します。<strong>本サービスはバックアップツールではありません。</strong>
+      iCloud 写真、Google フォトその他のバックアップ手段の代わりとして本サービスを使用しないでください。
+    </p>
+    <div lang="ja" class="callout">
+      <p>本節は、法律上排除または制限することのできない責任を排除または制限するものではありません。これには、故意または重大な過失による責任、
+      人身損害に対する責任、および消費者が「消費者保護法」に基づいて有し、契約によって排除することのできない権利が含まれます。
+      ユーザーが台湾の消費者である場合、本規約のうちユーザーにとって明らかに不公平な定めは、その不公平な範囲において効力を有しません。</p>
+    </div>
+    <p lang="ko">
+      법이 허용하는 최대 범위에서, 본 서비스는 ‘있는 그대로(as is)’ 및 ‘이용 가능한 상태로(as available)’ 제공됩니다.
+      회사는 본 서비스가 중단되지 않거나 오류가 없을 것, 또는 그 분석 결과(예: 비슷한 사진 판정, 품질 평가, 삭제 추천 사진)가
+      반드시 이용자의 기대에 부합할 것을 보증하지 않습니다. <strong>이는 판단을 돕는 도구일 뿐이며, 무엇을 남기고 무엇을 지울지에 대한 최종 결정은 언제나 이용자에게 있습니다.</strong>
+    </p>
+    <p lang="ko">
+      회사는 특히 다음을 분명히 밝힙니다. <strong>본 서비스는 백업 도구가 아닙니다.</strong>
+      iCloud 사진, Google 포토 또는 그 밖의 백업 수단을 대신하여 본 서비스를 사용하지 마시기 바랍니다.
+    </p>
+    <div lang="ko" class="callout">
+      <p>본 조는 법에 따라 배제하거나 제한할 수 없는 책임, 즉 고의 또는 중대한 과실로 인한 책임, 신체 상해에 대한 책임,
+      그리고 소비자가 대만 소비자보호법에 따라 가지며 계약으로 배제할 수 없는 권리를 배제하거나 제한하지 않습니다.
+      이용자가 대만의 소비자인 경우, 본 약관 중 이용자에게 현저히 불공정한 조항은 그 불공정한 범위에서 효력이 없습니다.</p>
+    </div>
   </section>
 
   <!-- 14 ────────────────────────────────────────────────────── -->
   <section id="liability">
-    <h2><span class="num">14</span><span class="zh">責任限制</span><span class="en">Limitation of liability</span></h2>
+    <h2><span class="num">14</span><span lang="zh-Hant">責任限制</span><span lang="zh-Hans">责任限制</span><span lang="en">Limitation of liability</span><span lang="ja">責任の制限</span><span lang="ko">책임의 제한</span></h2>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       在法律允許的最大範圍內，我們對於間接、附帶、衍生、懲罰性或非財產上的損害不負賠償責任。
       我們就本條款所生之全部責任，累計上限為
       <strong>你在請求發生前 12 個月內就本服務實際支付予我們或商店的金額</strong>，
       或新臺幣 1,000 元，以較高者為準。
     </p>
-    <p class="zh">
+    <p lang="zh-Hant">
       前項限制<strong>不適用於</strong>：我們的故意或重大過失、人身傷害、
       我們違反隱私權政策所致的損害，以及依法不得限制的其他責任。
     </p>
+    <p lang="zh-Hans">
+      在法律允许的最大范围内，我们对于间接、附带、衍生、惩罚性或非财产性的损害不承担赔偿责任。
+      我们就本条款所产生的全部责任，累计上限为<strong>你在请求发生前 12 个月内就本服务实际支付给我们或商店的金额</strong>，
+      或新台币 1,000 元，以较高者为准。
+    </p>
+    <p lang="zh-Hans">
+      前述限制<strong>不适用于</strong>：我们的故意或重大过失、人身伤害、
+      我们违反隐私权政策所致的损害，以及依法不得限制的其他责任。
+    </p>
 
-    <p class="en">
+    <p lang="en">
       To the maximum extent permitted by law, we are not liable for indirect, incidental, consequential,
       punitive or non-pecuniary damages. Our aggregate liability arising out of these Terms is capped at
       <strong>the amount you actually paid us or the store for the Service in the 12 months before the
       claim arose</strong>, or NT$1,000, whichever is greater.
     </p>
-    <p class="en">
+    <p lang="en">
       That cap does <strong>not</strong> apply to our wilful misconduct or gross negligence, personal
       injury, damage caused by our breach of the Privacy Policy, or any other liability that cannot
       lawfully be limited.
+    </p>
+    <p lang="ja">
+      法律で認められる最大限の範囲で、当社は、間接損害、付随的損害、派生的損害、懲罰的損害または非財産的損害について賠償責任を負いません。
+      本規約に関して当社が負う責任の総額は、
+      <strong>請求の原因が生じる前の 12 か月間にユーザーが本サービスについて当社またはストアに実際に支払った金額</strong>と
+      NT$1,000 のいずれか高い方を上限とします。
+    </p>
+    <p lang="ja">
+      前項の制限は、当社の故意または重大な過失、人身損害、
+      当社がプライバシーポリシーに違反したことにより生じた損害、その他法律上制限することのできない責任には<strong>適用されません</strong>。
+    </p>
+    <p lang="ko">
+      법이 허용하는 최대 범위에서, 회사는 간접 손해, 부수적 손해, 결과적 손해, 징벌적 손해 또는 비재산적 손해에 대하여 배상 책임을 지지 않습니다.
+      본 약관으로 인해 회사가 지는 모든 책임의 누적 한도는
+      <strong>청구 사유가 발생하기 전 12개월 동안 이용자가 본 서비스와 관련하여 회사 또는 스토어에 실제로 지급한 금액</strong>과
+      NT$1,000 중 더 큰 금액으로 합니다.
+    </p>
+    <p lang="ko">
+      위 제한은 회사의 고의 또는 중대한 과실, 신체 상해, 회사의 개인정보 처리방침 위반으로 인한 손해,
+      그리고 법에 따라 제한할 수 없는 그 밖의 책임에는 <strong>적용되지 않습니다</strong>.
     </p>
   </section>
 
   <!-- 15 ────────────────────────────────────────────────────── -->
   <section id="indemnity">
-    <h2><span class="num">15</span><span class="zh">補償</span><span class="en">Indemnity</span></h2>
+    <h2><span class="num">15</span><span lang="zh-Hant">補償</span><span lang="zh-Hans">补偿</span><span lang="en">Indemnity</span><span lang="ja">補償</span><span lang="ko">보상</span></h2>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       若因你違反本條款、或因你上傳、印製之內容侵害第三人權利，
       致我們遭受第三人請求或主管機關處分，你同意在可歸責於你的範圍內，
       補償我們因此支出的合理費用（包括必要的律師費）。
       我們會即時通知你該等請求，並讓你合理參與抗辯。
     </p>
-    <p class="en">
+    <p lang="zh-Hans">
+      如果因你违反本条款，或因你上传、印制的内容侵犯第三方权利，
+      致使我们遭受第三方索赔或主管机关处罚，你同意在可归责于你的范围内，
+      补偿我们因此支出的合理费用（包括必要的律师费）。
+      我们会及时通知你该等索赔，并让你合理参与抗辩。
+    </p>
+    <p lang="en">
       If a third-party claim or regulatory action arises because you breached these Terms or because
       content you uploaded or printed infringed someone’s rights, you agree to indemnify us — to the
       extent the matter is attributable to you — for the reasonable costs we incur, including necessary
       legal fees. We will notify you of any such claim promptly and let you participate reasonably in
       the defence.
     </p>
+    <p lang="ja">
+      ユーザーによる本規約への違反、またはユーザーがアップロードもしくは印刷したコンテンツによる第三者の権利侵害が原因で、
+      当社が第三者からの請求や監督官庁による処分を受けた場合、ユーザーは、自らの責めに帰すべき範囲において、
+      当社がそのために支出した合理的な費用（必要な弁護士費用を含みます）を補償することに同意するものとします。
+      当社は、そのような請求があった場合は速やかに通知し、ユーザーが合理的な範囲で防御に参加できるようにします。
+    </p>
+    <p lang="ko">
+      이용자가 본 약관을 위반하거나 이용자가 업로드 또는 인쇄한 콘텐츠가 제3자의 권리를 침해하여
+      회사가 제3자로부터 청구를 받거나 관계 당국으로부터 처분을 받은 경우, 이용자는 이용자에게 귀책사유가 있는 범위에서
+      회사가 이로 인해 지출한 합리적인 비용(필요한 변호사 비용 포함)을 보상하는 데 동의합니다.
+      회사는 그러한 청구가 있으면 지체 없이 이용자에게 알리고, 이용자가 방어에 합리적으로 참여할 수 있도록 합니다.
+    </p>
   </section>
 
   <!-- 16 ────────────────────────────────────────────────────── -->
   <section id="apple">
-    <h2><span class="num">16</span><span class="zh">Apple 與 Google 相關條款</span><span class="en">Apple and Google provisions</span></h2>
+    <h2><span class="num">16</span><span lang="zh-Hant">Apple 與 Google 相關條款</span><span lang="zh-Hans">Apple 与 Google 相关条款</span><span lang="en">Apple and Google provisions</span><span lang="ja">Apple および Google に関する条項</span><span lang="ko">Apple 및 Google 관련 조항</span></h2>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       以下條款適用於你透過 Apple App Store 取得本 App 的情形，
       並於與本條款其他部分牴觸時，就該牴觸範圍優先適用：
     </p>
-    <ol class="zh">
+    <ol lang="zh-Hant">
       <li><strong>合約當事人：</strong>本條款僅存在於你與我們之間，<strong>與 Apple 無關</strong>。本 App 及其內容由我們單獨負責，Apple 不負任何責任。</li>
       <li><strong>授權範圍：</strong>本 App 的授權為不可轉讓之授權，僅供你在所擁有或控制的 Apple 品牌產品上使用，並受 Apple 媒體服務條款中「使用規範」之拘束。</li>
       <li><strong>維護與支援：</strong>本 App 的維護與技術支援由我們單獨負責，<strong>Apple 無任何提供維護或支援之義務</strong>。</li>
@@ -767,16 +1754,36 @@
       <li><strong>第三方條款：</strong>你必須遵守使用本 App 時所適用之第三方條款。</li>
       <li><strong>第三方受益人：</strong>你同意 <strong>Apple 及其子公司為本條款之第三方受益人</strong>；於你接受本條款時，Apple 有權（並視為已接受該權利）以第三方受益人之地位對你執行本條款。</li>
     </ol>
-    <p class="zh">
+    <p lang="zh-Hant">
       若你透過 Google Play 取得本 App，則另受 Google Play 服務條款拘束；
       該等交易之銷售者為 Google，退款依 Google Play 之政策辦理。
     </p>
+    <p lang="zh-Hans">
+      以下条款适用于你通过 Apple App Store 获取本 App 的情形，
+      并在与本条款其他部分相抵触时，就抵触的范围优先适用：
+    </p>
+    <ol lang="zh-Hans">
+      <li><strong>协议当事人：</strong>本条款仅存在于你与我们之间，<strong>与 Apple 无关</strong>。本 App 及其内容由我们单独负责，Apple 不承担任何责任。</li>
+      <li><strong>许可范围：</strong>本 App 的许可为不可转让的许可，仅供你在所拥有或控制的 Apple 品牌产品上使用，并受 Apple 媒体服务条款和条件中“使用规则”的约束。</li>
+      <li><strong>维护与支持：</strong>本 App 的维护与技术支持由我们单独负责，<strong>Apple 没有任何提供维护或支持的义务</strong>。</li>
+      <li><strong>瑕疵担保：</strong>本 App 的一切瑕疵担保责任由我们单独承担。如果本 App 未能符合任何适用的担保，你可以通知 Apple，Apple 将退还你购买本 App 所支付的价款（如有）；<strong>在法律允许的最大范围内，Apple 就本 App 不承担其他任何担保义务</strong>。</li>
+      <li><strong>产品索赔：</strong>因本 App 产生的任何索赔——包括产品责任、未能符合法律法规要求、消费者保护或隐私相关法规所产生的索赔——由<strong>我们（而非 Apple）</strong>负责处理。</li>
+      <li><strong>知识产权索赔：</strong>如果第三方主张本 App 或你持有及使用本 App 侵犯其知识产权，由<strong>我们（而非 Apple）</strong>单独负责调查、抗辩、和解与清偿。</li>
+      <li><strong>法律合规：</strong>你声明并保证，你并非位于受美国政府禁运或被指定为“支持恐怖主义”的国家，且未被列入任何美国政府的禁止或限制交易名单。</li>
+      <li><strong>开发者名称与联系方式：</strong>就本 App 的任何疑问、投诉或索赔，请联系八西欧科技有限公司（统一编号 60773047），电子邮件 <a href="mailto:support@pibook.app">support@pibook.app</a>。本公司依中华民国法律设立登记；公司登记地址可在台湾经济部“商工登记公示资料查询服务”（<a href="https://findbiz.nat.gov.tw/" target="_blank" rel="noopener noreferrer">findbiz.nat.gov.tw</a>）以统一编号 60773047 查询。</li>
+      <li><strong>第三方条款：</strong>你必须遵守使用本 App 时所适用的第三方条款。</li>
+      <li><strong>第三方受益人：</strong>你同意 <strong>Apple 及其子公司为本条款的第三方受益人</strong>；在你接受本条款时，Apple 有权（并被视为已接受该权利）以第三方受益人的身份对你执行本条款。</li>
+    </ol>
+    <p lang="zh-Hans">
+      如果你通过 Google Play 获取本 App，则另受 Google Play 服务条款的约束；
+      该等交易的销售方为 Google，退款按照 Google Play 的政策办理。
+    </p>
 
-    <p class="en">
+    <p lang="en">
       The following apply where you obtained the App from the Apple App Store and prevail over any
       conflicting provision of these Terms to the extent of the conflict:
     </p>
-    <ol class="en">
+    <ol lang="en">
       <li><strong>Acknowledgement.</strong> These Terms are between you and us only, and <strong>not with Apple</strong>. We alone are responsible for the App and its content.</li>
       <li><strong>Scope of licence.</strong> The licence granted is non-transferable and limited to use on Apple-branded products that you own or control, subject to the Usage Rules in Apple’s Media Services Terms and Conditions.</li>
       <li><strong>Maintenance and support.</strong> We are solely responsible for maintenance and support services. <strong>Apple has no obligation whatsoever to furnish any maintenance or support.</strong></li>
@@ -788,83 +1795,198 @@
       <li><strong>Third-party terms.</strong> You must comply with applicable third-party terms of agreement when using the App.</li>
       <li><strong>Third-party beneficiary.</strong> You acknowledge and agree that <strong>Apple and Apple’s subsidiaries are third-party beneficiaries of these Terms</strong>, and that upon your acceptance Apple will have the right (and will be deemed to have accepted the right) to enforce these Terms against you as a third-party beneficiary.</li>
     </ol>
-    <p class="en">
+    <p lang="en">
       Where you obtained the App from Google Play, the Google Play Terms of Service also apply; Google is
       the seller of record for those transactions and refunds follow Google Play’s policies.
+    </p>
+    <p lang="ja">
+      以下の条項は、ユーザーが Apple App Store から本アプリを入手した場合に適用され、
+      本規約の他の部分と矛盾する場合は、その矛盾する範囲において優先して適用されます。
+    </p>
+    <ol lang="ja">
+      <li><strong>契約当事者：</strong>本規約はユーザーと当社との間にのみ存在し、<strong>Apple との間の契約ではありません</strong>。本アプリおよびそのコンテンツについては当社が単独で責任を負い、Apple は一切の責任を負いません。</li>
+      <li><strong>使用許諾の範囲：</strong>本アプリの使用許諾は譲渡不能であり、ユーザーが所有または管理する Apple ブランドの製品上での使用に限られ、Apple メディアサービス利用規約の「使用ルール」に従うものとします。</li>
+      <li><strong>保守とサポート：</strong>本アプリの保守および技術サポートは当社が単独で責任を負い、<strong>Apple は保守またはサポートを提供する義務を一切負いません</strong>。</li>
+      <li><strong>瑕疵担保：</strong>本アプリに関する一切の瑕疵担保責任は当社が単独で負います。本アプリが適用されるいずれかの保証に適合しない場合、ユーザーは Apple に通知することができ、Apple はユーザーが本アプリの購入に支払った代金（ある場合）を返金します。<strong>法律で認められる最大限の範囲で、Apple は本アプリに関してその他いかなる保証義務も負いません</strong>。</li>
+      <li><strong>製品に関する請求：</strong>本アプリに起因するあらゆる請求（製造物責任、法令上の要件への不適合、消費者保護またはプライバシーに関する法令に基づく請求を含みます）への対応は、<strong>Apple ではなく当社</strong>が責任を負います。</li>
+      <li><strong>知的財産権に関する請求：</strong>本アプリ、またはユーザーによる本アプリの保有および使用が第三者の知的財産権を侵害するとの主張がなされた場合、その調査、防御、和解および弁済については、<strong>Apple ではなく当社</strong>が単独で責任を負います。</li>
+      <li><strong>法令の遵守：</strong>ユーザーは、米国政府による禁輸措置の対象国または「テロ支援国家」に指定された国に所在していないこと、および米国政府の取引禁止または取引制限の対象者リストに記載されていないことを表明し、保証するものとします。</li>
+      <li><strong>開発者の名称と連絡先：</strong>本アプリに関するご質問、苦情または請求は、8CO Technology Co., Ltd.（八西歐科技有限公司、統一編号 60773047）までお寄せください。メールアドレスは <a href="mailto:support@pibook.app">support@pibook.app</a> です。当社は中華民国の法律に基づいて設立登記された会社です。当社の登記住所は、台湾経済部の「商工登記公示資料検索サービス」（<a href="https://findbiz.nat.gov.tw/" target="_blank" rel="noopener noreferrer">findbiz.nat.gov.tw</a>）で、統一編号 60773047 により検索できます。</li>
+      <li><strong>第三者の規約：</strong>本アプリを使用する際は、適用される第三者の規約を遵守する必要があります。</li>
+      <li><strong>第三受益者：</strong>ユーザーは、<strong>Apple およびその子会社が本規約の第三受益者である</strong>ことに同意します。ユーザーが本規約に同意した時点で、Apple は第三受益者として本規約をユーザーに対して執行する権利を有し、その権利を受諾したものとみなされます。</li>
+    </ol>
+    <p lang="ja">
+      ユーザーが Google Play から本アプリを入手した場合は、Google Play 利用規約にも従うものとします。
+      これらの取引の販売者は Google であり、返金は Google Play のポリシーに従って取り扱われます。
+    </p>
+    <p lang="ko">
+      다음 조항은 이용자가 Apple App Store를 통해 본 앱을 취득한 경우에 적용되며,
+      본 약관의 다른 부분과 충돌하는 경우 그 충돌하는 범위에서 우선 적용됩니다.
+    </p>
+    <ol lang="ko">
+      <li><strong>계약 당사자:</strong> 본 약관은 이용자와 회사 사이에만 존재하며 <strong>Apple과는 무관합니다</strong>. 본 앱과 그 콘텐츠에 대한 책임은 회사가 단독으로 지며, Apple은 어떠한 책임도 지지 않습니다.</li>
+      <li><strong>사용권의 범위:</strong> 본 앱의 사용권은 양도할 수 없는 사용권으로, 이용자가 소유하거나 관리하는 Apple 브랜드 제품에서만 사용할 수 있으며 Apple 미디어 서비스 이용 약관의 ‘사용 규칙’을 따릅니다.</li>
+      <li><strong>유지 보수 및 지원:</strong> 본 앱의 유지 보수와 기술 지원은 회사가 단독으로 책임지며, <strong>Apple은 유지 보수나 지원을 제공할 의무가 전혀 없습니다</strong>.</li>
+      <li><strong>보증:</strong> 본 앱에 관한 모든 하자담보책임은 회사가 단독으로 부담합니다. 본 앱이 적용되는 보증에 부합하지 않는 경우 이용자는 Apple에 이를 알릴 수 있으며, Apple은 이용자가 본 앱 구매 시 지불한 금액(있는 경우)을 환불합니다. <strong>법이 허용하는 최대 범위에서, Apple은 본 앱과 관련하여 그 밖의 어떠한 보증 의무도 지지 않습니다</strong>.</li>
+      <li><strong>제품 관련 청구:</strong> 본 앱과 관련하여 발생하는 모든 청구(제조물 책임, 법령상 요구 사항 미준수, 소비자 보호 또는 개인정보 관련 법규에 따른 청구 포함)는 <strong>Apple이 아닌 회사</strong>가 처리할 책임이 있습니다.</li>
+      <li><strong>지식재산권 관련 청구:</strong> 제3자가 본 앱 또는 이용자의 본 앱 보유 및 사용이 자신의 지식재산권을 침해한다고 주장하는 경우, 그 조사, 방어, 합의 및 배상은 <strong>Apple이 아닌 회사</strong>가 단독으로 책임집니다.</li>
+      <li><strong>법령 준수:</strong> 이용자는 미국 정부의 금수 조치 대상 국가 또는 ‘테러 지원국’으로 지정된 국가에 있지 않으며, 미국 정부의 거래 금지 또는 제한 대상자 명단에 올라 있지 않음을 진술하고 보증합니다.</li>
+      <li><strong>개발자 이름 및 연락처:</strong> 본 앱에 관한 문의, 불만 또는 청구는 8CO Technology Co., Ltd.(八西歐科技有限公司, 대만 사업자 통일번호 60773047)에 연락해 주시기 바랍니다(이메일: <a href="mailto:support@pibook.app">support@pibook.app</a>). 회사는 중화민국(대만) 법률에 따라 설립·등기된 법인이며, 회사의 등기 주소는 대만 경제부의 ‘상공업 등기 공시 자료 조회 서비스’(<a href="https://findbiz.nat.gov.tw/" target="_blank" rel="noopener noreferrer">findbiz.nat.gov.tw</a>)에서 사업자 통일번호 60773047로 조회할 수 있습니다.</li>
+      <li><strong>제3자 약관:</strong> 이용자는 본 앱을 이용할 때 적용되는 제3자 약관을 준수해야 합니다.</li>
+      <li><strong>제3자 수익자:</strong> 이용자는 <strong>Apple 및 그 자회사가 본 약관의 제3자 수익자</strong>임에 동의하며, 이용자가 본 약관을 수락하는 때에 Apple은 제3자 수익자로서 이용자에 대하여 본 약관을 집행할 권리를 가지게 됩니다(Apple은 이 권리를 수락한 것으로 간주됩니다).</li>
+    </ol>
+    <p lang="ko">
+      이용자가 Google Play를 통해 본 앱을 취득한 경우에는 Google Play 서비스 약관도 적용됩니다.
+      이러한 거래의 판매자는 Google이며, 환불은 Google Play의 정책에 따릅니다.
     </p>
   </section>
 
   <!-- 17 ────────────────────────────────────────────────────── -->
   <section id="law">
-    <h2><span class="num">17</span><span class="zh">準據法與爭議解決</span><span class="en">Governing law and disputes</span></h2>
+    <h2><span class="num">17</span><span lang="zh-Hant">準據法與爭議解決</span><span lang="zh-Hans">适用法律与争议解决</span><span lang="en">Governing law and disputes</span><span lang="ja">準拠法と紛争解決</span><span lang="ko">준거법 및 분쟁 해결</span></h2>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       本條款之解釋與適用，以及因本條款所生之爭議，均以<strong>中華民國（台灣）法律</strong>為準據法。
     </p>
-    <p class="zh">
+    <p lang="zh-Hant">
       發生爭議時，請先來信 <a href="mailto:support@pibook.app">support@pibook.app</a>，
       我們會誠信與你協商。協商未果時，雙方合意以<strong>台灣臺北地方法院</strong>為第一審管轄法院。
     </p>
-    <div class="callout zh">
+    <div lang="zh-Hant" class="callout">
       <p>前項管轄約定<strong>不排除</strong>你依《消費者保護法》或其他強制規定，
       向你住所地法院起訴或向消費者保護團體、直轄市或縣市政府消費者服務中心申訴的權利。
       若你是位於歐洲經濟區的消費者，你仍得主張你經常居所地強制規定所給予的保護。</p>
     </div>
+    <p lang="zh-Hans">
+      本条款的解释与适用，以及因本条款产生的争议，均以<strong>中华民国（台湾）法律</strong>为适用法律。
+    </p>
+    <p lang="zh-Hans">
+      发生争议时，请先发邮件至 <a href="mailto:support@pibook.app">support@pibook.app</a>，
+      我们会本着诚信原则与你协商。协商不成时，双方同意以<strong>台湾台北地方法院</strong>为第一审管辖法院。
+    </p>
+    <div lang="zh-Hans" class="callout">
+      <p>前述管辖约定<strong>不排除</strong>你依据《消费者保护法》或其他强制性规定，
+      向你住所地法院起诉，或向消费者保护团体、直辖市或县市政府消费者服务中心申诉的权利。
+      如果你是位于欧洲经济区的消费者，你仍可主张你经常居住地强制性规定所给予的保护。</p>
+    </div>
 
-    <p class="en">
+    <p lang="en">
       These Terms and any dispute arising from them are governed by the laws of the
       <strong>Republic of China (Taiwan)</strong>.
     </p>
-    <p class="en">
+    <p lang="en">
       If a dispute arises, please write to <a href="mailto:support@pibook.app">support@pibook.app</a>
       first; we will negotiate in good faith. Failing that, the parties agree that the
       <strong>Taipei District Court</strong> shall be the court of first instance.
     </p>
-    <div class="callout en">
+    <div lang="en" class="callout">
       <p>That jurisdiction clause does <strong>not</strong> remove your right, under the Consumer
       Protection Act or other mandatory rules, to sue in the court where you live or to complain to a
       consumer protection body or a municipal consumer service centre. If you are a consumer in the
       EEA, you keep the protection of the mandatory rules of your country of habitual residence.</p>
     </div>
+    <p lang="ja">
+      本規約の解釈および適用、ならびに本規約に起因する紛争については、<strong>中華民国（台湾）の法律</strong>を準拠法とします。
+    </p>
+    <p lang="ja">
+      紛争が生じた場合は、まず <a href="mailto:support@pibook.app">support@pibook.app</a> までご連絡ください。
+      当社は誠実に協議します。協議が調わない場合、両当事者は<strong>台湾台北地方法院</strong>を第一審の管轄裁判所とすることに合意します。
+    </p>
+    <div lang="ja" class="callout">
+      <p>前項の管轄の合意は、「消費者保護法」その他の強行規定に基づき、ユーザーが自らの住所地の裁判所に訴えを提起する権利、
+      または消費者保護団体、直轄市もしくは県・市の政府の消費者サービスセンターに苦情を申し立てる権利を<strong>排除するものではありません</strong>。
+      ユーザーが欧州経済領域に所在する消費者である場合は、常居所地の強行規定によって与えられる保護を引き続き主張することができます。</p>
+    </div>
+    <p lang="ko">
+      본 약관의 해석과 적용, 그리고 본 약관으로 인해 발생하는 분쟁에는 <strong>중화민국(대만) 법률</strong>을 준거법으로 적용합니다.
+    </p>
+    <p lang="ko">
+      분쟁이 발생하면 먼저 <a href="mailto:support@pibook.app">support@pibook.app</a>에 메일을 보내 주시기 바랍니다.
+      회사는 성실하게 이용자와 협의합니다. 협의가 이루어지지 않는 경우, 양 당사자는 <strong>대만 타이베이 지방법원</strong>을 제1심 관할 법원으로 하는 데 합의합니다.
+    </p>
+    <div lang="ko" class="callout">
+      <p>위의 관할 합의는 이용자가 대만 소비자보호법 또는 그 밖의 강행 규정에 따라
+      이용자의 주소지 법원에 소를 제기하거나, 소비자 보호 단체 또는 직할시·현·시 정부의 소비자 서비스 센터에 민원을 제기할 권리를 <strong>배제하지 않습니다</strong>.
+      이용자가 유럽경제지역(EEA)에 있는 소비자인 경우, 이용자는 여전히 상거소지의 강행 규정이 부여하는 보호를 주장할 수 있습니다.</p>
+    </div>
   </section>
 
   <!-- 18 ────────────────────────────────────────────────────── -->
   <section id="misc">
-    <h2><span class="num">18</span><span class="zh">其他約定</span><span class="en">General</span></h2>
+    <h2><span class="num">18</span><span lang="zh-Hant">其他約定</span><span lang="zh-Hans">其他约定</span><span lang="en">General</span><span lang="ja">その他の定め</span><span lang="ko">기타 조항</span></h2>
 
-    <ul class="zh">
+    <ul lang="zh-Hant">
       <li><strong>條款變更：</strong>我們可能修訂本條款。重大變更將於生效前至少 <strong>30 日</strong>在 App 內或本網站公告；若你不同意，可停止使用並刪除帳號，已付費而尚未使用的期間我們會依比例協助處理。</li>
       <li><strong>可分性：</strong>本條款任一部分若被認定無效，其餘部分仍繼續有效。</li>
       <li><strong>不棄權：</strong>我們未行使或延遲行使任何權利，不構成棄權。</li>
       <li><strong>轉讓：</strong>你不得轉讓本條款下的權利義務。我們得於企業併購或資產移轉時轉讓，並事先通知你。</li>
       <li><strong>完整合意：</strong>本條款與<a href="/privacy/">隱私權政策</a>構成雙方就本服務之完整合意。</li>
-      <li><strong>語言：</strong>本條款以繁體中文撰寫，英文版係為方便閱讀所提供之譯本。兩者如有歧異，<strong>以繁體中文版為準</strong>。</li>
+      <li><strong>語言：</strong>本條款以繁體中文撰寫，英文、簡體中文、日文與韓文版本係為方便閱讀所提供之譯本。各版本如有歧異，<strong>以繁體中文版為準</strong>。</li>
+    </ul>
+    <ul lang="zh-Hans">
+      <li><strong>条款变更：</strong>我们可能修订本条款。重大变更将在生效前至少 <strong>30 日</strong>在 App 内或本网站公告；如果你不同意，可以停止使用并删除账号，对于已付费但尚未使用的期间，我们会按比例协助处理。</li>
+      <li><strong>可分割性：</strong>本条款任一部分如被认定无效，其余部分仍继续有效。</li>
+      <li><strong>不放弃权利：</strong>我们未行使或延迟行使任何权利，不构成对该权利的放弃。</li>
+      <li><strong>转让：</strong>你不得转让本条款下的权利义务。我们可以在企业并购或资产转让时转让，并会事先通知你。</li>
+      <li><strong>完整协议：</strong>本条款与<a href="/privacy/">隐私权政策</a>构成双方就本服务达成的完整协议。</li>
+      <li><strong>语言：</strong>本条款以繁体中文撰写，英文、简体中文、日文与韩文版本是为方便阅读而提供的译本。各版本如有不一致之处，<strong>以繁体中文版为准</strong>。</li>
     </ul>
 
-    <ul class="en">
+    <ul lang="en">
       <li><strong>Changes.</strong> We may revise these Terms. Material changes will be announced in the App or on this site at least <strong>30 days</strong> before they take effect; if you disagree you may stop using the Service and delete your account, and we will help settle any paid but unused period proportionately.</li>
       <li><strong>Severability.</strong> If any part is held invalid, the rest remains in force.</li>
       <li><strong>No waiver.</strong> Failure or delay in exercising a right is not a waiver of it.</li>
       <li><strong>Assignment.</strong> You may not assign your rights or obligations. We may assign in a merger or transfer of assets, with prior notice to you.</li>
       <li><strong>Entire agreement.</strong> These Terms and the <a href="/privacy/">Privacy Policy</a> are the entire agreement between us regarding the Service.</li>
-      <li><strong>Language.</strong> These Terms are written in Traditional Chinese; the English text is a convenience translation. <strong>In the event of any discrepancy, the Traditional Chinese version prevails.</strong></li>
+      <li><strong>Language.</strong> These Terms are written in Traditional Chinese; the English, Simplified Chinese, Japanese and Korean texts are convenience translations. <strong>In the event of any discrepancy, the Traditional Chinese version prevails.</strong></li>
+    </ul>
+    <ul lang="ja">
+      <li><strong>規約の変更：</strong>当社は本規約を改定することがあります。重要な変更については、効力が生じる少なくとも <strong>30 日</strong>前に、本アプリ内または本ウェブサイトでお知らせします。変更に同意いただけない場合は、利用をやめてアカウントを削除することができ、支払い済みで未使用の期間については、当社が按分による対応をお手伝いします。</li>
+      <li><strong>分離可能性：</strong>本規約のいずれかの部分が無効と判断された場合でも、その他の部分は引き続き有効とします。</li>
+      <li><strong>権利の不放棄：</strong>当社がいずれかの権利を行使しないこと、または行使が遅れたことは、その権利の放棄を意味するものではありません。</li>
+      <li><strong>譲渡：</strong>ユーザーは、本規約に基づく権利義務を譲渡することはできません。当社は、合併・買収または資産の譲渡に際してこれを譲渡することができ、その場合は事前にユーザーに通知します。</li>
+      <li><strong>完全合意：</strong>本規約と<a href="/privacy/">プライバシーポリシー</a>は、本サービスに関する両当事者間の完全な合意を構成します。</li>
+      <li><strong>言語：</strong>本規約は繁体字中国語で作成されており、英語、簡体字中国語、日本語および韓国語の各版は、読みやすさのために提供する翻訳です。各版の内容に相違がある場合は、<strong>繁体字中国語版が優先します</strong>。</li>
+    </ul>
+    <ul lang="ko">
+      <li><strong>약관의 변경:</strong> 회사는 본 약관을 개정할 수 있습니다. 중대한 변경은 시행 최소 <strong>30일</strong> 전에 앱 또는 본 웹사이트에 공지합니다. 이용자가 변경에 동의하지 않는 경우 이용을 중단하고 계정을 삭제할 수 있으며, 이미 결제했으나 아직 사용하지 않은 기간은 회사가 기간에 비례하여 처리할 수 있도록 돕습니다.</li>
+      <li><strong>분리 가능성:</strong> 본 약관의 일부가 무효로 판단되더라도 나머지 부분은 계속 효력을 가집니다.</li>
+      <li><strong>권리의 불포기:</strong> 회사가 어떠한 권리를 행사하지 않거나 늦게 행사하더라도 이는 권리의 포기에 해당하지 않습니다.</li>
+      <li><strong>양도:</strong> 이용자는 본 약관에 따른 권리와 의무를 양도할 수 없습니다. 회사는 기업 인수·합병 또는 자산 양도 시 이를 양도할 수 있으며, 이 경우 이용자에게 미리 알립니다.</li>
+      <li><strong>완전한 합의:</strong> 본 약관과 <a href="/privacy/">개인정보 처리방침</a>은 본 서비스에 관한 양 당사자 간의 완전한 합의를 구성합니다.</li>
+      <li><strong>언어:</strong> 본 약관은 번체 중국어로 작성되었으며, 영어, 간체 중국어, 일본어 및 한국어 버전은 읽기 편의를 위해 제공되는 번역본입니다. 각 버전 사이에 차이가 있는 경우 <strong>번체 중국어 버전이 우선합니다</strong>.</li>
     </ul>
   </section>
 
   <!-- 19 ────────────────────────────────────────────────────── -->
   <section id="contact">
-    <h2><span class="num">19</span><span class="zh">聯絡我們</span><span class="en">Contact</span></h2>
+    <h2><span class="num">19</span><span lang="zh-Hant">聯絡我們</span><span lang="zh-Hans">联系我们</span><span lang="en">Contact</span><span lang="ja">お問い合わせ</span><span lang="ko">문의처</span></h2>
 
-    <p class="zh">
+    <p lang="zh-Hant">
       八西歐科技有限公司<br>
       統一編號：60773047<br>
       電子郵件：<a href="mailto:support@pibook.app">support@pibook.app</a>
     </p>
+    <p lang="zh-Hans">
+      八西欧科技有限公司<br>
+      统一编号：60773047<br>
+      电子邮件：<a href="mailto:support@pibook.app">support@pibook.app</a>
+    </p>
 
-    <p class="en">
+    <p lang="en">
       8CO Technology Co., Ltd.<br>
       Taiwan Unified Business No.: 60773047<br>
       Email: <a href="mailto:support@pibook.app">support@pibook.app</a>
+    </p>
+    <p lang="ja">
+      8CO Technology Co., Ltd.（八西歐科技有限公司）<br>
+      台湾統一編号：60773047<br>
+      メールアドレス：<a href="mailto:support@pibook.app">support@pibook.app</a>
+    </p>
+    <p lang="ko">
+      8CO Technology Co., Ltd.(八西歐科技有限公司)<br>
+      대만 사업자 통일번호: 60773047<br>
+      이메일: <a href="mailto:support@pibook.app">support@pibook.app</a>
     </p>
   </section>
 
@@ -874,22 +1996,40 @@
 <footer class="site-footer">
   <div class="inner">
     <nav>
-      <a href="/"><span class="zh">首頁</span><span class="en">Home</span></a>
-      <a href="/privacy/"><span class="zh">隱私權政策</span><span class="en">Privacy Policy</span></a>
-      <a href="/terms/"><span class="zh">服務條款</span><span class="en">Terms of Use</span></a>
-      <a href="/support/"><span class="zh">支援</span><span class="en">Support</span></a>
-      <a href="/delete-account/"><span class="zh">刪除帳號</span><span class="en">Delete Account</span></a>
+      <a href="/"><span lang="zh-Hant">首頁</span><span lang="zh-Hans">首页</span><span lang="en">Home</span><span lang="ja">ホーム</span><span lang="ko">홈</span></a>
+      <a href="/privacy/"><span lang="zh-Hant">隱私權政策</span><span lang="zh-Hans">隐私权政策</span><span lang="en">Privacy Policy</span><span lang="ja">プライバシーポリシー</span><span lang="ko">개인정보 처리방침</span></a>
+      <a href="/terms/"><span lang="zh-Hant">服務條款</span><span lang="zh-Hans">服务条款</span><span lang="en">Terms of Use</span><span lang="ja">利用規約</span><span lang="ko">이용약관</span></a>
+      <a href="/support/"><span lang="zh-Hant">支援</span><span lang="zh-Hans">支持</span><span lang="en">Support</span><span lang="ja">サポート</span><span lang="ko">지원</span></a>
+      <a href="/delete-account/"><span lang="zh-Hant">刪除帳號</span><span lang="zh-Hans">删除账号</span><span lang="en">Delete Account</span><span lang="ja">アカウント削除</span><span lang="ko">계정 삭제</span></a>
     </nav>
     <div class="legal">
-      <span class="zh">
+      <span lang="zh-Hant">
         八西歐科技有限公司<br>
         統一編號 60773047<br>
         support@pibook.app<br>
         © 2026 Pibook. 保留一切權利。
       </span>
-      <span class="en">
+      <span lang="zh-Hans">
+        八西欧科技有限公司<br>
+        统一编号 60773047<br>
+        support@pibook.app<br>
+        © 2026 Pibook. 保留所有权利。
+      </span>
+      <span lang="en">
         8CO Technology Co., Ltd.<br>
         Tax ID 60773047<br>
+        support@pibook.app<br>
+        © 2026 Pibook. All rights reserved.
+      </span>
+      <span lang="ja">
+        8CO Technology Co., Ltd.<br>
+        統一編号 60773047<br>
+        support@pibook.app<br>
+        © 2026 Pibook. All rights reserved.
+      </span>
+      <span lang="ko">
+        8CO Technology Co., Ltd.<br>
+        사업자 통일번호 60773047<br>
         support@pibook.app<br>
         © 2026 Pibook. All rights reserved.
       </span>
@@ -898,6 +2038,6 @@
 </footer>
 <!-- @/partial:footer -->
 
-<script src="/assets/lang.js"></script>
+<script src="/assets/lang.js?v=20260925"></script>
 </body>
 </html>
