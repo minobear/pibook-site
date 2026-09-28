@@ -367,3 +367,6 @@ html[lang="en"] .sub { font-size: 15px; }
   background: transparent;
   box-shadow: 0 0 0 3px rgba(199,95,78,.9), 0 0 0 8px rgba(232,128,110,.18);
 }
+
+/* 韓文只在字與字之間換行（預設會把「앨범」這種詞從中間折斷） */
+html[lang="ko"] h1, html[lang="ko"] .sub, html[lang="ko"] .check-row { word-break: keep-all; }

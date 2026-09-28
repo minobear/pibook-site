@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>截圖 04 — 圖庫</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;700&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap">
+<link rel="stylesheet" href="../../assets/phone.css">
+<link rel="stylesheet" href="../press.css">
+<style>:root{--pb-sans:"Noto Sans JP", sans-serif;--pb-serif:"Noto Serif JP", serif}</style>
+</head>
+<body>
+<div class="board">
+
+  <div class="copy">
+    <div class="kicker">ギャラリー</div>
+    <h1>整理済みもアルバムも<br>ひと目でわかる</h1>
+    <p class="sub">左上の点は整理済みのしるし<br>右上の数字は入っているアルバム数</p>
+  </div>
+
+  <div class="stage stage--bleed">
+    <svg class="spark" style="left:5%;top:2%" width="22" height="22" viewBox="0 0 24 24"><path d="M12 0C13 7 17 11 24 12 17 13 13 17 12 24 11 17 7 13 0 12 7 11 11 7 12 0Z" fill="#F6C453"/></svg>
+
+    <!-- 座標以手機左上角為原點（手機 372.6×756，螢幕從 10.8 開始、1080px 素材縮 0.325） -->
+    <div class="phone-wrap" style="margin-top:10px">
+      <div class="phone-fit" style="--ps:.9"><div class="phone"><div class="scr scr--img">
+        <img class="shot" src="../../assets/shots/ja/gallery_hd.jpg" alt="圖庫：今天整理過的照片左上角有點、收進相簿的右上角有相簿數">
+      </div></div></div>
+
+      <!-- 手機畫面輕輕壓暗，讓特寫卡浮出來（格線仍看得見，只是退到背景） -->
+      <div class="ov" style="left:10.8px;top:10.8px;width:351px;height:734.4px;border-radius:40px;background:rgba(24,33,42,.30);z-index:2"></div>
+
+      <!-- 特寫：第一格（朋友自拍）放大。標記在卡上的位置：藍點 (11.8%,11.8%)、相簿數 (72.5%,17.4%) -->
+      <div class="ov zoom-card zoom-card--framed" style="left:96px;top:196px;width:256px;height:256px;z-index:4">
+        <img src="../../assets/shots/gallery_badge_hd.jpg" alt="縮圖特寫：左上角整理狀態、右上角相簿數">
+      </div>
+
+      <!-- 標記外圈＋引線：引線停在圈外，不蓋住標記本身 -->
+      <svg class="ov" style="left:0;top:0;z-index:5;overflow:visible" width="373" height="756">
+        <circle cx="130.5" cy="230.5" r="17" fill="none" stroke="#fff" stroke-width="3"/>
+        <line x1="87" y1="230.5" x2="109" y2="230.5" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+        <rect x="221" y="213" width="117" height="62" rx="31" fill="none" stroke="#fff" stroke-width="3"/>
+        <line x1="279.5" y1="180" x2="279.5" y2="209" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+      </svg>
+
+      <div class="ov callout callout--blue" style="right:calc(100% - 84px);top:211px;z-index:6">
+        <span class="dot"><svg width="11" height="11" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="#fff"/></svg></span>
+        整理済み
+      </div>
+      <div class="ov callout callout--coral" style="left:279.5px;top:138px;transform:translateX(-50%);z-index:6">
+        <span class="dot"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="5" y="8" width="14" height="11" rx="2.5" fill="#fff"/><path d="M8 5.5h8" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></span>
+        アルバムに追加済み
+      </div>
+    </div>
+  </div>
+</div>
+<script src="../press.js"></script>
+</body>
+</html>

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# 商店截圖輸出：無頭 Chrome 把每張畫板渲染成 PNG → 主 repo 的 store_assets/screenshots/。
+# 商店截圖輸出：無頭 Chrome 把每張畫板渲染成 PNG → 主 repo 的 store_assets/screenshots/<語言>/
+# （繁中 zh-Hant、簡中 zh-Hans、en、ja、ko；zh 這個代號就是繁中畫板，放在 press/ 根目錄）。
 #
 # 同一套畫板、同一份素材，App Store 與 Google Play 共用（畫板完全不畫狀態列）。
 # 只差「畫布尺寸」，因為兩家的比例規定互斥，一張圖不可能同時上兩邊：
@@ -7,7 +8,7 @@
 #   1080x1920：Google Play 手機截圖（Play 規定長邊不得超過短邊兩倍，1290x2796 會被擋）
 # 用法：bash render.sh [畫板編號…]（不帶參數＝全部）
 #   SIZES="1290x2796" bash render.sh   只出其中一種尺寸
-#   LOCALES="zh en" bash render.sh     連英文一起出（英文畫板在 en/，尚未照新設計重做）
+#   LOCALES="zh en ja ko zh-Hans" bash render.sh   全部語言一起出（其他語言的畫板在 <語言>/，由 make_boards.py 產生）
 #
 # ⚠️ 為什麼不用 --force-device-scale-factor=3 ＋ 小視窗（舊版寫法）：
 #    實測 `--window-size=360,640 --force-device-scale-factor=3` 的 CSS 視窗是
@@ -53,7 +54,7 @@ boards=("$@")
 if [ ${#boards[@]} -eq 0 ]; then boards=(01 02 03 04 05 06 07); fi
 
 for loc in $LOCALES; do
-  if [ "$loc" = "zh" ]; then src="."; dst="$OUT"; else src="$loc"; dst="$OUT/$loc"; fi
+  if [ "$loc" = "zh" ]; then src="."; dst="$OUT/zh-Hant"; else src="$loc"; dst="$OUT/$loc"; fi
   for b in "${boards[@]}"; do
     f=$(ls $src/${b}_*.html 2>/dev/null | head -1)
     [ -z "$f" ] && { echo "跳過 $loc/$b（找不到畫板）"; continue; }
@@ -80,4 +81,4 @@ if fs:
     sheet.save(os.path.join(d, '總覽.jpg'), quality=88)
 PYEOF
 done
-echo "輸出：store_assets/screenshots/1290x2796（App Store）與 1080x1920（Google Play）"
+echo "輸出：store_assets/screenshots/<語言>/1290x2796（App Store）與 1080x1920（Google Play）"
