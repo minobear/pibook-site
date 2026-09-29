@@ -6,5 +6,7 @@ Disallow: /privacy.html
 Disallow: /terms.html
 Disallow: /support.html
 Disallow: /delete-account.html
+# 邀請頁：每個人一組碼，沒有值得收錄的內容（頁面本身也帶 noindex）
+Disallow: /i/
 
 Sitemap: https://pibook.app/sitemap.xml
