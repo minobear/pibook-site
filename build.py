@@ -34,6 +34,7 @@ PAGES = [
     ROOT / 'terms' / 'index.html',
     ROOT / 'support' / 'index.html',
     ROOT / 'delete-account' / 'index.html',
+    ROOT / 'i' / 'index.html',
 ]
 
 PARTIAL_NAMES = ('head', 'header', 'footer')

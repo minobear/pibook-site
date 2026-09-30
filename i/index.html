@@ -1,121 +1,373 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-Hant" data-lang="zh-Hant">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>拍簿邀請碼 — Pibook</title>
+<title>朋友邀請你一起用拍簿 — 拍簿 Pibook</title>
+<script type="application/json" id="page-titles">{"zh-Hant": "朋友邀請你一起用拍簿 — 拍簿 Pibook", "zh-Hans": "朋友邀请你一起用拍簿 — 拍簿 Pibook", "en": "A friend invited you to Pibook", "ja": "友だちから Pibook への招待", "ko": "친구가 Pibook에 초대했어요"}</script>
+<!-- @partial:head -->
+<script>
+(function (d, w) {
+  var LANGS = ['zh-Hant', 'zh-Hans', 'en', 'ja', 'ko'];
+  var KEY = 'pibook-lang';
+  var FONTS = {
+    'zh-Hant': 'family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700',
+    'zh-Hans': 'family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@500;700',
+    'ja': 'family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;700',
+    'ko': 'family=Noto+Sans+KR:wght@400;500;700'
+  };
+
+  function norm(tag) { return String(tag || '').toLowerCase().replace(/_/g, '-'); }
+
+  /* 中文分繁簡：先看文字（Hant／Hans），再看地區 —— 台灣、香港、澳門與粵語是繁體，
+     中國、新加坡、馬來西亞是簡體。只寫「zh」答不出來，回 null。 */
+  function chinese(t) {
+    if (/-hans(-|$)/.test(t)) return 'zh-Hans';
+    if (/-hant(-|$)/.test(t) || /^yue(-|$)/.test(t) || /-(tw|hk|mo)(-|$)/.test(t)) return 'zh-Hant';
+    if (/-(cn|sg|my)(-|$)/.test(t)) return 'zh-Hans';
+    return null;
+  }
+
+  /* 一個語言標籤 → 我們有的語言；沒有就回 null，讓清單裡的下一個接手。 */
+  function match(tag, rest) {
+    var t = norm(tag);
+    if (!t) return null;
+    var base = t.split('-')[0];
+    if (base === 'zh' || base === 'yue') {
+      var v = chinese(t);
+      if (v) return v;
+      // 只寫「zh」：看清單後面有沒有更明確的中文，沒有就當簡體。
+      for (var j = 0; rest && j < rest.length; j++) {
+        var r = chinese(norm(rest[j]));
+        if (r) return r;
+      }
+      return 'zh-Hans';
+    }
+    if (base === 'en') return 'en';
+    if (base === 'ja') return 'ja';
+    if (base === 'ko') return 'ko';
+    return null;
+  }
+
+  function pick() {
+    var q = /[?&]lang=([^&#]+)/.exec(w.location.search);
+    var fromUrl = null;
+    try { fromUrl = q && match(decodeURIComponent(q[1])); } catch (e) { /* 網址參數壞掉就忽略 */ }
+    if (fromUrl) return fromUrl;
+    try {
+      var saved = w.localStorage.getItem(KEY);
+      if (LANGS.indexOf(saved) >= 0) return saved;
+    } catch (e) { /* 隱私模式或被封鎖：往下用裝置語言 */ }
+    var list = (w.navigator.languages && w.navigator.languages.length)
+      ? w.navigator.languages : [w.navigator.language || w.navigator.userLanguage];
+    for (var i = 0; i < list.length; i++) {
+      var m = match(list[i], list.slice(i + 1));
+      if (m) return m;
+    }
+    return 'en';
+  }
+
+  function loadFont(lang) {
+    var set = lang === 'en' ? 'zh-Hant' : lang;
+    if (d.getElementById('pb-font-' + set)) return;
+    var link = d.createElement('link');
+    link.rel = 'stylesheet';
+    link.id = 'pb-font-' + set;
+    link.href = 'https://fonts.googleapis.com/css2?' + FONTS[set] + '&display=swap';
+    d.head.appendChild(link);
+  }
+
+  function title(lang) {
+    var el = d.getElementById('page-titles');
+    if (!el) return;
+    try {
+      var map = JSON.parse(el.textContent);
+      if (map[lang]) d.title = map[lang];
+    } catch (e) { /* 標題維持原樣 */ }
+  }
+
+  function apply(lang) {
+    var root = d.documentElement;
+    root.setAttribute('lang', lang);
+    root.setAttribute('data-lang', lang);
+    loadFont(lang);
+    title(lang);
+  }
+
+  w.PibookLang = { langs: LANGS, key: KEY, match: match, apply: apply, current: pick() };
+  apply(w.PibookLang.current);
+})(document, window);
+</script>
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap"></noscript>
+<!-- @/partial:head -->
+<!--
+  邀請頁（2026-09-29；2026-09-30 改版走全站版型）—— 朋友分享出去的連結落在這裡：
+  https://pibook.app/i/?c=K7M2Q
+
+  ⚠️ 參數叫 c，不叫 code：App 端的 supabase_flutter 會把帶 code= 的連結當成登入回呼吃掉。
+  ⚠️ 字元表與 App（lib/core/entitlement/invite_code.dart）、伺服器（migration 20260929000000
+     的 CHECK）必須一模一樣 —— App 的守門測試會比對這個檔案。
+  這份的正本在 App repo 的 site_drafts/i/index.html；上線的是官網 repo 的 i/index.html。
+-->
 <meta name="robots" content="noindex">
 <meta name="description" content="朋友邀請你一起用拍簿整理照片。下載後登入並輸入邀請碼，你們都能免費多用 Premium。">
 <meta name="theme-color" content="#FBF7F0" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#171E25" media="(prefers-color-scheme: dark)">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="拍簿 Pibook">
-<meta property="og:title" content="拍簿邀請碼">
+<meta property="og:title" content="朋友邀請你一起用拍簿">
 <meta property="og:description" content="下載拍簿、登入並輸入邀請碼，你和朋友都能免費多用 Premium。">
 <meta property="og:image" content="https://pibook.app/assets/app_icon.png">
 <meta name="twitter:card" content="summary">
-<link rel="icon" href="/assets/app_icon.png">
-<style>
-/*
- * 邀請頁（2026-09-29）—— 朋友分享出去的連結落在這裡：https://pibook.app/i/?c=K7M2Q
- *
- * 一頁只做兩件事：讓他看清楚那組碼（可以複製），以及把他送到對的商店。
- * 下載之後要在哪裡輸入，照 App 裡真正的字寫出來。
- *
- * ⚠️ 參數叫 c，不叫 code：App 端的 supabase_flutter 會把帶 code= 的連結當成
- *    登入回呼吃掉。
- * ⚠️ 字元表與 App（lib/core/entitlement/invite_code.dart）、伺服器（migration
- *    20260929000000 的 CHECK）必須一模一樣 —— App 的守門測試會比對這個檔案。
- * ⚠️ 自己一頁、不走 build.py 的中英切換：邀請頁要五種語言，依瀏覽器語言挑。
- *
- * 這份的正本在主 repo 的 site_drafts/i/index.html；上線的是官網 repo
- * （minobear/pibook-site）的 i/index.html —— 改一邊要同步另一邊。
- */
-:root {
-  --ground: #FBF7F0; --surface: #FFFFFF; --sunken: #F4EFE6; --line: #E6DED1;
-  --ink: #2A3744; --ink-soft: #5C6A78; --ink-fade: #93A0AC;
-  --gold: #C2772E; --gold-wash: #FBF1E6; --coral: #C75F4E;
-  --radius: 22px;
-  --sans: "PingFang TC", "Noto Sans TC", "Hiragino Sans", "Apple SD Gothic Neo", system-ui, -apple-system, sans-serif;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --ground: #171E25; --surface: #212B34; --sunken: #1B242C; --line: #33404C;
-    --ink: #E9E3D8; --ink-soft: #AAB6C1; --ink-fade: #7C8894;
-    --gold: #F0C094; --gold-wash: #2E2A24; --coral: #F09885;
-  }
-}
-* { box-sizing: border-box; }
-html, body { margin: 0; background: var(--ground); color: var(--ink); font-family: var(--sans); }
-main { max-width: 440px; margin: 0 auto; padding: 40px 20px 48px; }
-.brand { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; }
-.brand img { width: 40px; height: 40px; border-radius: 10px; }
-.brand span { font-weight: 700; font-size: 18px; letter-spacing: .02em; }
-h1 { font-size: 26px; line-height: 1.35; margin: 0 0 8px; }
-.lead { color: var(--ink-soft); font-size: 16px; line-height: 1.6; margin: 0 0 24px; }
-.ticket {
-  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
-  padding: 20px; text-align: center;
-}
-.ticket .label { color: var(--ink-soft); font-size: 14px; margin-bottom: 8px; }
-.code {
-  font-variant-numeric: tabular-nums; font-size: 40px; font-weight: 700; letter-spacing: .28em;
-  color: var(--gold); padding-left: .28em; user-select: all; -webkit-user-select: all;
-}
-.code.missing { color: var(--ink-fade); letter-spacing: .2em; }
-.copy {
-  margin-top: 12px; border: 1px solid var(--line); background: var(--sunken); color: var(--ink);
-  border-radius: 999px; padding: 8px 16px; font-size: 14px; cursor: pointer; font-family: inherit;
-}
-.copied { color: var(--ink-soft); font-size: 13px; min-height: 18px; margin-top: 6px; }
-.cta {
-  display: block; width: 100%; margin-top: 20px; padding: 16px; border: 0; border-radius: 16px;
-  background: var(--coral); color: #fff; font-size: 17px; font-weight: 700; text-align: center;
-  text-decoration: none; cursor: pointer; font-family: inherit;
-}
-.stores { display: flex; gap: 10px; margin-top: 12px; }
-.stores a {
-  flex: 1; text-align: center; padding: 12px; border-radius: 14px; border: 1px solid var(--line);
-  background: var(--surface); color: var(--ink); text-decoration: none; font-size: 14px;
-}
-/* 還沒有 App Store 網址、又不在 iPhone 上：只是一句「去哪裡找」，不是按鈕。 */
-.stores a.note { border-style: dashed; background: transparent; color: var(--ink-soft); font-size: 13px; }
-.steps { margin: 28px 0 0; padding: 0; list-style: none; counter-reset: s; }
-.steps li { position: relative; padding: 0 0 14px 34px; line-height: 1.6; color: var(--ink-soft); counter-increment: s; }
-.steps li::before {
-  content: counter(s); position: absolute; left: 0; top: 0; width: 24px; height: 24px; border-radius: 50%;
-  background: var(--gold-wash); color: var(--gold); font-weight: 700; font-size: 13px;
-  display: flex; align-items: center; justify-content: center;
-}
-.fine { margin-top: 20px; color: var(--ink-fade); font-size: 12px; line-height: 1.6; }
-</style>
+<link rel="icon" type="image/png" href="/assets/app_icon.png">
+<link rel="apple-touch-icon" href="/assets/app_icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="/assets/style.css?v=20260925">
+<link rel="stylesheet" href="/assets/landing.css?v=20260925">
+<link rel="stylesheet" href="/assets/invite.css?v=20260930">
 </head>
 <body>
-<main>
-  <div class="brand"><img src="/assets/app_icon.png" alt=""><span data-t="brand">拍簿</span></div>
-  <h1 data-t="title">朋友邀請你一起用拍簿</h1>
-  <p class="lead" data-t="lead">下載拍簿、登入之後輸入這組邀請碼，你和朋友都能免費多用 Premium。</p>
 
-  <div class="ticket">
-    <div class="label" data-t="codeLabel">邀請碼</div>
-    <div class="code" id="code">•••••</div>
-    <button type="button" class="copy" id="copy" data-t="copy">複製邀請碼</button>
-    <div class="copied" id="copied" aria-live="polite"></div>
+<!-- @partial:header -->
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="/">
+      <img class="brand-logo" src="/assets/app_icon.png" alt="" aria-hidden="true">
+      <span class="brand-words">
+        <span lang="zh-Hant" class="mark">拍簿</span>
+        <span lang="zh-Hans" class="mark">拍簿</span>
+        <span lang="en" class="mark">Pibook</span>
+        <span lang="ja" class="mark">Pibook</span>
+        <span lang="ko" class="mark">Pibook</span>
+        <span lang="zh-Hant" class="latin">PIBOOK</span>
+        <span lang="zh-Hans" class="latin">PIBOOK</span>
+      </span>
+    </a>
+    <div class="lang-switch">
+      <button type="button" class="lang-button" id="lang-button"
+              aria-haspopup="menu" aria-expanded="false" aria-controls="lang-menu">
+        <svg class="lang-globe" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="M3.4 12h17.2"/><path d="M12 3.4c2.3 2.4 3.5 5.3 3.5 8.6s-1.2 6.2-3.5 8.6c-2.3-2.4-3.5-5.3-3.5-8.6s1.2-6.2 3.5-8.6z"/></svg>
+        <span lang="zh-Hant">繁體中文</span>
+        <span lang="zh-Hans">简体中文</span>
+        <span lang="en">English</span>
+        <span lang="ja">日本語</span>
+        <span lang="ko">한국어</span>
+        <svg class="lang-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.6 6 7.6 9 4.6"/></svg>
+      </button>
+      <ul class="lang-menu" id="lang-menu" role="menu" aria-labelledby="lang-button" hidden>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="zh-Hant"><span lang="zh-Hant">繁體中文</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="zh-Hans"><span lang="zh-Hans">简体中文</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="en"><span lang="en">English</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="ja"><span lang="ja">日本語</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="ko"><span lang="ko">한국어</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+      </ul>
+    </div>
   </div>
+</header>
+<!-- @/partial:header -->
 
-  <a class="cta" id="go" href="#" data-t="go">複製邀請碼並前往下載</a>
-  <div class="stores">
-    <a id="ios" href="#" data-t="ios">App Store</a>
-    <a id="android" href="#" data-t="android">Google Play</a>
-  </div>
+<main id="invite">
 
-  <ol class="steps">
-    <li data-t="step1">下載並打開拍簿，登入你的帳號。</li>
-    <li data-t="step2">點首頁分頁列右邊的「賺 Premium」。</li>
-    <li data-t="step3">點「輸入邀請碼」，貼上或輸入這組碼。</li>
-  </ol>
-  <p class="fine" data-t="fine">每個帳號可以使用一次邀請碼。邀請碼沒有現金價值。</p>
+  <section class="invite-hero">
+    <div class="wrap invite-grid">
+
+      <div class="invite-copy">
+        <span class="invite-eyebrow"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="8.5" width="17" height="4" rx="1"/><path d="M5 12.5v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7M12 8.5v12M12 8.5c-1.6-3.6-5.5-4.2-5.5-1.8 0 1.4 2 1.8 5.5 1.8Zm0 0c1.6-3.6 5.5-4.2 5.5-1.8 0 1.4-2 1.8-5.5 1.8Z"/></svg>
+          <span lang="zh-Hant">拍簿 · 好友邀請</span>
+          <span lang="zh-Hans">拍簿 · 好友邀请</span>
+          <span lang="en">Pibook · Friend invite</span>
+          <span lang="ja">Pibook · 友だち招待</span>
+          <span lang="ko">Pibook · 친구 초대</span>
+        </span>
+        <h1 lang="zh-Hant">朋友邀請你<br>一起用拍簿</h1>
+        <h1 lang="zh-Hans">朋友邀请你<br>一起用拍簿</h1>
+        <h1 lang="en">A friend invited you<br>to Pibook</h1>
+        <h1 lang="ja">友だちから<br>Pibook への招待です</h1>
+        <h1 lang="ko">친구가 Pibook에<br>초대했어요</h1>
+        <p lang="zh-Hant" class="lede when-code">下載拍簿、登入之後輸入這組邀請碼，你和朋友都能免費多用 Premium。</p>
+        <p lang="zh-Hans" class="lede when-code">下载拍簿、登录之后输入这组邀请码，你和朋友都能免费多用 Premium。</p>
+        <p lang="en" class="lede when-code">Download Pibook, sign in and enter this invite code, and you and your friend both get extra days of Premium for free.</p>
+        <p lang="ja" class="lede when-code">Pibook をダウンロードしてサインインし、この招待コードを入力すると、お互いに Premium が無料で付きます。</p>
+        <p lang="ko" class="lede when-code">Pibook을 다운로드해서 로그인한 뒤 이 초대 코드를 입력하면 나와 친구 모두 Premium을 무료로 더 받아요.</p>
+        <p lang="zh-Hant" class="lede when-missing">這個連結裡沒有邀請碼。請向朋友再要一次，或直接下載拍簿。</p>
+        <p lang="zh-Hans" class="lede when-missing">这个链接里没有邀请码。请向朋友再要一次，或直接下载拍簿。</p>
+        <p lang="en" class="lede when-missing">This link has no invite code. Ask your friend for it again, or just download Pibook.</p>
+        <p lang="ja" class="lede when-missing">このリンクには招待コードがありません。友だちにもう一度聞くか、そのまま Pibook をダウンロードしてください。</p>
+        <p lang="ko" class="lede when-missing">이 링크에는 초대 코드가 없어요. 친구에게 다시 받거나 바로 Pibook을 다운로드하세요.</p>
+      </div>
+
+      <div class="ticket-wrap">
+        <img class="ticket-mascot" src="/assets/mascot/pipi_celebrate.webp" alt="" aria-hidden="true">
+        <div class="ticket">
+          <div class="ticket-top">
+            <p class="ticket-label">
+              <span lang="zh-Hant">邀請碼</span>
+              <span lang="zh-Hans">邀请码</span>
+              <span lang="en">Invite code</span>
+              <span lang="ja">招待コード</span>
+              <span lang="ko">초대 코드</span>
+            </p>
+            <p class="ticket-code" id="code">•••••</p>
+          </div>
+          <div class="ticket-tear" aria-hidden="true"></div>
+          <div class="ticket-bottom">
+            <p class="ticket-fine">
+              <span lang="zh-Hant">每個帳號可以使用一次，沒有現金價值。</span>
+              <span lang="zh-Hans">每个账号可以使用一次，没有现金价值。</span>
+              <span lang="en">One per account. No cash value.</span>
+              <span lang="ja">1 アカウントにつき 1 回。換金はできません。</span>
+              <span lang="ko">계정마다 한 번. 현금 가치는 없어요.</span>
+            </p>
+            <button type="button" class="copy-btn" id="copy"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8.5" y="8.5" width="11" height="11" rx="2.5"/><path d="M15.5 8.5V6.5a2 2 0 0 0-2-2h-7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h2"/></svg>
+              <span class="idle">
+                <span lang="zh-Hant">複製</span>
+                <span lang="zh-Hans">复制</span>
+                <span lang="en">Copy</span>
+                <span lang="ja">コピー</span>
+                <span lang="ko">복사</span>
+              </span>
+              <span class="done">
+                <span lang="zh-Hant">已複製</span>
+                <span lang="zh-Hans">已复制</span>
+                <span lang="en">Copied</span>
+                <span lang="ja">コピー済み</span>
+                <span lang="ko">복사됨</span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="invite-actions">
+        <div class="badge-row">
+          <a class="store-badge store-badge--apple" id="ios" href="#" aria-label="Download on the App Store">
+            <svg class="sb-glyph" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.05 12.54c-.03-2.9 2.37-4.3 2.48-4.37-1.35-1.98-3.46-2.25-4.21-2.28-1.79-.18-3.5 1.05-4.4 1.05-.9 0-2.31-1.03-3.8-1-1.95.03-3.75 1.14-4.76 2.88-2.03 3.52-.52 8.73 1.46 11.59.97 1.4 2.12 2.97 3.63 2.91 1.46-.06 2.01-.94 3.77-.94 1.76 0 2.26.94 3.8.91 1.57-.03 2.57-1.42 3.53-2.83 1.11-1.62 1.57-3.19 1.6-3.27-.04-.02-3.07-1.18-3.1-4.65ZM14.16 4c.8-.97 1.34-2.32 1.19-3.67-1.15.05-2.55.77-3.38 1.74-.74.86-1.39 2.24-1.22 3.56 1.29.1 2.6-.65 3.41-1.63Z"/></svg>
+            <span class="sb-text"><small>Download on the</small><strong>App Store</strong></span>
+          </a>
+          <a class="store-badge store-badge--play" id="android" href="#" aria-label="Get it on Google Play">
+            <svg class="sb-glyph sb-glyph--play" viewBox="0 0 512 512" aria-hidden="true"><defs><linearGradient id="pbPlayA" x1="261.2" y1="63.4" x2="53.4" y2="271.2" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#00A0FF"/><stop offset=".01" stop-color="#00A1FF"/><stop offset=".26" stop-color="#00BEFF"/><stop offset=".51" stop-color="#00D2FF"/><stop offset=".76" stop-color="#00DFFF"/><stop offset="1" stop-color="#00E3FF"/></linearGradient><linearGradient id="pbPlayB" x1="504.6" y1="256" x2="82.5" y2="256" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFE000"/><stop offset=".41" stop-color="#FFBD00"/><stop offset=".78" stop-color="#FFA500"/><stop offset="1" stop-color="#FF9C00"/></linearGradient><linearGradient id="pbPlayC" x1="437.5" y1="296.3" x2="16.9" y2="716.9" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FF3A44"/><stop offset="1" stop-color="#C31162"/></linearGradient><linearGradient id="pbPlayD" x1="46.1" y1="-112.2" x2="233.9" y2="75.6" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#32A071"/><stop offset=".07" stop-color="#2DA771"/><stop offset=".48" stop-color="#15CF74"/><stop offset=".8" stop-color="#06E775"/><stop offset="1" stop-color="#00F076"/></linearGradient></defs><path fill="url(#pbPlayA)" d="M99.6 24.8C93.4 31.3 89.8 41.4 89.8 54.5v403c0 13.1 3.6 23.2 9.8 29.7l1.3 1.3 225.9-225.9v-5.3L101 23.5l-1.4 1.3z"/><path fill="url(#pbPlayB)" d="M401.9 331.6l-75.1-75.1v-5.3l75.2-75.2 1.7 1 89.1 50.6c25.4 14.4 25.4 38.1 0 52.6l-89.1 50.6-1.8.8z"/><path fill="url(#pbPlayC)" d="M403.7 330.8l-76.9-76.9L99.6 481.1c8.4 8.9 22.2 10 37.8 1.1l266.3-151.4"/><path fill="url(#pbPlayD)" d="M403.7 177.1L137.4 25.8C121.8 16.9 108 18 99.6 26.9l227.2 227.1 76.9-76.9z"/></svg>
+            <span class="sb-text"><small>GET IT ON</small><strong>Google Play</strong></span>
+          </a>
+        </div>
+        <p class="badge-hint when-code">
+          <span lang="zh-Hant">點下載時，邀請碼會自動複製。</span>
+          <span lang="zh-Hans">点下载时，邀请码会自动复制。</span>
+          <span lang="en">Your code is copied automatically when you tap a download button.</span>
+          <span lang="ja">ダウンロードを押すと、招待コードが自動でコピーされます。</span>
+          <span lang="ko">다운로드를 누르면 초대 코드가 자동으로 복사돼요.</span>
+        </p>
+        <p class="ios-hint" id="ios-hint" hidden>
+          <span lang="zh-Hant">iPhone 請在 App Store 搜尋「拍簿」。</span>
+          <span lang="zh-Hans">iPhone 请在 App Store 搜索「拍簿」。</span>
+          <span lang="en">On iPhone, search “Pibook” in the App Store.</span>
+          <span lang="ja">iPhone では App Store で「Pibook」を検索してください。</span>
+          <span lang="ko">iPhone에서는 App Store에서 「Pibook」을 검색하세요.</span>
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="invite-steps">
+    <div class="wrap">
+      <h2 lang="zh-Hant">下載之後，三個步驟</h2>
+      <h2 lang="zh-Hans">下载之后，三个步骤</h2>
+      <h2 lang="en">After downloading, three steps</h2>
+      <h2 lang="ja">ダウンロードしたら、3 ステップ</h2>
+      <h2 lang="ko">다운로드한 뒤 세 단계</h2>
+      <ol class="steps3">
+      <li>
+        <span class="step-num">1</span>
+        <h3 lang="zh-Hant">登入帳號</h3>
+        <h3 lang="zh-Hans">登录账号</h3>
+        <h3 lang="en">Sign in</h3>
+        <h3 lang="ja">サインイン</h3>
+        <h3 lang="ko">로그인</h3>
+        <p lang="zh-Hant">打開拍簿，登入你的帳號。</p>
+        <p lang="zh-Hans">打开拍簿，登录你的账号。</p>
+        <p lang="en">Open Pibook and sign in to your account.</p>
+        <p lang="ja">Pibook を開いて、アカウントにサインインします。</p>
+        <p lang="ko">Pibook을 열고 계정에 로그인하세요.</p>
+      </li>
+      <li>
+        <span class="step-num">2</span>
+        <h3 lang="zh-Hant">打開任務</h3>
+        <h3 lang="zh-Hans">打开任务</h3>
+        <h3 lang="en">Open Tasks</h3>
+        <h3 lang="ja">ミッションを開く</h3>
+        <h3 lang="ko">미션 열기</h3>
+        <p lang="zh-Hant">點首頁分頁列右邊的「賺 Premium」。</p>
+        <p lang="zh-Hans">点首页标签栏右边的「赚 Premium」。</p>
+        <p lang="en">Tap “Earn Premium” at the right of the Home tab bar.</p>
+        <p lang="ja">ホームのタブバー右側の「Premium 獲得」をタップします。</p>
+        <p lang="ko">홈 탭 바 오른쪽의 「Premium 받기」를 누르세요.</p>
+      </li>
+      <li>
+        <span class="step-num">3</span>
+        <h3 lang="zh-Hant">輸入邀請碼</h3>
+        <h3 lang="zh-Hans">输入邀请码</h3>
+        <h3 lang="en">Enter the code</h3>
+        <h3 lang="ja">コードを入力</h3>
+        <h3 lang="ko">코드 입력</h3>
+        <p lang="zh-Hant">點「輸入邀請碼」，貼上這組碼就完成了。</p>
+        <p lang="zh-Hans">点「输入邀请码」，粘贴这组码就完成了。</p>
+        <p lang="en">Tap “Enter code” and paste this code. That’s it.</p>
+        <p lang="ja">「コードを入力」をタップして、このコードを貼り付ければ完了です。</p>
+        <p lang="ko">「코드 입력」을 누르고 이 코드를 붙여넣으면 끝이에요.</p>
+      </li>
+      </ol>
+    </div>
+  </section>
+
 </main>
+
+<!-- @partial:footer -->
+<footer class="site-footer">
+  <div class="inner">
+    <nav>
+      <a href="/"><span lang="zh-Hant">首頁</span><span lang="zh-Hans">首页</span><span lang="en">Home</span><span lang="ja">ホーム</span><span lang="ko">홈</span></a>
+      <a href="/privacy/"><span lang="zh-Hant">隱私權政策</span><span lang="zh-Hans">隐私权政策</span><span lang="en">Privacy Policy</span><span lang="ja">プライバシーポリシー</span><span lang="ko">개인정보 처리방침</span></a>
+      <a href="/terms/"><span lang="zh-Hant">服務條款</span><span lang="zh-Hans">服务条款</span><span lang="en">Terms of Use</span><span lang="ja">利用規約</span><span lang="ko">이용약관</span></a>
+      <a href="/support/"><span lang="zh-Hant">支援</span><span lang="zh-Hans">支持</span><span lang="en">Support</span><span lang="ja">サポート</span><span lang="ko">지원</span></a>
+      <a href="/delete-account/"><span lang="zh-Hant">刪除帳號</span><span lang="zh-Hans">删除账号</span><span lang="en">Delete Account</span><span lang="ja">アカウント削除</span><span lang="ko">계정 삭제</span></a>
+    </nav>
+    <div class="legal">
+      <span lang="zh-Hant">
+        八西歐科技有限公司<br>
+        統一編號 60773047<br>
+        support@pibook.app<br>
+        © 2026 Pibook. 保留一切權利。
+      </span>
+      <span lang="zh-Hans">
+        八西欧科技有限公司<br>
+        统一编号 60773047<br>
+        support@pibook.app<br>
+        © 2026 Pibook. 保留所有权利。
+      </span>
+      <span lang="en">
+        8CO Technology Co., Ltd.<br>
+        Tax ID 60773047<br>
+        support@pibook.app<br>
+        © 2026 Pibook. All rights reserved.
+      </span>
+      <span lang="ja">
+        8CO Technology Co., Ltd.<br>
+        統一編号 60773047<br>
+        support@pibook.app<br>
+        © 2026 Pibook. All rights reserved.
+      </span>
+      <span lang="ko">
+        8CO Technology Co., Ltd.<br>
+        사업자 통일번호 60773047<br>
+        support@pibook.app<br>
+        © 2026 Pibook. All rights reserved.
+      </span>
+    </div>
+  </div>
+</footer>
+<!-- @/partial:footer -->
+
 <script>
 (function () {
   'use strict';
@@ -126,85 +378,6 @@ h1 { font-size: 26px; line-height: 1.35; margin: 0 0 8px; }
   // 拿到 App Store 的數字 ID 之後填這裡：'https://apps.apple.com/app/id<數字>'。
   // 在那之前 iPhone 導向 App Store 搜尋（與 App 內更新牆同一個退路）。
   var APP_STORE_URL = '';
-
-  var T = {
-    'zh-Hant': {
-      brand: '拍簿', title: '朋友邀請你一起用拍簿',
-      lead: '下載拍簿、登入之後輸入這組邀請碼，你和朋友都能免費多用 Premium。',
-      codeLabel: '邀請碼', copy: '複製邀請碼', copied: '已複製邀請碼',
-      go: '複製邀請碼並前往下載', ios: 'App Store', android: 'Google Play',
-      step1: '下載並打開拍簿，登入你的帳號。',
-      step2: '點首頁分頁列右邊的「賺 Premium」。',
-      step3: '點「輸入邀請碼」，貼上或輸入這組碼。',
-      fine: '每個帳號可以使用一次邀請碼。邀請碼沒有現金價值。',
-      missing: '這個連結裡沒有邀請碼。請向朋友再要一次，或直接下載拍簿。',
-      iosSearch: 'App Store 搜尋「拍簿」'
-    },
-    'zh-Hans': {
-      brand: '拍簿', title: '朋友邀请你一起用拍簿',
-      lead: '下载拍簿、登录之后输入这组邀请码，你和朋友都能免费多用 Premium。',
-      codeLabel: '邀请码', copy: '复制邀请码', copied: '已复制邀请码',
-      go: '复制邀请码并前往下载', ios: 'App Store', android: 'Google Play',
-      step1: '下载并打开拍簿，登录你的账号。',
-      step2: '点首页标签栏右边的「赚 Premium」。',
-      step3: '点「输入邀请码」，粘贴或输入这组码。',
-      fine: '每个账号可以使用一次邀请码。邀请码没有现金价值。',
-      missing: '这个链接里没有邀请码。请向朋友再要一次，或直接下载拍簿。',
-      iosSearch: 'App Store 搜索「拍簿」'
-    },
-    en: {
-      brand: 'Pibook', title: 'A friend invited you to Pibook',
-      lead: 'Download Pibook, sign in and enter this invite code, and you and your friend both get extra days of Premium for free.',
-      codeLabel: 'Invite code', copy: 'Copy code', copied: 'Invite code copied',
-      go: 'Copy code and download', ios: 'App Store', android: 'Google Play',
-      step1: 'Download and open Pibook, then sign in.',
-      step2: 'Tap “Earn Premium” at the right of the Home tab bar.',
-      step3: 'Tap “Enter code” and paste or type this code.',
-      fine: 'Each account can redeem one invite code. Invite codes have no cash value.',
-      missing: 'This link has no invite code. Ask your friend for it again, or just download Pibook.',
-      iosSearch: 'Search “Pibook” in the App Store'
-    },
-    ja: {
-      brand: 'Pibook', title: '友だちから Pibook への招待',
-      lead: 'Pibook をダウンロードしてサインインし、この招待コードを入力すると、お互いに Premium が無料で付きます。',
-      codeLabel: '招待コード', copy: 'コードをコピー', copied: '招待コードをコピーしました',
-      go: 'コードをコピーしてダウンロード', ios: 'App Store', android: 'Google Play',
-      step1: 'Pibook をダウンロードして開き、サインインします。',
-      step2: 'ホームのタブバー右側の「Premium を獲得」をタップします。',
-      step3: '「コードを入力」をタップして、このコードを貼り付けます。',
-      fine: '招待コードは 1 つのアカウントにつき 1 回使えます。換金はできません。',
-      missing: 'このリンクには招待コードがありません。友だちにもう一度聞くか、そのまま Pibook をダウンロードしてください。',
-      iosSearch: 'App Store で「Pibook」を検索'
-    },
-    ko: {
-      brand: 'Pibook', title: '친구가 Pibook에 초대했어요',
-      lead: 'Pibook을 다운로드해서 로그인한 뒤 이 초대 코드를 입력하면 나와 친구 모두 Premium을 무료로 더 받아요.',
-      codeLabel: '초대 코드', copy: '코드 복사', copied: '초대 코드를 복사했어요',
-      go: '코드 복사하고 다운로드', ios: 'App Store', android: 'Google Play',
-      step1: 'Pibook을 다운로드해 열고 로그인하세요.',
-      step2: '홈 탭 바 오른쪽의 「Premium 받기」를 누르세요.',
-      step3: '「코드 입력」을 누르고 이 코드를 붙여넣으세요.',
-      fine: '초대 코드는 계정마다 한 번 사용할 수 있어요. 현금 가치는 없어요.',
-      missing: '이 링크에는 초대 코드가 없어요. 친구에게 다시 받거나 바로 Pibook을 다운로드하세요.',
-      iosSearch: 'App Store에서 「Pibook」 검색'
-    }
-  };
-
-  function pickLang() {
-    var langs = (navigator.languages && navigator.languages.length)
-      ? navigator.languages : [navigator.language || 'en'];
-    for (var i = 0; i < langs.length; i++) {
-      var l = String(langs[i]).toLowerCase();
-      if (l.indexOf('zh') === 0) {
-        if (l.indexOf('hans') >= 0 || l === 'zh-cn' || l === 'zh-sg') return 'zh-Hans';
-        return 'zh-Hant';
-      }
-      if (l.indexOf('ja') === 0) return 'ja';
-      if (l.indexOf('ko') === 0) return 'ko';
-      if (l.indexOf('en') === 0) return 'en';
-    }
-    return 'en';
-  }
 
   // 與 App 的 normalizeInviteInput 同一套：全形轉半形、轉大寫、只留英數字。
   function normalize(raw) {
@@ -222,49 +395,22 @@ h1 { font-size: 26px; line-height: 1.35; margin: 0 0 8px; }
     return /[2-9]/.test(code) && /[B-Z]/.test(code);
   }
 
-  var lang = pickLang();
-  var t = T[lang];
-  document.documentElement.lang = lang;
-  var nodes = document.querySelectorAll('[data-t]');
-  for (var i = 0; i < nodes.length; i++) {
-    var key = nodes[i].getAttribute('data-t');
-    if (t[key]) nodes[i].textContent = t[key];
-  }
-  document.title = t.codeLabel + ' — ' + (lang.indexOf('zh') === 0 ? '拍簿 Pibook' : 'Pibook');
-
-  var params = new URLSearchParams(location.search);
-  var code = normalize(params.get('c'));
-  var codeEl = document.getElementById('code');
-  var copyBtn = document.getElementById('copy');
-  var copiedEl = document.getElementById('copied');
+  var main = document.getElementById('invite');
+  var code = normalize(new URLSearchParams(location.search).get('c'));
   var valid = isValid(code);
-  if (valid) {
-    codeEl.textContent = code;
-  } else {
-    codeEl.className = 'code missing';
-    copyBtn.style.display = 'none';
-    document.querySelector('.lead').textContent = t.missing;
-  }
+  var codeEl = document.getElementById('code');
+  if (valid) codeEl.textContent = code;
+  else main.classList.add('no-code');
 
   var ua = navigator.userAgent || '';
   var isIOS = /iPhone|iPad|iPod/.test(ua) ||
     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  var isAndroid = /Android/.test(ua);
   var playUrl = 'https://play.google.com/store/apps/details?id=' + PACKAGE +
     '&referrer=' + encodeURIComponent('utm_source=invite' + (valid ? '&utm_content=' + code : ''));
-  var iosUrl = APP_STORE_URL || 'itms-apps://itunes.apple.com/search?term=Pibook&entity=software';
+  var iosUrl = APP_STORE_URL || (isIOS ? 'itms-apps://itunes.apple.com/search?term=Pibook&entity=software' : '');
 
-  var iosLink = document.getElementById('ios');
-  document.getElementById('android').href = playUrl;
-  if (APP_STORE_URL || isIOS) {
-    iosLink.href = iosUrl;
-  } else {
-    // 桌機上又還沒有 App Store 的頁面網址 —— 講清楚要去哪裡找，不給一個點了沒反應的連結。
-    iosLink.removeAttribute('href');
-    iosLink.className = 'note';
-    iosLink.textContent = t.iosSearch;
-  }
-
+  var copyBtn = document.getElementById('copy');
+  var copiedTimer = null;
   function copyCode() {
     if (!valid) return Promise.resolve(false);
     function fallback() {
@@ -285,25 +431,34 @@ h1 { font-size: 26px; line-height: 1.35; margin: 0 0 8px; }
       ? navigator.clipboard.writeText(code).then(function () { return true; }, fallback)
       : Promise.resolve(fallback());
     return p.then(function (ok) {
-      if (ok) copiedEl.textContent = t.copied;
+      if (ok) {
+        copyBtn.classList.add('is-copied');
+        clearTimeout(copiedTimer);
+        copiedTimer = setTimeout(function () { copyBtn.classList.remove('is-copied'); }, 2400);
+      }
       return ok;
     });
   }
-
   copyBtn.addEventListener('click', copyCode);
 
-  var go = document.getElementById('go');
-  go.href = isAndroid ? playUrl : (isIOS ? iosUrl : '#');
-  go.addEventListener('click', function (e) {
-    e.preventDefault();
-    // 先複製、再走 —— 不自動跳轉：一進來就被送走，他連碼都沒看到。
-    copyCode().then(function () {
-      if (isAndroid) location.href = playUrl;
-      else if (isIOS) location.href = iosUrl;
-      else document.querySelector('.stores').scrollIntoView({ behavior: 'smooth' });
+  // 按商店徽章：先複製邀請碼、再走（不自動跳轉 —— 一進來就被送走，他連碼都沒看到）。
+  function wire(el, url, onMissing) {
+    el.href = url || '#';
+    el.addEventListener('click', function (e) {
+      e.preventDefault();
+      copyCode().then(function () {
+        if (url) location.href = url;
+        else if (onMissing) onMissing();
+      });
     });
+  }
+  wire(document.getElementById('android'), playUrl);
+  // 桌機上又還沒有 App Store 的網址：講清楚 iPhone 上去哪裡找，不給一個點了沒反應的連結。
+  wire(document.getElementById('ios'), iosUrl, function () {
+    document.getElementById('ios-hint').hidden = false;
   });
 })();
 </script>
+<script src="/assets/lang.js?v=20260925"></script>
 </body>
 </html>
