@@ -385,3 +385,12 @@ html.web .brandline { display: none; }
 html.web .stage { top: 40px !important; bottom: auto !important; }
 html.web .phone-wrap,
 html.web .stage .phone-fit { margin-top: 0 !important; }
+
+/* 整理板：商店畫板的手機下緣出血，App 自己那條相簿軌在畫布外；官網模式手機整支完整，
+   那條原本的相簿軌就露在特寫下面，看起來像重複了兩條（2026-09-30 使用者回報）。
+   官網模式把「相簿軌特寫＋點擊圈＋飛行箭頭＋飛出的照片」整組往下移，
+   讓特寫的中心正好蓋在原本那條相簿軌的中心上（特寫 500×112 大於原本的 330×74，整條蓋住）。
+   位移量：原相簿軌在素材 review_hd.jpg 的 y 1992–2220（高 228，同 review_rail_hd.png），
+   螢幕從 10.8 起、每 px ×0.325 → 中心 10.8 + 2106×0.325 = 695.25；
+   特寫高 500×228/1016 = 112.2 → 頂端應在 639.15，原本 550 → 往下 89.15。 */
+html.web .phone-wrap:has(> .rail-zoom) > .ov { translate: 0 89.15px; }
