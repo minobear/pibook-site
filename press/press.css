@@ -370,3 +370,18 @@ html[lang="en"] .sub { font-size: 15px; }
 
 /* 韓文只在字與字之間換行（預設會把「앨범」這種詞從中間折斷） */
 html[lang="ko"] h1, html[lang="ko"] .sub, html[lang="ko"] .check-row { word-break: keep-all; }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   官網模式（網址帶 ?web → press.js 在 <html> 加上 .web）
+   官網每一段自己有標題、自己有底色，要的只是「畫面本身」：手機，以及貼在手機上的
+   聚焦元件（相簿軌特寫、標註膠囊、手勢）。畫板的底色、底紋、標題、星芒、品牌列
+   一律不畫，背景透明；手機整支完整、不出血。由 tools/web_shots.py 以透明底截圖。
+   ═══════════════════════════════════════════════════════════════════════ */
+html.web, html.web body, html.web .board { background: transparent; }
+html.web .board::before,
+html.web .copy,
+html.web .spark,
+html.web .brandline { display: none; }
+html.web .stage { top: 40px !important; bottom: auto !important; }
+html.web .phone-wrap,
+html.web .stage .phone-fit { margin-top: 0 !important; }

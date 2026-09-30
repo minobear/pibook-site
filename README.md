@@ -87,15 +87,19 @@ CSS 只顯示 `<html data-lang>` 那一種。這樣審查員把網址轉給同�
 
 ## 首頁的截圖
 
-首頁每一段的畫面都是**商店截圖**（主 repo 的 `store_assets/screenshots/<語言>/`），
-由 `tools/web_shots.py` 裁掉上方的標題區（官網這一段自己就有標題）後轉成
-`assets/shots/<語言>/<名稱>-{480,800,1200}.webp`。五種語言各一張、只顯示目前語言那一張；
-看不見的那四張是 `display:none` 的 lazy 圖片，瀏覽器根本不會去下載。
+首頁每一段的畫面都來自 `press/` 的**商店畫板**，但不是直接拿商店截圖來裁 ——
+那樣畫板的底色會跟著進來，在官網上變成手機外面一圈米白色的框。
+`tools/web_shots.py` 用無頭 Chrome 以「官網模式」（`?web`，見 `press/press.css` 最後一段）
+重新渲染畫板：只畫手機與貼在上面的特寫，不畫底色、標題、星芒，背景透明，
+輸出成 `assets/shots/<語言>/<名稱>-{480,800,1200}.webp`，並把版面數值直接寫回 `index.html`
+（每個 figure 的 `--iw/--ml/--mt/--mb`、每張圖的 `width`/`height`/`sizes`）。
+五種語言各一張、只顯示目前語言那一張；看不見的那四張是 `display:none` 的 lazy 圖片，
+瀏覽器根本不會去下載。
 
-商店截圖更新後：
+畫板或素材更新後：
 
 ```bash
-python tools/web_shots.py        # 預設讀 ../store_assets/screenshots
+python tools/web_shots.py        # 五語全部重做（約 6 分鐘）
 ```
 
 `press/` 是商店行銷截圖的畫板。改完跑：

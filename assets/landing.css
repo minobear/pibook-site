@@ -1,8 +1,8 @@
 /* ═══════════════════════════════════════════════════════════════════════
    拍簿官網 — 首頁版面 v3
-   結構：Promise（英雄）→ 三句話 → Proof（每段一張商店截圖）→ 隱私 → 印製預告
-   依賴 style.css（全站基調）。截圖來自主 repo 的 store_assets/screenshots/<語言>/，
-   裁掉上方的標題區（這一段自己就有標題），五種語言各一張，只顯示目前語言那一張。
+   結構：Promise（英雄）→ 三句話 → Proof（每段一張 App 畫面）→ 隱私 → 印製預告
+   依賴 style.css（全站基調）。畫面由 tools/web_shots.py 從 press/ 的商店畫板以官網模式
+   渲染：只有手機與貼在上面的特寫，透明底，五種語言各一張，只顯示目前語言那一張。
    ═══════════════════════════════════════════════════════════════════════ */
 
 /* ── 英雄區 ── */
@@ -118,13 +118,13 @@
   position: relative;
   align-self: end;
 }
-/* 英雄區的截圖站在區塊的地面線上、下緣被區塊切掉 —— 手機本來就在圖裡被裁到一半，
-   讓它看起來是從地面長出來，而不是一張浮在半空的卡片。 */
+/* 英雄區的手機站在區塊的地面線上、下緣被區塊切掉 —— 看起來是從地面長出來，
+   而不是一支浮在半空的手機。框高＝機身高（寬 × 756 / 372.6）的四分之三。
+   只裁上下：左右伸出去的是機身陰影，裁掉會在淺色底上留下一道硬邊。 */
 .hero2-stage .shot-card--hero {
-  --shot-w: 360px;
-  height: calc(var(--shot-w) * 2004 / 1290 * .86);
-  border-bottom: 0;
-  border-radius: 30px 30px 0 0;
+  --shot-w: 312px;
+  height: calc(var(--shot-w) * 756 / 372.6 * .74);
+  overflow-y: clip;
 }
 /* 吉祥物坐在英雄區的地面線上（.hero2-stage 的底就是區塊底）。
    手機圖故意出題外、吉祥物不行——它是完整的形體。 */
@@ -133,7 +133,7 @@
   z-index: 4;
   /* 只讓肩膀搭在截圖的左下角 —— 再往右就會蓋掉「今天拍的還沒整理」那張卡，
      而那正是這張圖要講的事。 */
-  left: -104px;
+  left: -128px;
   bottom: 0;
   width: min(156px, 18vw);
   filter: drop-shadow(0 14px 26px rgba(42,55,68,.24));
@@ -412,7 +412,7 @@
 
 /* ── 功能段 ── */
 
-.feat { padding: 84px 0 0; position: relative; }
+.feat { padding: 84px 0 0; position: relative; overflow-x: clip; }  /* 窄螢幕上掛在框外的特寫與陰影不准撐出橫向捲動 */
 
 /* 每段一種柔和色相，頁面不再一片素 */
 .feat--blush::before, .feat--blue::before, .feat--emerald::before {
@@ -470,29 +470,30 @@
 
 .feat-stage { position: relative; }
 
-/* ── 商店截圖卡 ──
-   每一張都有五種語言的版本疊在同一個框裡（只顯示目前語言那一張）。
-   寬高比由 <img width height> 決定，圖還沒到之前框就佔好位置，版面不會跳。 */
+/* ── App 畫面 ──
+   圖是透明底的「畫面本身」：手機（機身與陰影都在圖裡）＋貼在上面的特寫。
+   不加框、不墊底色 —— 手機外面不該再有一層背景（2026-09-30 使用者要求）。
+
+   版面只算「錨點」：手機的機身（隱私、相似照片是那一組內容）。figure 的寬＝錨點寬，
+   圖以 --iw（圖寬 ÷ 錨點寬）放大，再以負邊距 --ml/--mt/--mb（都以錨點寬為 100%，
+   CSS 的百分比邊距連上下都是以寬度計）讓伸出去的特寫與陰影掛在框外、不佔版面 ——
+   所以每一段的手機一樣大、邊緣對齊。四個值由 tools/web_shots.py 寫進 index.html。
+   五種語言疊在同一個框裡（只顯示目前語言那一張），寬高比由 <img width height> 決定，
+   圖還沒到之前框就佔好位置，版面不會跳。 */
 .shot-card {
-  --shot-w: 340px;
+  --shot-w: 296px;
   position: relative;
   width: var(--shot-w);
   margin: 0;
-  overflow: hidden;
-  border-radius: 28px;
-  border: 1px solid var(--line);
-  background: #F3EFE8;                 /* 截圖本身的紙色：圖到之前先是同一個顏色 */
-  box-shadow: 0 2px 5px rgba(42,55,68,.08), 0 30px 60px -26px rgba(42,55,68,.4);
 }
-.shot-card img { display: block; width: 100%; height: auto; }
-.shot-card--dark {
-  background: #1C2B3B;
-  border-color: rgba(255,255,255,.08);
-  box-shadow: 0 30px 60px -26px rgba(0,0,0,.7);
+.shot-card img {
+  display: block;
+  width: var(--iw, 100%);
+  max-width: none;
+  height: auto;
+  margin: var(--mt, 0) 0 var(--mb, 0) var(--ml, 0);
 }
-@media (prefers-color-scheme: dark) {
-  .shot-card { border-color: rgba(255,255,255,.08); box-shadow: 0 30px 60px -26px rgba(0,0,0,.7); }
-}
+.feat-stage .shot-card--panel { --shot-w: 332px; }
 
 /* 回憶段：整段收進深色圓角面板（App 沉浸底），實錄影片在其中播放 */
 .feat--dark { padding-top: 96px; }
@@ -520,6 +521,7 @@
 /* ── 隱私承諾 ── */
 
 .promise2 {
+  overflow-x: clip;                    /* 同 .feat：掛在框外的陰影不准撐出橫向捲動 */
   margin-top: 96px;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
@@ -566,7 +568,7 @@
 }
 
 .promise2 .shot-card--privacy {
-  --shot-w: 300px;
+  --shot-w: 240px;
   justify-self: center;
 }
 
@@ -612,28 +614,30 @@
 /* ── 響應式 ── */
 
 @media (max-width: 1060px) {
-  .hero2-stage .shot-card--hero { --shot-w: 320px; }
-  .feat-stage .shot-card { --shot-w: 310px; }
+  .hero2-stage .shot-card--hero { --shot-w: 280px; }
+  .feat-stage .shot-card { --shot-w: 270px; }
+  .feat-stage .shot-card--panel { --shot-w: 304px; }
 }
 
 @media (max-width: 880px) {
   .hero2-grid { grid-template-columns: 1fr; gap: 8px; }
   .hero2-copy { padding-bottom: 8px; }
   .hero2-stage { justify-self: center; margin-top: 20px; }
-  .hero2-stage .shot-card--hero { --shot-w: min(320px, 80vw); }
-  .hero2-mascot { left: -40px; width: 100px; }
+  .hero2-stage .shot-card--hero { --shot-w: min(280px, 70vw); }
+  .hero2-mascot { left: -61px; width: 100px; }
 
   .feat { padding-top: 64px; }
   .feat-grid, .feat--flip .feat-grid { grid-template-columns: 1fr; gap: 26px; }
   .feat--flip .feat-copy { order: 1; }
   .feat--flip .feat-stage { order: 2; }
   .feat-stage { justify-self: center; }
-  .feat-stage .shot-card { --shot-w: min(320px, 84vw); }
+  .feat-stage .shot-card { --shot-w: min(280px, 72vw); }
+  .feat-stage .shot-card--panel { --shot-w: min(312px, 82vw); }
   .feat--flip { --tint-x: 84%; }
   .feat--dark .feat-shell { padding: 40px 26px; border-radius: 26px; }
 
   .promise2-grid { grid-template-columns: 1fr; }
-  .promise2 .shot-card--privacy { --shot-w: min(300px, 80vw); }
+  .promise2 .shot-card--privacy { --shot-w: min(240px, 64vw); }
 
   .printtease-inner { flex-direction: column; text-align: center; padding: 26px 22px; }
 }

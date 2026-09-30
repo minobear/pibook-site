@@ -25,3 +25,34 @@
   apply();
   window.addEventListener('resize', apply);
 })();
+
+/* 官網模式：見 press.css 最後一段。另外把「版面錨點」的位置寫進 <meta name="web-anchor">
+   （有手機就是機身；沒有手機的板子是舞台上內容的聯集，星芒除外），
+   tools/web_shots.py 用 --dump-dom 讀回去 —— 官網排版以錨點為準，
+   伸出錨點外的特寫與陰影不佔版面。
+   數值以畫板座標表示（高 932 為基準）：左右是相對畫板水平中心、上下是相對畫板頂端。
+   ⚠️ 不能寫成「佔視窗的比例」：--dump-dom 與 --screenshot 的視窗外框不同（實測前者
+   少了約 127px 高），畫板寬度跟著變，比例就對不上；舞台置中，所以「離中心多遠」不受影響。 */
+(function () {
+  if (!/[?&]web\b/.test(location.search)) return;
+  document.documentElement.classList.add('web');
+  function report() {
+    var els = document.querySelectorAll('.stage .phone');
+    if (!els.length) els = document.querySelectorAll('.stage > :not(.spark)');
+    var l = Infinity, t = Infinity, r = -Infinity, b = -Infinity;
+    for (var i = 0; i < els.length; i++) {
+      var q = els[i].getBoundingClientRect();
+      l = Math.min(l, q.left); t = Math.min(t, q.top);
+      r = Math.max(r, q.right); b = Math.max(b, q.bottom);
+    }
+    var bd = document.querySelector('.board').getBoundingClientRect();
+    var k = 932 / bd.height, cx = bd.left + bd.width / 2;
+    var m = document.createElement('meta');
+    m.name = 'web-anchor';
+    m.content = [(l - cx) * k, (t - bd.top) * k, (r - cx) * k, (b - bd.top) * k]
+      .map(function (v) { return v.toFixed(2); }).join(',');
+    document.head.appendChild(m);
+  }
+  if (document.readyState === 'complete') report();
+  else window.addEventListener('load', report);
+})();
