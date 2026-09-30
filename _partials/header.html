@@ -1,18 +1,39 @@
 <!-- 全站共用頁首。這是唯一的一份 —— 改這裡，跑 `python build.py`，
-     每一頁的 @partial:header 區塊就會一起換掉。不要直接改頁面裡展開後的內容。 -->
+     每一頁的 @partial:header 區塊就會一起換掉。不要直接改頁面裡展開後的內容。
+     語言選單的行為在 /assets/lang.js；選單裡的語言名稱刻意用各自的文字寫，
+     看不懂目前語言的人也認得出自己的那一個。 -->
 <header class="site-header">
   <div class="inner">
     <a class="brand" href="/">
       <img class="brand-logo" src="/assets/app_icon.png" alt="" aria-hidden="true">
       <span class="brand-words">
-        <span class="mark zh">拍簿</span>
-        <span class="mark en">Pibook</span>
-        <span class="latin zh">PIBOOK</span>
+        <span lang="zh-Hant" class="mark">拍簿</span>
+        <span lang="zh-Hans" class="mark">拍簿</span>
+        <span lang="en" class="mark">Pibook</span>
+        <span lang="ja" class="mark">Pibook</span>
+        <span lang="ko" class="mark">Pibook</span>
+        <span lang="zh-Hant" class="latin">PIBOOK</span>
+        <span lang="zh-Hans" class="latin">PIBOOK</span>
       </span>
     </a>
-    <div class="lang-toggle">
-      <button type="button" data-lang="zh" aria-pressed="true">繁體中文</button>
-      <button type="button" data-lang="en" aria-pressed="false">English</button>
+    <div class="lang-switch">
+      <button type="button" class="lang-button" id="lang-button"
+              aria-haspopup="menu" aria-expanded="false" aria-controls="lang-menu">
+        <svg class="lang-globe" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="M3.4 12h17.2"/><path d="M12 3.4c2.3 2.4 3.5 5.3 3.5 8.6s-1.2 6.2-3.5 8.6c-2.3-2.4-3.5-5.3-3.5-8.6s1.2-6.2 3.5-8.6z"/></svg>
+        <span lang="zh-Hant">繁體中文</span>
+        <span lang="zh-Hans">简体中文</span>
+        <span lang="en">English</span>
+        <span lang="ja">日本語</span>
+        <span lang="ko">한국어</span>
+        <svg class="lang-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.6 6 7.6 9 4.6"/></svg>
+      </button>
+      <ul class="lang-menu" id="lang-menu" role="menu" aria-labelledby="lang-button" hidden>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="zh-Hant"><span lang="zh-Hant">繁體中文</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="zh-Hans"><span lang="zh-Hans">简体中文</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="en"><span lang="en">English</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="ja"><span lang="ja">日本語</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+        <li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-set-lang="ko"><span lang="ko">한국어</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.4 12.5 4.8"/></svg></button></li>
+      </ul>
     </div>
   </div>
 </header>

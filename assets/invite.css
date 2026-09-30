@@ -1,0 +1,247 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   邀請頁 /i/ —— 朋友分享出去的連結落在這裡（2026-09-30 改版：走全站版型）。
+   依賴 style.css（全站基調）與 landing.css（商店徽章）。
+   ═══════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* 邀請碼的金：與 App 裡邀請碼票券同一個顏色家族（Premium 金）。 */
+  --gold: #B46A24;
+  --gold-soft: #F7EADB;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --gold: #EDB983;
+    --gold-soft: #2E2821;
+  }
+}
+
+.invite-hero {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+}
+.invite-hero::before {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 55% 50% at 0% 0%, rgba(232,128,110,.13), transparent 70%),
+    radial-gradient(ellipse 50% 55% at 100% 20%, rgba(194,119,46,.12), transparent 70%);
+  pointer-events: none;
+}
+.invite-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  /* 桌機：左欄文案＋下載，右欄票券。手機：文案 → 票券 → 下載（先看到碼再去下載）。 */
+  grid-template-areas: "copy ticket" "actions ticket";
+  column-gap: 56px;
+  row-gap: 28px;
+  align-items: center;
+  padding-top: 72px;
+  padding-bottom: 80px;
+}
+.invite-copy { grid-area: copy; align-self: end; display: flex; flex-direction: column; gap: 18px; }
+.invite-actions { grid-area: actions; align-self: start; display: flex; flex-direction: column; gap: 12px; }
+.ticket-wrap { grid-area: ticket; }
+
+.invite-eyebrow {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 10px;
+  border-radius: 999px;
+  background: var(--gold-soft);
+  color: var(--gold);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+.invite-eyebrow svg { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+.invite-copy h1 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: clamp(30px, 4.4vw, 44px);
+  line-height: 1.22;
+  letter-spacing: .01em;
+}
+.invite-copy .lede {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--ink-soft);
+  max-width: 34em;
+}
+
+/* 商店徽章：整顆是連結（landing.css 的 .store-badge 本來是 span） */
+a.store-badge { text-decoration: none; transition: transform .15s ease, box-shadow .15s ease; }
+a.store-badge:hover { transform: translateY(-1px); }
+a.store-badge:focus-visible { outline: 2px solid var(--coral-mark); outline-offset: 3px; }
+.invite-actions .badge-row { margin-top: 0; }
+.invite-actions .sb-text strong, .invite-actions .sb-text small { white-space: nowrap; }
+.badge-hint { margin: 0; font-size: 13px; color: var(--ink-fade); }
+.ios-hint { margin: 0; font-size: 13.5px; color: var(--ink-soft); }
+.ios-hint[hidden] { display: none; }
+
+/* ── 邀請碼票券 ── */
+
+.ticket-wrap { position: relative; justify-self: center; width: min(100%, 400px); }
+.ticket-mascot {
+  position: absolute;
+  z-index: 2;
+  width: 112px;
+  top: -74px;
+  right: -14px;
+  filter: drop-shadow(0 10px 18px rgba(42,55,68,.2));
+  pointer-events: none;
+}
+.ticket {
+  --notch: 13px;
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.ticket-top { padding: 30px 28px 24px; text-align: center; }
+.ticket-label {
+  margin: 0 0 12px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-fade);
+}
+.ticket-code {
+  margin: 0;
+  font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(38px, 9vw, 50px);
+  font-weight: 700;
+  letter-spacing: .26em;
+  padding-left: .26em; /* 字距加在右邊，補回左邊才置中 */
+  color: var(--gold);
+  user-select: all;
+  -webkit-user-select: all;
+}
+.no-code .ticket-code { color: var(--ink-fade); letter-spacing: .2em; }
+
+/* 撕線：一條虛線＋兩側半圓缺口（缺口填頁面底色） */
+.ticket-tear { position: relative; height: 0; border-top: 1.5px dashed var(--line); margin: 0 20px; }
+.ticket-tear::before,
+.ticket-tear::after {
+  content: "";
+  position: absolute;
+  top: calc(var(--notch) * -1);
+  width: calc(var(--notch) * 2);
+  height: calc(var(--notch) * 2);
+  border-radius: 50%;
+  background: var(--ground);
+  border: 1px solid var(--line);
+}
+.ticket-tear::before { left: calc(-20px - var(--notch)); }
+.ticket-tear::after { right: calc(-20px - var(--notch)); }
+
+.ticket-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 22px 20px;
+}
+.ticket-fine { margin: 0; font-size: 12.5px; line-height: 1.55; color: var(--ink-fade); }
+
+.copy-btn {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--sunken);
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease;
+}
+.copy-btn:hover { border-color: color-mix(in srgb, var(--gold) 45%, var(--line)); }
+.copy-btn:focus-visible { outline: 2px solid var(--coral-mark); outline-offset: 2px; }
+.copy-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.copy-btn .done, .copy-btn.is-copied .idle { display: none; }
+.copy-btn.is-copied .done { display: inline; }
+.copy-btn.is-copied { color: var(--green); border-color: color-mix(in srgb, var(--green) 45%, var(--line)); }
+.no-code .copy-btn { display: none; }
+
+/* 有碼／沒碼兩套字 */
+.when-missing { display: none; }
+.no-code .when-missing { display: revert; }
+.no-code .when-code { display: none; }
+
+/* ── 三個步驟 ── */
+
+.invite-steps { padding: 64px 0 88px; }
+.invite-steps h2 {
+  margin: 0 0 28px;
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 700;
+}
+.steps3 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.steps3 li {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px 22px 24px;
+  box-shadow: var(--shadow-sm);
+}
+.step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--gold-soft);
+  color: var(--gold);
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+.steps3 h3 { margin: 0 0 6px; font-size: 16.5px; font-weight: 700; }
+.steps3 p { margin: 0; font-size: 14.5px; line-height: 1.65; color: var(--ink-soft); }
+
+@media (max-width: 820px) {
+  .invite-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas: "copy" "ticket" "actions";
+    row-gap: 36px;
+    padding-top: 40px;
+    padding-bottom: 56px;
+  }
+  .ticket-wrap { margin-top: 48px; } /* 讓出吉祥物探出來的高度 */
+  .ticket-mascot { width: 92px; top: -60px; right: -6px; }
+  .steps3 { grid-template-columns: 1fr; gap: 12px; }
+  .invite-steps { padding: 48px 0 64px; }
+}
+@media (max-width: 420px) {
+  .ticket-top { padding: 26px 18px 20px; }
+  .ticket-bottom { flex-direction: column; align-items: stretch; text-align: center; }
+  .copy-btn { justify-content: center; }
+  .badge-row { gap: 10px; flex-wrap: nowrap; }
+  /* 兩顆並排各佔一半：字縮一點、內距收一點，「Google Play」才不會折成兩行。 */
+  .badge-row .store-badge { flex: 1 1 0; min-width: 0; justify-content: center; gap: 8px; padding: 0 10px; }
+  .badge-row .sb-text strong { font-size: 17px; white-space: nowrap; }
+}

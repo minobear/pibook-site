@@ -65,6 +65,28 @@
   }
 }
 
+/* ── 字型跟著語言走 ─────────────────────────────────────────────────
+   規則與 App 的 PibookScript 相同：繁中與英文用 TC（拉丁字形相同），簡中用 SC，
+   日文有自己的明朝與黑體（繁中字型畫出來的漢字是中文字形），
+   韓文刻意沒有明朝 —— 明朝的橫畫是髮絲級，韓文字母橫畫多，同字重下整段淡一截，
+   而且韓國的介面標題本來就用고딕。<html lang> 由 _partials/head.html 在第一次繪製前設好。 */
+:root[lang="zh-Hans"] {
+  --serif: "Noto Serif SC", "Songti SC", "STSong", "SimSun", Georgia, serif;
+  --sans: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+}
+:root[lang="ja"] {
+  --serif: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", Georgia, serif;
+  --sans: "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", "YuGothic", "Meiryo", system-ui, -apple-system, sans-serif;
+}
+:root[lang="ko"] {
+  --serif: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, -apple-system, sans-serif;
+  --sans: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, -apple-system, sans-serif;
+}
+
+/* 韓文照詞斷行（不在一個詞的中間換行）；日文標題依文節斷行（支援的瀏覽器才有效，其餘照舊）。 */
+:root[lang="ko"] body { word-break: keep-all; overflow-wrap: break-word; }
+:root[lang="ja"] :is(h1, h2, h3, blockquote, .qs-t) { word-break: auto-phrase; }
+
 * { box-sizing: border-box; }
 
 html { scroll-behavior: smooth; scroll-padding-top: 88px; }
@@ -85,10 +107,18 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* ── 語言切換 ──────────────────────────────────────────────────────── */
+/* ── 語言 ──────────────────────────────────────────────────────────
+   每一段文字的五種語言都在同一份 HTML 裡，以 lang 屬性標記，只顯示
+   <html data-lang> 那一種。看不見的圖片（loading="lazy"）因為沒有版面，
+   瀏覽器根本不會去下載，所以每位訪客只拿自己語言的那一份。
+   ⚠️ 帶 lang 的元素裡面不要再包帶 lang 的元素，否則會被當成另一種語言藏起來。
+   語言選單是例外：每一項本來就要用各自的文字顯示。 */
 
-body[data-lang="zh"] .en { display: none; }
-body[data-lang="en"] .zh { display: none; }
+:root[data-lang="zh-Hant"] body [lang]:not([lang="zh-Hant"]):not(.lang-menu [lang]),
+:root[data-lang="zh-Hans"] body [lang]:not([lang="zh-Hans"]):not(.lang-menu [lang]),
+:root[data-lang="en"] body [lang]:not([lang="en"]):not(.lang-menu [lang]),
+:root[data-lang="ja"] body [lang]:not([lang="ja"]):not(.lang-menu [lang]),
+:root[data-lang="ko"] body [lang]:not([lang="ko"]):not(.lang-menu [lang]) { display: none !important; }
 
 /* ── 頁首 ─────────────────────────────────────────────────────────── */
 
@@ -154,37 +184,98 @@ body[data-lang="en"] .zh { display: none; }
   text-transform: uppercase;
 }
 
-.lang-toggle {
+/* 語言選單：地球圖示＋目前語言＋小箭頭，點開是錨定在它下方的選單
+   （與 App「小決定用錨定選單、不用 sheet」同一個原則）。 */
+.lang-switch { position: relative; flex: 0 0 auto; }
+
+.lang-button {
+  appearance: none;
   display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 34px;
+  padding: 0 11px 0 10px;
   border: 1px solid var(--line);
   border-radius: 999px;
-  overflow: hidden;
   background: var(--surface);
-}
-
-.lang-toggle button {
-  appearance: none;
-  border: 0;
-  background: transparent;
+  color: var(--ink-soft);
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 500;
-  letter-spacing: .04em;
-  padding: 5px 14px;
-  color: var(--ink-soft);
+  letter-spacing: .02em;
+  line-height: 1;
+  white-space: nowrap;
   cursor: pointer;
-  transition: background .15s ease, color .15s ease;
+  transition: border-color .15s ease, color .15s ease, background .15s ease;
+}
+.lang-button:hover,
+.lang-button[aria-expanded="true"] { color: var(--ink); border-color: color-mix(in srgb, var(--blue) 45%, var(--line)); }
+.lang-button:focus-visible { outline: 2px solid var(--coral-mark); outline-offset: 2px; }
+
+.lang-button svg { flex: none; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
+.lang-globe { width: 16px; height: 16px; stroke-width: 1.5; color: var(--blue); }
+.lang-chevron { width: 11px; height: 11px; stroke-width: 1.6; transition: transform .2s ease; }
+.lang-button[aria-expanded="true"] .lang-chevron { transform: rotate(180deg); }
+
+.lang-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 30;
+  min-width: 176px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(42, 55, 68, .06), 0 18px 40px -18px rgba(42, 55, 68, .45);
+  transform-origin: top right;
+  animation: lang-menu-in .16s cubic-bezier(.2, .7, .2, 1);
+}
+.lang-menu[hidden] { display: none; }
+@keyframes lang-menu-in {
+  from { opacity: 0; transform: translateY(-4px) scale(.98); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-color-scheme: dark) {
+  .lang-menu { box-shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 18px 40px -18px rgba(0, 0, 0, .8); }
 }
 
-.lang-toggle button[aria-pressed="true"] {
-  background: var(--blue);
-  color: #fff;
+.lang-menu button {
+  appearance: none;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 14.5px;
+  font-weight: 400;
+  text-align: left;
+  cursor: pointer;
 }
+/* 每一項用自己語言的字型寫自己的名字（在日文頁面上看「简体中文」也要是簡體字形）。 */
+.lang-menu [lang="zh-Hant"] { font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif; }
+.lang-menu [lang="zh-Hans"] { font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif; }
+.lang-menu [lang="ja"] { font-family: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", "Meiryo", system-ui, sans-serif; }
+.lang-menu [lang="ko"] { font-family: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif; }
+.lang-menu [lang="en"] { font-family: var(--sans); }
 
-.lang-toggle button:focus-visible {
-  outline: 2px solid var(--coral-mark);
-  outline-offset: -2px;
+.lang-menu button:hover,
+.lang-menu button:focus-visible { background: var(--sunken); color: var(--ink); outline: none; }
+.lang-menu button[aria-checked="true"] { color: var(--ink); font-weight: 500; }
+.lang-menu button svg {
+  width: 16px; height: 16px; flex: none;
+  fill: none; stroke: var(--coral); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+  visibility: hidden;
 }
+.lang-menu button[aria-checked="true"] svg { visibility: visible; }
 
 /* ── 版面容器 ─────────────────────────────────────────────────────── */
 
@@ -632,11 +723,16 @@ code {
   .wrap { padding: 0 20px; }
   .site-header .inner { padding: 12px 20px; gap: 10px; }
   .site-footer .inner { padding: 0 20px; flex-direction: column; gap: 24px; }
-  th, td { padding: 11px 14px; }
+  th, td { padding: 10px 12px; }
+  /* 窄螢幕的表格：表頭允許換行、第一欄不必留 130px —— 日文、韓文（照詞斷行，更寬）的表格
+     在一般手機寬度就不必再橫向捲動。刻意不用 overflow-wrap:anywhere：那會把單字從中間切開
+     （Accou/nt、상호작/용），比橫捲更難讀；更窄的螢幕維持 .table-wrap 的橫捲。 */
+  th { white-space: normal; letter-spacing: .06em; }
+  td:first-child { min-width: 88px; }
   /* 窄螢幕：左上字標讓出寬度，語言切換才不會被撠出畫面。 */
   .brand { gap: 9px; }
   .brand-logo { width: 30px; height: 30px; border-radius: 8px; }
   .brand .mark { font-size: 17px; }
   .brand .latin { font-size: 8.5px; letter-spacing: .2em; }
-  .lang-toggle button { font-size: 12px; padding: 5px 10px; }
+  .lang-button { height: 32px; padding: 0 9px 0 8px; gap: 6px; font-size: 12.5px; }
 }
