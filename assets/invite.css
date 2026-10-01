@@ -75,15 +75,9 @@
   max-width: 34em;
 }
 
-/* 商店徽章：整顆是連結（landing.css 的 .store-badge 本來是 span） */
-a.store-badge { text-decoration: none; transition: transform .15s ease, box-shadow .15s ease; }
-a.store-badge:hover { transform: translateY(-1px); }
-a.store-badge:focus-visible { outline: 2px solid var(--coral-mark); outline-offset: 3px; }
 .invite-actions .badge-row { margin-top: 0; }
 .invite-actions .sb-text strong, .invite-actions .sb-text small { white-space: nowrap; }
 .badge-hint { margin: 0; font-size: 13px; color: var(--ink-fade); }
-.ios-hint { margin: 0; font-size: 13.5px; color: var(--ink-soft); }
-.ios-hint[hidden] { display: none; }
 
 /* ── 邀請碼票券 ── */
 

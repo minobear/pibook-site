@@ -124,8 +124,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="/assets/style.css?v=20260925">
-<link rel="stylesheet" href="/assets/landing.css?v=20260925">
-<link rel="stylesheet" href="/assets/invite.css?v=20260930">
+<link rel="stylesheet" href="/assets/landing.css?v=20261001">
+<link rel="stylesheet" href="/assets/invite.css?v=20261001">
 </head>
 <body>
 
@@ -257,13 +257,6 @@
           <span lang="ja">ダウンロードを押すと、招待コードが自動でコピーされます。</span>
           <span lang="ko">다운로드를 누르면 초대 코드가 자동으로 복사돼요.</span>
         </p>
-        <p class="ios-hint" id="ios-hint" hidden>
-          <span lang="zh-Hant">iPhone 請在 App Store 搜尋「拍簿」。</span>
-          <span lang="zh-Hans">iPhone 请在 App Store 搜索「拍簿」。</span>
-          <span lang="en">On iPhone, search “Pibook” in the App Store.</span>
-          <span lang="ja">iPhone では App Store で「Pibook」を検索してください。</span>
-          <span lang="ko">iPhone에서는 App Store에서 「Pibook」을 검색하세요.</span>
-        </p>
       </div>
 
     </div>
@@ -375,9 +368,9 @@
   // ⚠️ 與 App 的 kInviteAlphabet、伺服器的 CHECK 一模一樣（守門測試會比對）。
   var ALPHABET = '23456789BCDFGHJKMNPQRSTVWXYZ';
   var PACKAGE = 'com.minobear.pibook';
-  // 拿到 App Store 的數字 ID 之後填這裡：'https://apps.apple.com/app/id<數字>'。
-  // 在那之前 iPhone 導向 App Store 搜尋（與 App 內更新牆同一個退路）。
-  var APP_STORE_URL = '';
+  // App Store 頁面（2026-10-01 上架）。與 App 內 `PibookStoreLinks.appStoreUrl` 同一個網址：
+  // 不帶地區，由訪客自己的 App Store 依他的地區導向。
+  var APP_STORE_URL = 'https://apps.apple.com/app/id6806170678';
 
   // 與 App 的 normalizeInviteInput 同一套：全形轉半形、轉大寫、只留英數字。
   function normalize(raw) {
@@ -402,12 +395,9 @@
   if (valid) codeEl.textContent = code;
   else main.classList.add('no-code');
 
-  var ua = navigator.userAgent || '';
-  var isIOS = /iPhone|iPad|iPod/.test(ua) ||
-    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   var playUrl = 'https://play.google.com/store/apps/details?id=' + PACKAGE +
     '&referrer=' + encodeURIComponent('utm_source=invite' + (valid ? '&utm_content=' + code : ''));
-  var iosUrl = APP_STORE_URL || (isIOS ? 'itms-apps://itunes.apple.com/search?term=Pibook&entity=software' : '');
+  var iosUrl = APP_STORE_URL;
 
   var copyBtn = document.getElementById('copy');
   var copiedTimer = null;
@@ -442,21 +432,15 @@
   copyBtn.addEventListener('click', copyCode);
 
   // 按商店徽章：先複製邀請碼、再走（不自動跳轉 —— 一進來就被送走，他連碼都沒看到）。
-  function wire(el, url, onMissing) {
-    el.href = url || '#';
+  function wire(el, url) {
+    el.href = url;
     el.addEventListener('click', function (e) {
       e.preventDefault();
-      copyCode().then(function () {
-        if (url) location.href = url;
-        else if (onMissing) onMissing();
-      });
+      copyCode().then(function () { location.href = url; });
     });
   }
   wire(document.getElementById('android'), playUrl);
-  // 桌機上又還沒有 App Store 的網址：講清楚 iPhone 上去哪裡找，不給一個點了沒反應的連結。
-  wire(document.getElementById('ios'), iosUrl, function () {
-    document.getElementById('ios-hint').hidden = false;
-  });
+  wire(document.getElementById('ios'), iosUrl);
 })();
 </script>
 <script src="/assets/lang.js?v=20260925"></script>
