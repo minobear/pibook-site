@@ -159,18 +159,18 @@
     <div class="doc-meta">
       <span lang="zh-Hant">生效日期：2026 年 8 月 28 日</span>
       <span lang="en">Effective: 28 August 2026</span>
-      <span lang="zh-Hant">最後更新：2026 年 9 月 30 日</span>
-      <span lang="en">Last updated: 30 September 2026</span>
+      <span lang="zh-Hant">最後更新：2026 年 10 月 3 日</span>
+      <span lang="en">Last updated: 3 October 2026</span>
       <span lang="zh-Hant">版本 1.1</span>
       <span lang="zh-Hans">生效日期：2026 年 8 月 28 日</span>
-      <span lang="zh-Hans">最后更新：2026 年 9 月 30 日</span>
+      <span lang="zh-Hans">最后更新：2026 年 10 月 3 日</span>
       <span lang="zh-Hans">版本 1.1</span>
       <span lang="en">Version 1.1</span>
       <span lang="ja">施行日：2026年8月28日</span>
-      <span lang="ja">最終更新日：2026年9月30日</span>
+      <span lang="ja">最終更新日：2026年10月3日</span>
       <span lang="ja">バージョン 1.1</span>
       <span lang="ko">시행일: 2026년 8월 28일</span>
-      <span lang="ko">최종 수정일: 2026년 9월 30일</span>
+      <span lang="ko">최종 수정일: 2026년 10월 3일</span>
       <span lang="ko">버전 1.1</span>
     </div>
   </div>
@@ -679,6 +679,11 @@
             <td>啟動 App 時（可隨分析功能一併關閉）</td>
           </tr>
           <tr>
+            <td>安裝次數紀錄<br>（僅 iPhone、iPad）</td>
+            <td>存在你裝置鑰匙圈裡的一小筆紀錄：這台裝置裝過拍簿幾次、第一次安裝的日期、最後一次使用的日期與 App 版本。它<strong>不含任何識別碼</strong>，無法把刪除前與重新安裝後的使用串成同一個人。iOS 在解除安裝 App 後仍會保留鑰匙圈裡的資料，所以這筆紀錄會留在裝置上；傳給我們的只有「這是第幾次安裝、離上次使用隔了幾天、之前用的版本」，用來統計重新安裝的比例。</td>
+            <td>每次安裝後第一次啟動 App 時（關閉分析功能後不再記錄，也不再傳送）</td>
+          </tr>
+          <tr>
             <td>帳號資料</td>
             <td>電子郵件地址、由 Apple 或 Google 提供的使用者識別碼、你選擇提供的顯示名稱。若你使用 Apple 的「隱藏我的電子郵件」，我們收到的是 Apple 提供的中繼轉寄位址，看不到你的真實信箱。</td>
             <td>只有在你主動選擇登入時</td>
@@ -732,6 +737,11 @@
             <td>Anonymous install ID</td>
             <td>A random string generated locally on first launch. It is not a device identifier and contains nothing that identifies you. Reinstalling produces a new one.</td>
             <td>On app launch (switched off with analytics)</td>
+          </tr>
+          <tr>
+            <td>Install count record<br>(iPhone and iPad only)</td>
+            <td>A small record kept in your device’s keychain: how many times Pibook has been installed on this device, the date of the first install, and the date and app version of the last use. It <strong>contains no identifier</strong> and cannot link use before and after a reinstall to the same person. iOS keeps keychain data after an app is deleted, so this record stays on the device. We receive only which install this is, how many days passed since the last use and the previous version, so we can measure how often people reinstall.</td>
+            <td>On the first launch after each install (no longer recorded or sent once analytics is off)</td>
           </tr>
           <tr>
             <td>Account data</td>
@@ -804,6 +814,11 @@
             <td>启动 App 时（可随分析功能一并关闭）</td>
           </tr>
           <tr>
+            <td>安装次数记录<br>（仅 iPhone、iPad）</td>
+            <td>保存在你设备钥匙串中的一小条记录：这台设备安装过拍簿几次、第一次安装的日期、最后一次使用的日期与 App 版本。它<strong>不含任何标识符</strong>，无法把删除前与重新安装后的使用关联为同一个人。iOS 在卸载 App 后仍会保留钥匙串中的数据，所以这条记录会留在设备上；发送给我们的只有“这是第几次安装、距离上次使用隔了几天、之前使用的版本”，用于统计重新安装的比例。</td>
+            <td>每次安装后第一次启动 App 时（关闭分析功能后不再记录，也不再发送）</td>
+          </tr>
+          <tr>
             <td>账号信息</td>
             <td>电子邮件地址、由 Apple 或 Google 提供的用户标识符、你选择提供的显示名称。如果你使用 Apple 的“隐藏邮件地址”，我们收到的是 Apple 提供的中继转发地址，看不到你的真实邮箱。</td>
             <td>仅在你主动选择登录时</td>
@@ -873,6 +888,11 @@
             <td>アプリの起動時（分析機能と一緒にオフにできます）</td>
           </tr>
           <tr>
+            <td>インストール回数の記録<br>（iPhone・iPad のみ）</td>
+            <td>端末のキーチェーンに保存される小さな記録です。この端末に本アプリをインストールした回数、最初のインストール日、最後に使った日とアプリのバージョンだけを含みます。<strong>識別子は含まれず</strong>、削除前と再インストール後の利用を同じ人として結びつけることはできません。iOS はアプリを削除してもキーチェーンのデータを残すため、この記録は端末に残ります。当社に送信されるのは「何回目のインストールか、前回の利用から何日たったか、以前のバージョン」だけで、再インストールの割合を把握するために使います。</td>
+            <td>インストール後の初回起動時（分析機能をオフにすると、記録も送信も行いません）</td>
+          </tr>
+          <tr>
             <td>アカウント情報</td>
             <td>メールアドレス、Apple または Google が提供するユーザー識別子、任意で設定した表示名。Apple の「メールを非公開」を使用している場合、当社が受け取るのは Apple が発行する転送用アドレスであり、実際のメールアドレスを知ることはできません。</td>
             <td>自らサインインを選んだ場合のみ</td>
@@ -936,6 +956,11 @@
             <td>익명 설치 식별자</td>
             <td>본 앱을 처음 실행할 때 기기에서 생성되는 무작위 문자열입니다. 기기 식별자가 아니며, 이용자의 신원을 알아볼 수 있는 정보도 포함하지 않습니다. 앱을 삭제한 뒤 다시 설치하면 새 식별자가 생성됩니다.</td>
             <td>앱 실행 시(분석 기능과 함께 끌 수 있음)</td>
+          </tr>
+          <tr>
+            <td>설치 횟수 기록<br>(iPhone·iPad만 해당)</td>
+            <td>기기의 키체인에 저장되는 작은 기록입니다. 이 기기에 본 앱을 설치한 횟수, 처음 설치한 날짜, 마지막으로 사용한 날짜와 앱 버전만 담고 있습니다. <strong>식별자는 포함하지 않으며</strong>, 삭제 전과 재설치 후의 이용을 같은 사람으로 연결할 수 없습니다. iOS는 앱을 삭제해도 키체인 데이터를 남기므로 이 기록은 기기에 남습니다. 회사로 전송되는 것은 '몇 번째 설치인지, 마지막 이용 후 며칠이 지났는지, 이전 버전'뿐이며, 재설치 비율을 파악하는 데 사용합니다.</td>
+            <td>설치 후 첫 실행 시(분석 기능을 끄면 기록하지도 전송하지도 않음)</td>
           </tr>
           <tr>
             <td>계정 정보</td>
