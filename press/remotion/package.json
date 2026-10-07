@@ -5,8 +5,10 @@
   "description": "拍簿 App Store / Google Play 預覽影片（Remotion）",
   "scripts": {
     "studio": "remotion studio",
-    "render:ios": "remotion render AppPreviewIOS out/app_preview_ios.mp4",
-    "render:play": "remotion render AppPreviewPlay out/app_preview_1080.mp4"
+    "render:appstore": "remotion render AppStore out/appstore_preview.mp4 --crf=12 --jpeg-quality=95 --audio-bitrate=256k --color-space=bt709",
+    "render:googleplay": "remotion render Play out/googleplay_preview.mp4 --crf=12 --jpeg-quality=95 --audio-bitrate=256k --color-space=bt709",
+    "render:ad30": "remotion render Ad30 out/social_ad_30s.mp4 --crf=12 --jpeg-quality=95 --audio-bitrate=256k --color-space=bt709",
+    "render:ad15": "remotion render Ad15 out/social_ad_15s.mp4 --crf=12 --jpeg-quality=95 --audio-bitrate=256k --color-space=bt709"
   },
   "dependencies": {
     "@remotion/cli": "4.0.410",

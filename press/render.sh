@@ -37,6 +37,9 @@ shot() { # $1=畫板 $2=輸出路徑 $3=寬 $4=高
     --force-device-scale-factor=1 --window-size="$3,$4" \
     --virtual-time-budget=12000 \
     --screenshot="$2" "file:///$HERE/$1" 2>/dev/null
+  # 一次性的 Chrome 設定檔用完就刪：一個約 10MB、留在 C 槽的暫存，
+  # 2026-10-06 一輪出四種尺寸 × 五語就累積了 1GB 多（加上影片暫存把 C 槽寫滿過）。
+  rm -rf "$prof"
   # Play 不收帶透明通道的 PNG —— 一律存成 RGB；尺寸不對就是版面出事了，直接停。
   python -c "
 from PIL import Image

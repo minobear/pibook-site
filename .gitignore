@@ -2,3 +2,6 @@ press/remotion/node_modules/
 press/remotion/out/
 press/__pycache__/
 _shoot_tmp/
+press/remotion/public/creative/
+press/creative/__pycache__/
+press/video/__pycache__/

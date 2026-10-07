@@ -7,7 +7,7 @@
 # 字卡與轉場。片段之間用 xfade 交叉溶解，最後統一輸出。
 #
 # 用法：PIBOOK_REC_DIR=<素材資料夾> bash build.sh
-#       → store_assets/videos/app_preview_ios.mp4
+#       → store_assets/videos/appstore_preview.mp4
 #
 # 兩個踩過的坑（改動前先讀）：
 #  1. 字幕 PNG 一定要 `-loop 1 -t <長度>`。單張圖只有一格，overlay 的 enable
@@ -90,11 +90,11 @@ cmd = [FF,'-y'] + inputs + [
     '-c:v','libx264','-profile:v','high','-level','4.0','-crf','19','-preset','slow',
     '-pix_fmt','yuv420p','-r',str(FPS),
     '-c:a','aac','-b:a','128k','-ar','44100','-ac','2',
-    '-movflags','+faststart', os.path.join(OUT,'app_preview_ios.mp4')]
+    '-movflags','+faststart', os.path.join(OUT,'appstore_preview.mp4')]
 r = subprocess.run(cmd, capture_output=True)
 if r.returncode: raise SystemExit(r.stderr.decode('utf-8','replace')[-1500:])
 print('  總長 %.2f 秒（App Store 允收 15–30 秒）' % total)
 PYEOF
 
-"$FF" -i "$OUT/app_preview_ios.mp4" 2>&1 | grep -E "Duration|Stream #"
-echo "輸出：store_assets/videos/app_preview_ios.mp4"
+"$FF" -i "$OUT/appstore_preview.mp4" 2>&1 | grep -E "Duration|Stream #"
+echo "輸出：store_assets/videos/appstore_preview.mp4"

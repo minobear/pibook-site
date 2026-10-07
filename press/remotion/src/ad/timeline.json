@@ -1,0 +1,373 @@
+{
+  "_comment": "四個輸出的段落與長度（秒）＋每段用哪一支素材、從素材第幾秒開始、播放速率。畫面（storyboard.ts）與聲音（video/music.py：配樂＋操作音效）共用這一份。100 BPM：一拍 0.6 秒、一小節 2.4 秒；開場剛好一小節（配樂在第一個功能出現時進拍），中間功能段加總是整數小節，每一次切換都落在拍點上。 v3（2026-10-06）：App Store 版與 Ad30 改成 整理 → 省空間（兩個成果頁）→ 回憶 → 安心，拿掉圖庫、修圖、已整理的相簿（導演腳本 §1.0）。 v3.1（2026-10-07）：相似照片改成「清單（一組一組）→ 點開一組、每一張親手標保留或刪除 → 成果頁」，相似照片成果頁拉長到 3.6 秒讓改版後的分享卡露臉；壓縮完成、回憶各縮成 3 秒。 v3.2（2026-10-07）：動作落在拍點上 —— 每段的 from／rate 由手勢時間反推（見 storyboard 註解）；開場 4.2 秒（儲存空間卡、看得頭暈的「爆滿」、嘆氣），結尾 3.6 秒（小飛機）；中間九小節，結尾卡落在小節開頭。 v3.3（2026-10-07）：開場回到 2.4 秒（一小節）；滑卡四下（保留兩下、丟棄兩下）；相似照片拆成「聚光那一組」與「左右滑比一比→標記」兩段；中間十小節。 v3.3 收斂（2026-10-07 使用者）：全部版本同一條故事 —— play（Google Play，原 long 的功能大全版退役）＝appstore 的剪法、只放 Play 徽章；ad15＝開場→滑卡→歸檔（兩下）→最後一張滑走、結尾頁進度環跑到 100%、按壓縮（0.95 倍速，按下去落在拍點）→省回來了→結尾，2.4＋四小節＋3.0＝15.0 秒；配樂是專屬編曲（video/music.py 的 render_ad15）。 壓縮（2026-10-07 使用者：要看得見 0%→100%）：compress（1.2 秒，滑掉最後一張、進度環到 100%）＋compress_run（同一支錄影的 0.35 倍速還原 r5_slow，按下壓縮、推近看懸浮球跑完）；ad15 的 compress_run 只有 1.2 秒（按下落在半拍）。",
+  "bpm": 100,
+  "variants": {
+    "appstore": [
+      [
+        "hook",
+        2.4
+      ],
+      [
+        "swipe",
+        3.0,
+        {
+          "from": 0.073,
+          "rate": 1.1467
+        }
+      ],
+      [
+        "album",
+        3.0,
+        {
+          "from": 0.202,
+          "rate": 1.06
+        }
+      ],
+      [
+        "compress",
+        1.2,
+        {
+          "from": 1.9,
+          "rate": 1.1189
+        }
+      ],
+      [
+        "compress_run",
+        1.8,
+        {
+          "from": 9.2647,
+          "rate": 1.0
+        }
+      ],
+      [
+        "compress_done",
+        2.4
+      ],
+      [
+        "similar3_list",
+        1.8
+      ],
+      [
+        "similar3",
+        4.2
+      ],
+      [
+        "similar3_done",
+        3.6
+      ],
+      [
+        "memory",
+        3.0,
+        {
+          "from": 1.987,
+          "rate": 1.0342
+        }
+      ],
+      [
+        "end",
+        3.0
+      ]
+    ],
+    "ad30": [
+      [
+        "hook",
+        2.4
+      ],
+      [
+        "swipe",
+        3.0,
+        {
+          "from": 0.073,
+          "rate": 1.1467
+        }
+      ],
+      [
+        "album",
+        3.0,
+        {
+          "from": 0.202,
+          "rate": 1.06
+        }
+      ],
+      [
+        "compress",
+        1.2,
+        {
+          "from": 1.9,
+          "rate": 1.1189
+        }
+      ],
+      [
+        "compress_run",
+        1.8,
+        {
+          "from": 9.2647,
+          "rate": 1.0
+        }
+      ],
+      [
+        "compress_done",
+        2.4
+      ],
+      [
+        "similar3_list",
+        1.8
+      ],
+      [
+        "similar3",
+        4.2
+      ],
+      [
+        "similar3_done",
+        3.6
+      ],
+      [
+        "memory",
+        3.0,
+        {
+          "from": 1.987,
+          "rate": 1.0342
+        }
+      ],
+      [
+        "end",
+        3.0
+      ]
+    ],
+    "play": [
+      [
+        "hook",
+        2.4
+      ],
+      [
+        "swipe",
+        3.0,
+        {
+          "from": 0.073,
+          "rate": 1.1467
+        }
+      ],
+      [
+        "album",
+        3.0,
+        {
+          "from": 0.202,
+          "rate": 1.06
+        }
+      ],
+      [
+        "compress",
+        1.2,
+        {
+          "from": 1.9,
+          "rate": 1.1189
+        }
+      ],
+      [
+        "compress_run",
+        1.8,
+        {
+          "from": 9.2647,
+          "rate": 1.0
+        }
+      ],
+      [
+        "compress_done",
+        2.4
+      ],
+      [
+        "similar3_list",
+        1.8
+      ],
+      [
+        "similar3",
+        4.2
+      ],
+      [
+        "similar3_done",
+        3.6
+      ],
+      [
+        "memory",
+        3.0,
+        {
+          "from": 1.987,
+          "rate": 1.0342
+        }
+      ],
+      [
+        "end",
+        3.0
+      ]
+    ],
+    "ad15": [
+      [
+        "hook",
+        2.4
+      ],
+      [
+        "swipe",
+        3.0,
+        {
+          "from": 0.073,
+          "rate": 1.1467
+        }
+      ],
+      [
+        "album",
+        1.8,
+        {
+          "from": 0.202,
+          "rate": 1.06
+        }
+      ],
+      [
+        "compress",
+        1.2,
+        {
+          "from": 1.9,
+          "rate": 1.2064
+        }
+      ],
+      [
+        "compress_run",
+        1.2,
+        {
+          "from": 9.5647,
+          "rate": 1.0
+        }
+      ],
+      [
+        "compress_done",
+        2.4
+      ],
+      [
+        "end",
+        3.0
+      ]
+    ]
+  },
+  "segments": {
+    "hook": {
+      "clip": "h_dense",
+      "from": 1.0,
+      "rate": 1.0,
+      "fx": [
+        [
+          "thud",
+          0.87
+        ],
+        [
+          "breath",
+          1.53
+        ]
+      ]
+    },
+    "swipe": {
+      "clip": "r1_swipe",
+      "from": 0.35,
+      "rate": 1.0
+    },
+    "album": {
+      "clip": "r2_album",
+      "from": 0.4,
+      "rate": 1.15
+    },
+    "edit": {
+      "clip": "r3_edit",
+      "from": 0.85,
+      "rate": 1.3
+    },
+    "share": {
+      "clip": "r4_share",
+      "from": 0.42,
+      "rate": 1.15
+    },
+    "compress": {
+      "clip": "r5_compress",
+      "from": 1.75,
+      "rate": 1.0
+    },
+    "similar": {
+      "clip": "s_similar",
+      "from": 0.65,
+      "rate": 1.28
+    },
+    "gallery": {
+      "clip": "g_gallery",
+      "from": 0.0,
+      "rate": 1.24
+    },
+    "organised": {
+      "clip": "o_organised",
+      "from": 0.85,
+      "rate": 1.3
+    },
+    "memory": {
+      "clip": "m_memory",
+      "from": 1.75,
+      "rate": 1.0
+    },
+    "end": {
+      "fx": [
+        [
+          "whoosh",
+          0.35
+        ]
+      ]
+    },
+    "compress_done": {
+      "clip": "r6_done",
+      "from": 0.509,
+      "rate": 1.4,
+      "cues": [
+        [
+          "range_complete",
+          1.2
+        ]
+      ]
+    },
+    "similar_clean": {
+      "clip": "s2_done",
+      "from": 0.23,
+      "rate": 1.0
+    },
+    "similar_done": {
+      "clip": "s2_done",
+      "from": 2.12,
+      "rate": 1.0,
+      "cues": [
+        [
+          "celebrate",
+          3.6
+        ]
+      ]
+    },
+    "similar3": {
+      "clip": "s3_similar",
+      "from": 2.16,
+      "rate": 1.1717
+    },
+    "similar3_done": {
+      "clip": "s3_done",
+      "from": 1.017,
+      "rate": 1.537,
+      "cues": [
+        [
+          "celebrate",
+          2.4
+        ]
+      ]
+    },
+    "similar3_list": {
+      "clip": "s3_similar",
+      "from": 0.36,
+      "rate": 1.0
+    },
+    "compress_run": {
+      "clip": "r5_slow",
+      "from": 9.2647,
+      "rate": 1.0
+    }
+  }
+}

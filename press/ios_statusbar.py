@@ -25,7 +25,7 @@ Semibold（同屬新怪誕體，「9:41」四個字元幾乎分不出來）。
 用法
 ────
   python ios_statusbar.py shots                  # 商店畫板用的 12 張 → <name>_hd_ios.jpg
-  python ios_statusbar.py clips                  # 預覽影片的 6 支錄影 → remotion/public/clips/ios/
+  python ios_statusbar.py clips                  # （已停用：預覽影片 v2 起素材不含狀態列，見 DIRECTOR_SCRIPT.md P9）
   python ios_statusbar.py video IN.mp4 OUT.mp4   # 單獨處理一支錄影
   python ios_statusbar.py image IN OUT           # 單獨處理一張截圖
 """
@@ -523,6 +523,8 @@ CLIPS = ['review', 'album', 'similar', 'compress', 'memory', 'library']
 
 
 def cmd_clips():
+    # 2026-10-03 起預覽影片 v2 的素材在錄影時就裁掉了系統列（DIRECTOR_SCRIPT.md P9），不再需要換狀態列。
+    raise SystemExit('預覽影片 v2 不再需要換狀態列：素材本來就不含系統列（見 DIRECTOR_SCRIPT.md P9）')
     src_dir = HERE / 'remotion' / 'public' / 'clips'
     out_dir = src_dir / 'ios'
     out_dir.mkdir(exist_ok=True)
