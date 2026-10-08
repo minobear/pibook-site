@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════════════
    拍簿官網 — 首頁版面 v3
-   結構：Promise（英雄）→ 三句話 → Proof（每段一張 App 畫面）→ 隱私 → 印製預告
+   結構：Promise（英雄）→ 三句話 → Proof（每段一張 App 畫面）→ 隱私
    依賴 style.css（全站基調）。畫面由 tools/web_shots.py 從 press/ 的商店畫板以官網模式
    渲染：只有手機與貼在上面的特寫，透明底，五種語言各一張，只顯示目前語言那一張。
    ═══════════════════════════════════════════════════════════════════════ */
@@ -576,45 +576,6 @@ a.store-badge:focus-visible { outline: 2px solid var(--coral-mark); outline-offs
   justify-self: center;
 }
 
-/* ── 印製預告 ── */
-
-.printtease { padding: 68px 0 92px; }
-
-.printtease-inner {
-  display: flex;
-  align-items: center;
-  gap: 28px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 24px;
-  padding: 28px 34px;
-  box-shadow: var(--shadow);
-}
-
-.printtease-inner img { width: 104px; flex: 0 0 auto; }
-
-.printtease h2 {
-  font-family: var(--serif);
-  font-size: 22px;
-  font-weight: 700;
-  margin: 0 0 6px;
-}
-
-.printtease p { margin: 0; color: var(--ink-soft); font-size: 15.5px; }
-
-.soon-tag {
-  display: inline-block;
-  margin-left: 10px;
-  font-size: 11.5px;
-  font-weight: 700;
-  letter-spacing: .08em;
-  color: var(--coral);
-  background: var(--coral-wash);
-  padding: 3px 10px;
-  border-radius: 999px;
-  vertical-align: 1px;
-}
-
 /* ── 響應式 ── */
 
 @media (max-width: 1060px) {
@@ -643,7 +604,6 @@ a.store-badge:focus-visible { outline: 2px solid var(--coral-mark); outline-offs
   .promise2-grid { grid-template-columns: 1fr; }
   .promise2 .shot-card--privacy { --shot-w: min(240px, 64vw); }
 
-  .printtease-inner { flex-direction: column; text-align: center; padding: 26px 22px; }
 }
 
 @media (max-width: 430px) {
