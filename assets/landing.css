@@ -217,7 +217,7 @@
   user-select: none;
   box-shadow: 0 1px 2px rgba(20,26,32,.28), 0 14px 28px -16px rgba(0,0,0,.9);
 }
-/* 整顆是連結時（首頁的 App Store、邀請頁的兩顆）：不要底線、給一點按得到的回饋 */
+/* 整顆是連結時（首頁與邀請頁的兩顆）：不要底線、給一點按得到的回饋 */
 a.store-badge { color: #fff; text-decoration: none; transition: transform .15s ease, box-shadow .15s ease; }
 a.store-badge:hover { transform: translateY(-1px); }
 a.store-badge:focus-visible { outline: 2px solid var(--coral-mark); outline-offset: 3px; }
@@ -242,11 +242,6 @@ a.store-badge:focus-visible { outline: 2px solid var(--coral-mark); outline-offs
   font-weight: 500;
   letter-spacing: .005em;
   margin-top: 4px;
-}
-.badge-note {
-  margin: 0;
-  font-size: 13px;
-  color: var(--ink-fade);
 }
 
 /* ── 痛點：三段小劇場 ── */

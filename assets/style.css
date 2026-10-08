@@ -344,15 +344,6 @@ body {
   box-shadow: var(--shadow-sm);
 }
 
-.store-badge .soon {
-  font-size: 11px;
-  letter-spacing: .1em;
-  color: var(--coral);
-  background: var(--coral-wash);
-  padding: 2px 8px;
-  border-radius: 999px;
-}
-
 /* ── 價值三欄 ─────────────────────────────────────────────────────── */
 
 .pillars {
