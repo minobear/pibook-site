@@ -1,0 +1,439 @@
+Pibook background-music pack v1 -- provenance record
+=====================================================
+Collection: US Library of Congress, Citizen DJ -- "Free Music Archive" (loc-fma) collection,
+https://citizen-dj.labs.loc.gov/loc-fma/use/ . A subset of Free Music Archive recordings that their
+creators published under a public-domain dedication (CC0 1.0). Rights statement (identical on every
+item, quoted per track below) says free to use and reuse without restriction, including commercial
+use, attribution recommended but not required.
+
+Checks applied to every track:
+  1. LoC item metadata 'rights' field = public-domain dedication (quoted below).
+  2. The live Free Music Archive track page shows "CC0 1.0 Universal License" (checked 2026-10-17).
+  3. Any licence tag embedded in the MP3 itself does not contradict (1) and (2).
+  4. Files are the LoC MP3s, copied byte-for-byte (128 kbps, 44.1 kHz stereo, no artwork).
+
+Excluded for licensing ambiguity (embedded MP3 tag contradicts the CC0 claim):
+  - Rafael Archangel -- Forgotten (fma-166066), Ghosts (fma-166071), Rising Danger [Alternative
+    Version] (fma-166083): tag says CC BY-NC-ND 4.0; artist's whole set dropped (incl. fma-166064).
+  - Keith Jars -- Medusa (fma-161439): tag says CC BY-NC-SA 3.0 US.
+Not used (no live FMA page to cross-check, 404): fma-116584, fma-117105, fma-117298, fma-184032.
+
+[01] Love Train
+  file:            music/love-train.mp3  (1937837 bytes, byte-identical to the LoC MP3)
+  artist:          Loyalty Freak Music
+  category:        upbeat   duration 121.0s   bpm~120   loudness -13.7 LUFS (EBU R128)   true peak -0.9 dBTP   gainDb -2.3
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-164279/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-164279.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-164279.mp3
+  FMA page:        https://freemusicarchive.org/music/Loyalty_Freak_Music/POSITIVE_ATTITUDE_/Loyalty_Freak_Music_-_POSITIVE_ATTITUDE__-_03_Love_Train
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: "Public Domain: http://creativecommons.org/licenses/publicdomain/"
+  sha256:          8d30cd2fea87f82eb9d236fb07b317fb8682bc93482b526b3ab3df9ecb09db91
+
+[02] Ice Cream with you
+  file:            music/ice-cream-with-you.mp3  (2680149 bytes, byte-identical to the LoC MP3)
+  artist:          Loyalty Freak Music
+  category:        upbeat   duration 167.4s   bpm~150   loudness -13.7 LUFS (EBU R128)   true peak -0.8 dBTP   gainDb -2.3
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-164281/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-164281.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-164281.mp3
+  FMA page:        https://freemusicarchive.org/music/Loyalty_Freak_Music/POSITIVE_ATTITUDE_/Loyalty_Freak_Music_-_POSITIVE_ATTITUDE__-_05_Ice_Cream_with_you
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: "Public Domain: http://creativecommons.org/licenses/publicdomain/"
+  sha256:          ae22ea04fd2a128bd9db608305ff2a0f92b71e02f8b8b12317857956663423f6
+
+[03] La montagne
+  file:            music/la-montagne.mp3  (3492905 bytes, byte-identical to the LoC MP3)
+  artist:          Komiku
+  category:        upbeat   duration 218.2s   bpm~131   loudness -14.1 LUFS (EBU R128)   true peak -0.3 dBTP   gainDb -1.9
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-140395/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-140395.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-140395.mp3
+  FMA page:        https://freemusicarchive.org/music/Komiku/Its_time_for_adventure_/Komiku_-_Its_time_for_adventure_-_07_La_montagne
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: (none)
+  sha256:          8cd908bc7fba9bea22992afbc4f1f171759f842defadf412c580b18640690045
+
+[04] Free To Use 13
+  file:            music/free-to-use-13.mp3  (3185273 bytes, byte-identical to the LoC MP3)
+  artist:          Monplaisir
+  category:        upbeat   duration 199.0s   bpm~104   loudness -14.8 LUFS (EBU R128)   true peak 2.6 dBTP   gainDb -1.2
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-152622/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-152622.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-152622.mp3
+  FMA page:        https://freemusicarchive.org/music/Monplaisir/Free_To_Use/Monplaisir_-_Free_To_Use_-_13_Free_To_Use_13
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: (none)
+  sha256:          f09ad1e226be576cc0d6c3f389a77ff920bd383b5b50753b1b14915794b80e64
+
+[05] Standing
+  file:            music/standing.mp3  (2577611 bytes, byte-identical to the LoC MP3)
+  artist:          Loyalty Freak Music
+  category:        chill   duration 161.0s   bpm~120   loudness -15.6 LUFS (EBU R128)   true peak -2.8 dBTP   gainDb -0.4
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-171985/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-171985.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-171985.mp3
+  FMA page:        https://freemusicarchive.org/music/Loyalty_Freak_Music/MELODIES_WITH_A_BEAT/Loyalty_Freak_Music_-_MELODIES_WITH_A_BEAT_-_11_Standing
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: (none)
+  sha256:          48b56efddcbd65bec70d644d8c68194febb708cef19bcafcbbea78ab9b9e51d6
+
+[06] Bad Guys HQ
+  file:            music/bad-guys-hq.mp3  (1349212 bytes, byte-identical to the LoC MP3)
+  artist:          Komiku
+  category:        chill   duration 84.2s   bpm~142   loudness -15.1 LUFS (EBU R128)   true peak -1.1 dBTP   gainDb -0.9
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-165235/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-165235.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-165235.mp3
+  FMA page:        https://freemusicarchive.org/music/Komiku/THE_GIRL_WITH_THE_BASEBALL_BAT/Komiku_-_THE_GIRL_WITH_THE_BASEBALL_BAT_-_02_Bad_Guys_HQ
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: (none)
+  sha256:          bce3de522f0b85404d335db281fcede330e43c9fceb9c8c7b5977bb7db731fa2
+
+[07] Dreaming of you
+  file:            music/dreaming-of-you.mp3  (2741022 bytes, byte-identical to the LoC MP3)
+  artist:          Komiku
+  category:        chill   duration 171.2s   bpm~97   loudness -13.4 LUFS (EBU R128)   true peak -0.4 dBTP   gainDb -2.6
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-145627/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-145627.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-145627.mp3
+  FMA page:        https://freemusicarchive.org/music/Komiku/Its_time_for_adventure__vol_2/Komiku_-_Its_time_for_adventure_vol_2_-_08_Dreaming_of_you
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: (none)
+  sha256:          09606d96c9c958fd616e8d7f43ef7a0456e2abd9fddddd69caef522e5b07697d
+
+[08] On the road, looking at your feet
+  file:            music/on-the-road-looking-at-your-feet.mp3  (1891321 bytes, byte-identical to the LoC MP3)
+  artist:          Monplaisir
+  category:        warm   duration 118.1s   bpm~136   loudness -19.7 LUFS (EBU R128)   true peak -0.4 dBTP   gainDb 0.0
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-152300/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-152300.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-152300.mp3
+  FMA page:        https://freemusicarchive.org/music/Monplaisir/Relaxing_Ukulele/Monplaisir_-_Relaxing_Ukulele_-_06_On_the_road_looking_at_your_feet
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: (none)
+  sha256:          5800d60265b8d34f782f3ebf938ab9ff1830ef57918d1a5761b533726cb7eaed
+
+[09] Skysand
+  file:            music/skysand.mp3  (1505510 bytes, byte-identical to the LoC MP3)
+  artist:          Monplaisir
+  category:        warm   duration 94.0s   bpm~126   loudness -21.3 LUFS (EBU R128)   true peak -2.7 dBTP   gainDb 0.0
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-152645/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-152645.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-152645.mp3
+  FMA page:        https://freemusicarchive.org/music/Monplaisir/Fifty_seconds_of_rain/Monplaisir_-_Fifty_seconds_of_rain_-_04_Skysand
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: (none)
+  sha256:          e8887f40b36affd5f118c72ecbb4f3298219b0aa720b222d0bbfe6f9e8c9f5c4
+
+[10] Iyanetha
+  file:            music/iyanetha.mp3  (2644476 bytes, byte-identical to the LoC MP3)
+  artist:          John Bartmann
+  category:        warm   duration 165.2s   bpm~111   loudness -14.7 LUFS (EBU R128)   true peak -0.4 dBTP   gainDb -1.3
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-180708/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-180708.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-180708.mp3
+  FMA page:        https://freemusicarchive.org/music/John_Bartmann/Public_Domain_Soundtrack_Music_Album_One/iyanetha
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: (none)
+  sha256:          be65c67610bee0b767fab9fcde45b6281a0a992e641219629950d60ddbbe0170
+
+[11] Free To Use 9
+  file:            music/free-to-use-9.mp3  (2912342 bytes, byte-identical to the LoC MP3)
+  artist:          Monplaisir
+  category:        warm   duration 181.9s   bpm~148   loudness -14.8 LUFS (EBU R128)   true peak 1.7 dBTP   gainDb -1.2
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-152618/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-152618.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-152618.mp3
+  FMA page:        https://freemusicarchive.org/music/Monplaisir/Free_To_Use/Monplaisir_-_Free_To_Use_-_09_Free_To_Use_9
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: (none)
+  sha256:          434dd31b661fcf60ca7c196127602e77f9fe9880af972948dd3b2355e27bc0aa
+
+[12] Kyle of Durness
+  file:            music/kyle-of-durness.mp3  (2804920 bytes, byte-identical to the LoC MP3)
+  artist:          TRG Banks
+  category:        cinematic   duration 175.2s   bpm~123   loudness -11.2 LUFS (EBU R128)   true peak -0.4 dBTP   gainDb -4.8
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-175350/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-175350.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-175350.mp3
+  FMA page:        https://freemusicarchive.org/music/TRG_Banks/Bills_Adventures/Kyle_of_Durness
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: (none)
+  sha256:          deec4ef33c773b99da2e047ef5ec92741117b05557e5e28dac253d59e28c8a02
+
+[13] Castle in the cloud
+  file:            music/castle-in-the-cloud.mp3  (2405511 bytes, byte-identical to the LoC MP3)
+  artist:          TRG Banks
+  category:        cinematic   duration 150.3s   bpm~94   loudness -10.8 LUFS (EBU R128)   true peak -0.3 dBTP   gainDb -5.2
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-174212/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-174212.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-174212.mp3
+  FMA page:        https://freemusicarchive.org/music/TRG_Banks/Return_to_Dreamland/Castle_in_the_cloud
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: "CC0 1.0 Universal: http://creativecommons.org/publicdomain/zero/1.0/"
+  sha256:          69d6470e770ffc57588b7ac528233e9b783d33bd9c668a2c187e0e857b9a62c6
+
+[14] I need a heroïc figure (main character theme)
+  file:            music/i-need-a-heroic-figure-main-character-theme.mp3  (3478359 bytes, byte-identical to the LoC MP3)
+  artist:          Komiku
+  category:        cinematic   duration 217.3s   bpm~91   loudness -18.7 LUFS (EBU R128)   true peak -1.1 dBTP   gainDb 0.0
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-158401/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-158401.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-158401.mp3
+  FMA page:        https://freemusicarchive.org/music/Komiku/Its_time_for_adventure__vol_5/Komiku_-_Its_time_for_adventure_vol_5_-_04_I_need_a_heroc_figure_main_character_theme
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: (none)
+  sha256:          e6a39b13d9adce28c0ad3af1e677dcee6a15488549e81c58ebb34fdbdae8c047
+
+[15] The place that never get old
+  file:            music/the-place-that-never-get-old.mp3  (2969672 bytes, byte-identical to the LoC MP3)
+  artist:          Komiku
+  category:        cinematic   duration 185.5s   bpm~82   loudness -18.1 LUFS (EBU R128)   true peak -0.1 dBTP   gainDb 0.0
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-153144/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-153144.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-153144.mp3
+  FMA page:        https://freemusicarchive.org/music/Komiku/Its_time_for_adventure__vol_3/Komiku_-_Its_time_for_adventure_vol_3_-_07_The_place_that_never_get_old
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: (none)
+  sha256:          4ec15f6399923552bdf2bcdf7d383a6cdde99bcb9b9e773843dbdc9cc3c95b49
+
+[16] The Army Of You
+  file:            music/the-army-of-you.mp3  (2581948 bytes, byte-identical to the LoC MP3)
+  artist:          Soft and Furious
+  category:        electronic   duration 161.3s   bpm~120   loudness -12.5 LUFS (EBU R128)   true peak -0.5 dBTP   gainDb -3.5
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-155374/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-155374.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-155374.mp3
+  FMA page:        https://freemusicarchive.org/music/Soft_and_Furious/The_Merfolk_I_Should_Turn_To_Be/Soft_and_Furious_-_The_Merfolk_I_Should_Turn_To_Be_-_09_The_Army_Of_You
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: "Public Domain: http://creativecommons.org/licenses/publicdomain/"
+  sha256:          55da31b69ad3b776c73e7eb76ac9e18a5fc47fc8e48d94b7be773fe7fca84af7
+
+[17] Lost in the city
+  file:            music/lost-in-the-city.mp3  (3017668 bytes, byte-identical to the LoC MP3)
+  artist:          TRG Banks
+  category:        electronic   duration 188.5s   bpm~120   loudness -9.7 LUFS (EBU R128)   true peak 0.3 dBTP   gainDb -6.3
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-174215/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-174215.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-174215.mp3
+  FMA page:        https://freemusicarchive.org/music/TRG_Banks/Return_to_Dreamland/Lost_in_the_city_1408
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: (none)
+  sha256:          537157a5248b20e00b22fe5aa2e9196399aec5fbbf4b8dbd1167c23bbefeda17
+
+[18] City
+  file:            music/city.mp3  (2144137 bytes, byte-identical to the LoC MP3)
+  artist:          TRG Banks
+  category:        electronic   duration 133.9s   bpm~134   loudness -10.3 LUFS (EBU R128)   true peak -0.0 dBTP   gainDb -5.7
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-174834/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-174834.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-174834.mp3
+  FMA page:        https://freemusicarchive.org/music/TRG_Banks/Kevelin_and_Chestnuts_Adventures/City_1902
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: (none)
+  sha256:          366b02c2fe5d1e933bfd7f9c0d133db45572316bec0db2c0a54fd2b271360ed4
+
+[19] Action Decisive Move
+  file:            music/action-decisive-move.mp3  (2514494 bytes, byte-identical to the LoC MP3)
+  artist:          Komiku
+  category:        electronic   duration 157.1s   bpm~159   loudness -5.6 LUFS (EBU R128)   true peak 0.7 dBTP   gainDb -10.4
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-155584/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-155584.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-155584.mp3
+  FMA page:        https://freemusicarchive.org/music/Komiku/The_Binge_Watchers__Score_1/Komiku_-_The_Binge_Watchers_-_Score_1_-_19_Action_Decisive_Move
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: (none)
+  sha256:          039247de37eed2e72fdc9b7d7cd301921eaf0b5debca0f5953f41391bbd17e0a
+
+[20] Mushrooms
+  file:            music/mushrooms.mp3  (988918 bytes, byte-identical to the LoC MP3)
+  artist:          Komiku
+  category:        cute   duration 61.7s   bpm~140   loudness -19.8 LUFS (EBU R128)   true peak -3.8 dBTP   gainDb 0.0
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-178531/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-178531.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-178531.mp3
+  FMA page:        https://freemusicarchive.org/music/Komiku/Captain_Glouglous_Incredible_Week_Soundtrack/bibliothque
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: (none)
+  sha256:          72eb4e38c26362226ddab6bf9e50f4018f3e084b5451693737a839accebd2be5
+
+[21] Home
+  file:            music/home.mp3  (1057456 bytes, byte-identical to the LoC MP3)
+  artist:          Komiku
+  category:        cute   duration 66.0s   bpm~80   loudness -17.1 LUFS (EBU R128)   true peak -1.9 dBTP   gainDb 0.0
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-178534/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-178534.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-178534.mp3
+  FMA page:        https://freemusicarchive.org/music/Komiku/Captain_Glouglous_Incredible_Week_Soundtrack/Home_1105
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: (none)
+  sha256:          9e8d5732483d591108d5ea477435a96ab4c61fea6b363891b1536afae3d8adb2
+
+[22] Mall
+  file:            music/mall.mp3  (1098416 bytes, byte-identical to the LoC MP3)
+  artist:          Komiku
+  category:        cute   duration 68.6s   bpm~140   loudness -17.2 LUFS (EBU R128)   true peak -4.0 dBTP   gainDb 0.0
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-178535/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-178535.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-178535.mp3
+  FMA page:        https://freemusicarchive.org/music/Komiku/Captain_Glouglous_Incredible_Week_Soundtrack/mall_1328
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: (none)
+  sha256:          ed960d476f6a62669d9edef6e9008cf3d33f664b7156d24473c03d33fb6b7447
+
+[23] Ambiant Point Of No Return
+  file:            music/ambiant-point-of-no-return.mp3  (3113442 bytes, byte-identical to the LoC MP3)
+  artist:          Komiku
+  category:        calm   duration 194.5s   bpm~162   loudness -10.0 LUFS (EBU R128)   true peak -0.3 dBTP   gainDb -6.0
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-155586/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-155586.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-155586.mp3
+  FMA page:        https://freemusicarchive.org/music/Komiku/The_Binge_Watchers__Score_1/Komiku_-_The_Binge_Watchers_-_Score_1_-_21_Ambiant_Point_Of_No_Return
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: (none)
+  sha256:          42866d249a5855e1247dd1333a0d1fa291462bff96f8c137497072f1b09e4c34
+
+[24] Christmas lights
+  file:            music/christmas-lights.mp3  (3052515 bytes, byte-identical to the LoC MP3)
+  artist:          TRG Banks
+  category:        calm   duration 190.7s   bpm~99   loudness -10.1 LUFS (EBU R128)   true peak -0.1 dBTP   gainDb -5.9
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-182248/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-182248.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-182248.mp3
+  FMA page:        https://freemusicarchive.org/music/TRG_Banks/TRG_Banks_Christmas_Album/Christmas_lights
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: "CC0 1.0 Universal: http://creativecommons.org/publicdomain/zero/1.0/"
+  sha256:          c30096ca70ed660b2ec2b0040fecc56a9871d93da18de45c5470da4673554b16
+
+[25] Childhood scene
+  file:            music/childhood-scene.mp3  (2240307 bytes, byte-identical to the LoC MP3)
+  artist:          Komiku
+  category:        calm   duration 139.9s   bpm~126   loudness -12.3 LUFS (EBU R128)   true peak -0.8 dBTP   gainDb -3.7
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-153138/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-153138.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-153138.mp3
+  FMA page:        https://freemusicarchive.org/music/Komiku/Its_time_for_adventure__vol_3/Komiku_-_Its_time_for_adventure_vol_3_-_01_Childhood_scene
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: (none)
+  sha256:          3aefda0aa7685499fdccbed3cca4334e5b9a95a78fde81cc45d124b9833c12bc
+
+[26] Jenifer The Game
+  file:            music/jenifer-the-game.mp3  (3345394 bytes, byte-identical to the LoC MP3)
+  artist:          Komiku
+  category:        retro   duration 209.0s   bpm~120   loudness -17.9 LUFS (EBU R128)   true peak -3.3 dBTP   gainDb 0.0
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-169746/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-169746.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-169746.mp3
+  FMA page:        https://freemusicarchive.org/music/Komiku/Poupis_incredible_adventures_/Komiku_-_Poupis_incredible_adventures__-_28_Jenifer_The_Game
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: (none)
+  sha256:          de414fbc15acf0ec34c25e3c91e3653635ef9fe48d95f367df585e0f3f82b2c9
+
+[27] Time to go to space now !!
+  file:            music/time-to-go-to-space-now.mp3  (1297412 bytes, byte-identical to the LoC MP3)
+  artist:          Komiku
+  category:        retro   duration 81.0s   bpm~120   loudness -18.7 LUFS (EBU R128)   true peak -3.5 dBTP   gainDb 0.0
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-169742/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-169742.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-169742.mp3
+  FMA page:        https://freemusicarchive.org/music/Komiku/Poupis_incredible_adventures_/Komiku_-_Poupis_incredible_adventures__-_24_Time_to_go_to_space_now_
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: (none)
+  sha256:          0e861b4c66699303625b067b0be50f395dd80c5ecf862a24bfff887f0a4cb6f7
+
+[28] Disco Cat
+  file:            music/disco-cat.mp3  (976387 bytes, byte-identical to the LoC MP3)
+  artist:          Komiku
+  category:        retro   duration 60.9s   bpm~129   loudness -20.0 LUFS (EBU R128)   true peak -1.6 dBTP   gainDb 0.0
+  LoC item page:   https://citizen-dj.labs.loc.gov/items/loc-fma/fma-169734/
+  LoC metadata:    https://raw.githubusercontent.com/LibraryOfCongress/citizen-dj/master/_items/loc-fma/fma-169734.md
+  audio URL:       https://s3.amazonaws.com/citizen-dj-assets.labs.loc.gov/audio/items/loc-fma/fma-169734.mp3
+  FMA page:        https://freemusicarchive.org/music/Komiku/Poupis_incredible_adventures_/Komiku_-_Poupis_incredible_adventures__-_16_Disco_Cat
+  LoC rights:      "This work has been dedicated to the public domain by its creator, thus is free to use and reuse without restriction. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. Attribution is recommended but not required."
+  LoC rights note: "Most music and recordings in the Free Music Archive are not in the public domain. However, Citizen DJ provides a subset of recordings from the Free Music Archive that were published under a Public domain dedication license by their creators, thus are in the public domain."
+  LoC credit:      "Free Music Archive archived website at the Library of Congress, Web Archives Division."
+  FMA licence (live page, checked 2026-10-17): "CC0 1.0 Universal License" -> https://creativecommons.org/publicdomain/zero/1.0/
+  embedded ID3 copyright tag: (none)
+  sha256:          5e14ff5948551706615eb1165d234c967f7bfb13f58818a4dc59dbb0adc46aa2
